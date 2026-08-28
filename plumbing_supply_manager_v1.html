@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Plumbing Supply Manager — Version 1</title>
+<style>
+:root{
+  --bg:#f6f5f8; --card:#ffffff; --text:#17151a; --muted:#77717f;
+  --purple:#6f4bf2; --purple2:#efeafe; --line:#e7e3eb; --green:#2f9e62;
+  --amber:#d88a12; --red:#d94a4a; --shadow:0 6px 22px rgba(41,30,61,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:#ebe9ef;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text)}
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative;padding-bottom:88px}
+.topbar{position:sticky;top:0;z-index:8;background:rgba(246,245,248,.96);backdrop-filter:blur(12px);padding:18px 18px 10px;display:flex;align-items:center;gap:12px}
+.iconbtn{border:0;background:var(--card);width:42px;height:42px;border-radius:14px;box-shadow:var(--shadow);font-size:20px}
+.titlewrap{flex:1}.title{font-size:21px;font-weight:800;line-height:1.05}.subtitle{font-size:12px;color:var(--muted);margin-top:3px}
+.content{padding:10px 18px 24px}
+.search{width:100%;border:1px solid var(--line);background:#fff;border-radius:15px;padding:14px 16px;font-size:15px;outline:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin:12px 0;box-shadow:var(--shadow)}
+.row{display:flex;align-items:center;gap:12px}
+.grow{flex:1}.strong{font-weight:750}.muted{color:var(--muted);font-size:13px}
+.badge{font-size:11px;font-weight:700;padding:5px 8px;border-radius:999px;background:var(--purple2);color:var(--purple)}
+.badge.green{background:#e8f6ee;color:var(--green)} .badge.amber{background:#fff2dc;color:var(--amber)} .badge.red{background:#fdeaea;color:var(--red)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.tile{border:0;background:var(--card);border-radius:18px;padding:20px 14px;text-align:left;box-shadow:var(--shadow);min-height:105px}
+.tile.primary{background:var(--purple);color:#fff}
+.tile .emoji{font-size:25px;display:block;margin-bottom:12px}
+.tile .label{font-weight:800;font-size:15px}
+.tile .small{font-size:12px;opacity:.75;margin-top:4px}
+.sectionTitle{font-size:14px;font-weight:800;margin:22px 2px 8px;color:#49434f}
+.btn{border:0;border-radius:14px;padding:13px 16px;font-weight:800;font-size:14px}
+.btn.primary{background:var(--purple);color:#fff}.btn.secondary{background:var(--purple2);color:var(--purple)}
+.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--text)}
+.btn.full{width:100%}
+.bottom{position:fixed;z-index:10;bottom:0;left:50%;transform:translateX(-50%);max-width:430px;width:100%;height:76px;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+.navbtn{border:0;background:transparent;color:#7b7482;font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:4px}
+.navbtn span:first-child{font-size:21px}.navbtn.active{color:var(--purple)}
+.drawerMask{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:20;display:none}
+.drawer{position:absolute;left:0;top:0;bottom:0;width:84%;max-width:340px;background:#fff;padding:22px 16px;box-shadow:10px 0 30px rgba(0,0,0,.12)}
+.drawer h2{margin:4px 8px 18px}.menuItem{width:100%;border:0;background:#fff;padding:15px 12px;border-radius:14px;display:flex;align-items:center;gap:12px;font-size:15px;text-align:left}
+.menuItem:hover{background:var(--bg)}
+.close{float:right;border:0;background:#f1eef4;width:34px;height:34px;border-radius:12px;font-size:18px}
+.screen{display:none}.screen.active{display:block}
+.input,.select,.textarea{width:100%;border:1px solid var(--line);border-radius:13px;background:#fff;padding:12px;font-size:14px;margin-top:6px}
+.textarea{min-height:90px;resize:vertical}
+.label{font-size:12px;font-weight:800;margin-top:12px;display:block}
+.orderline{display:grid;grid-template-columns:36px 60px 1fr;gap:8px;margin:8px 0}
+.orderline input{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px}
+.num{display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--muted)}
+.personAvatar{width:42px;height:42px;border-radius:50%;background:var(--purple2);display:flex;align-items:center;justify-content:center;color:var(--purple);font-weight:900}
+.back{border:0;background:transparent;color:var(--purple);font-weight:800;padding:4px 0;margin-bottom:8px}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.kpi .card{margin:0;text-align:center;padding:12px 6px}.kpi b{display:block;font-size:20px}
+.notice{background:#fff8df;border:1px solid #f0d992;border-radius:14px;padding:12px;font-size:13px}
+.login{padding:36px 22px}.logo{width:62px;height:62px;border-radius:20px;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:18px}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="app">
+  <div id="loginScreen" class="screen active login">
+    <div class="logo">🔧</div>
+    <div class="title" style="font-size:28px">Plumbing Supply Manager</div>
+    <p class="muted" style="font-size:14px;line-height:1.45">Version 1 test build. Pick a team member to simulate signing in.</p>
+    <div id="loginPeople"></div>
+    <button class="btn secondary full" onclick="resetDemo()">Reset demo data</button>
+  </div>
+
+  <div id="appShell" class="hidden">
+    <div class="topbar">
+      <button class="iconbtn" onclick="openDrawer()">☰</button>
+      <div class="titlewrap">
+        <div class="title" id="pageTitle">Plumbing Supply Manager</div>
+        <div class="subtitle" id="signedInAs"></div>
+      </div>
+      <button class="iconbtn" onclick="showScreen('reminders')">🔔</button>
+    </div>
+
+    <div id="home" class="screen active content">
+      <input class="search" id="globalSearch" placeholder="Search anything…" oninput="renderHomeSearch()">
+      <div id="searchResults"></div>
+      <div class="grid">
+        <button class="tile" onclick="showScreen('myorders')"><span class="emoji">📦</span><span class="label">My Orders</span><div class="small">Assigned to you</div></button>
+        <button class="tile" onclick="showScreen('quotes')"><span class="emoji">🧾</span><span class="label">Quotes</span><div class="small">Saved by company & job</div></button>
+        <button class="tile" onclick="showScreen('customers')"><span class="emoji">👥</span><span class="label">Customers</span><div class="small">Contacts</div></button>
+        <button class="tile primary" onclick="showScreen('create')"><span class="emoji">＋</span><span class="label">Create Order</span><div class="small">New order sheet</div></button>
+        <button class="tile" onclick="showScreen('invoices')"><span class="emoji">📄</span><span class="label">Invoices</span><div class="small">Company → Job</div></button>
+        <button class="tile" onclick="showScreen('reminders')"><span class="emoji">⏰</span><span class="label">Reminders</span><div class="small">Follow-ups & tasks</div></button>
+      </div>
+      <div class="sectionTitle">Recent Orders</div>
+      <div id="recentOrders"></div>
+    </div>
+
+    <div id="myorders" class="screen content">
+      <input class="search" placeholder="Search my orders…" oninput="renderMyOrders(this.value)">
+      <div id="myOrdersList"></div>
+    </div>
+
+    <div id="team" class="screen content">
+      <div class="notice">Everyone can view and edit everyone’s orders. Names are used for organization and assignment only.</div>
+      <div id="teamList"></div>
+    </div>
+
+    <div id="personorders" class="screen content">
+      <button class="back" onclick="showScreen('team')">← Team Members</button>
+      <div id="personOrdersList"></div>
+    </div>
+
+    <div id="orderdetail" class="screen content">
+      <button class="back" onclick="goBackFromOrder()">← Back</button>
+      <div id="orderDetailContent"></div>
+    </div>
+
+    <div id="create" class="screen content">
+      <div class="card">
+        <div class="strong" style="font-size:18px">New Order Sheet</div>
+        <label class="label">Company / Plumber</label>
+        <input id="newCompany" class="input" placeholder="Company / Plumber">
+        <label class="label">Job / Order</label>
+        <input id="newJob" class="input" placeholder="Job / Order">
+        <label class="label">Date</label>
+        <input id="newDate" class="input" type="date">
+        <div class="sectionTitle">Items</div>
+        <div id="orderLines"></div>
+        <button class="btn secondary" onclick="addOrderLine()">+ Add Another Line</button>
+        <label class="label">Notes / Special Instructions</label>
+        <textarea id="newNotes" class="textarea" placeholder="Notes…"></textarea>
+        <button class="btn primary full" style="margin-top:14px" onclick="saveNewOrder()">Save Order</button>
+      </div>
+    </div>
+
+    <div id="scan" class="screen content">
+      <div class="card" style="text-align:center;padding:28px">
+        <div style="font-size:48px">📷</div>
+        <div class="strong" style="font-size:18px;margin-top:8px">Camera opens here</div>
+        <p class="muted">For this test version, choose what you scanned.</p>
+      </div>
+      <div class="grid">
+        <button class="tile" onclick="scanFlow('Box Scan')"><span class="emoji">📦</span><span class="label">Box Scan</span></button>
+        <button class="tile" onclick="scanFlow('Invoice Scan')"><span class="emoji">📄</span><span class="label">Invoice Scan</span></button>
+        <button class="tile" onclick="scanFlow('Quote Scan')"><span class="emoji">🧾</span><span class="label">Quote Scan</span></button>
+        <button class="tile" onclick="scanFlow('Location Scan')"><span class="emoji">🔳</span><span class="label">Location Scan</span></button>
+      </div>
+      <div id="scanResult"></div>
+    </div>
+
+    <div id="quotes" class="screen content"><input class="search" placeholder="Search quotes…"><div id="quotesList"></div></div>
+    <div id="customers" class="screen content"><input class="search" placeholder="Search name or phone…"><div id="customerList"></div></div>
+    <div id="invoices" class="screen content"><input class="search" placeholder="Search invoices…"><div id="invoiceList"></div></div>
+
+    <div id="reminders" class="screen content">
+      <div class="card">
+        <label class="label">Company / Plumber</label><input class="input" id="remCompany" placeholder="Company / Plumber">
+        <label class="label">Job / Order</label><input class="input" id="remJob" placeholder="Job / Order">
+        <label class="label">Date & Time</label><input class="input" id="remDate" type="datetime-local">
+        <div class="sectionTitle">What do you want to be reminded about?</div>
+        <input class="input" id="remText" placeholder="Reminder">
+        <label class="label">Notes</label><textarea class="textarea" id="remNotes"></textarea>
+        <button class="btn primary full" style="margin-top:14px" onclick="addReminder()">Save Reminder</button>
+      </div>
+      <div id="reminderList"></div>
+    </div>
+
+    <div id="more" class="screen content">
+      <div class="card"><div class="strong">More</div><p class="muted">We can decide later what belongs here so it doesn't duplicate the ☰ menu.</p></div>
+    </div>
+
+    <div class="bottom">
+      <button class="navbtn" data-nav="home" onclick="showScreen('home')"><span>⌂</span>Home</button>
+      <button class="navbtn" data-nav="myorders" onclick="showScreen('myorders')"><span>📦</span>My Orders</button>
+      <button class="navbtn" data-nav="scan" onclick="showScreen('scan')"><span>📷</span>Scan</button>
+      <button class="navbtn" data-nav="reminders" onclick="showScreen('reminders')"><span>⏰</span>Reminders</button>
+      <button class="navbtn" data-nav="more" onclick="showScreen('more')"><span>•••</span>More</button>
+    </div>
+  </div>
+</div>
+
+<div id="drawerMask" class="drawerMask" onclick="if(event.target===this)closeDrawer()">
+  <div class="drawer">
+    <button class="close" onclick="closeDrawer()">×</button>
+    <h2>Menu</h2>
+    <button class="menuItem" onclick="drawerGo('team')">👥 <span><b>Team Members</b><div class="muted">See everyone's orders</div></span></button>
+    <button class="menuItem" onclick="drawerInfo('Shelf Locations')">🏷️ <span><b>Shelf Locations</b><div class="muted">Manage shelf codes & locations</div></span></button>
+    <button class="menuItem" onclick="drawerInfo('QR Labels')">🔳 <span><b>QR Labels</b><div class="muted">Print reusable shelf labels</div></span></button>
+    <button class="menuItem" onclick="drawerInfo('Archived Orders')">🗃️ <span><b>Archived Orders</b></span></button>
+    <button class="menuItem" onclick="drawerInfo('Manage Companies')">🏢 <span><b>Manage Companies</b></span></button>
+    <hr>
+    <button class="menuItem" onclick="logout()">↩️ <b>Switch User / Log Out</b></button>
+  </div>
+</div>
+
+<script>
+const seed = {
+  people:["Mallerie","Kayla","Spencer","Jordan","Taylor"],
+  orders:[
+    {id:1,owner:"Mallerie",company:"D Star Plumbing",job:"306 Preserve",shelf:"D1",status:"Partial",notes:"Waiting on remaining trim.",items:[["T14059-RB",2,2],["3559-RB",2,1],["U4999-RB",1,1]]},
+    {id:2,owner:"Kayla",company:"D Star Plumbing",job:"309 Stalker Farms",shelf:"F1",status:"Received",notes:"Complete.",items:[["6410BN",4,4],["T2133EPBN",2,2],["T2132EPBN",2,2]]},
+    {id:3,owner:"Spencer",company:"D Star Plumbing",job:"304 Highland",shelf:"H3",status:"Missing",notes:"Several pieces still missing.",items:[["S74001EV2BG",2,0],["TS6985BG",4,1],["TS2913BG",2,0]]},
+    {id:4,owner:"Mallerie",company:"D Star Plumbing",job:"116 Harvest Fields",shelf:"C3",status:"Partial",notes:"",items:[["S6910BN",3,0],["TS2203EPBN",1,1],["3667EPBN",1,1]]}
+  ],
+  reminders:[
+    {text:"Follow up on quote for 306 Preserve",company:"D Star Plumbing",job:"306 Preserve"},
+    {text:"Check status of Moen order",company:"D Star Plumbing",job:"304 Highland"}
+  ]
+};
+let data = JSON.parse(localStorage.getItem("psm_v1")||"null") || structuredClone(seed);
+let currentUser = localStorage.getItem("psm_user") || "";
+let lastOrderBack = "myorders";
+
+function persist(){localStorage.setItem("psm_v1",JSON.stringify(data))}
+function boot(){
+  document.getElementById("loginPeople").innerHTML=data.people.map(p=>`<button class="card row" style="width:100%;text-align:left;border:1px solid var(--line)" onclick="login('${p}')"><div class="personAvatar">${p[0]}</div><div class="grow"><div class="strong">${p}</div><div class="muted">Tap to sign in</div></div><span>›</span></button>`).join("");
+  if(currentUser) login(currentUser,true);
+}
+function login(name,silent=false){
+  currentUser=name;localStorage.setItem("psm_user",name);
+  document.getElementById("loginScreen").classList.remove("active");
+  document.getElementById("appShell").classList.remove("hidden");
+  document.getElementById("signedInAs").textContent=`Signed in as ${name}`;
+  showScreen("home");
+}
+function logout(){localStorage.removeItem("psm_user");currentUser="";document.getElementById("appShell").classList.add("hidden");document.getElementById("loginScreen").classList.add("active");closeDrawer()}
+function resetDemo(){localStorage.removeItem("psm_v1");data=structuredClone(seed);persist();boot();alert("Demo data reset.")}
+function openDrawer(){document.getElementById("drawerMask").style.display="block"}
+function closeDrawer(){document.getElementById("drawerMask").style.display="none"}
+function drawerGo(s){closeDrawer();showScreen(s)}
+function drawerInfo(name){closeDrawer();alert(name+" is planned for the next version.")}
+const titles={home:"Plumbing Supply Manager",myorders:"My Orders",team:"Team Members",personorders:"Team Member Orders",orderdetail:"Order Details",create:"Create Order",scan:"Scan",quotes:"Quotes",customers:"Customers",invoices:"Invoices",reminders:"Reminders",more:"More"};
+function showScreen(id){
+  document.querySelectorAll("#appShell .screen").forEach(x=>x.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.getElementById("pageTitle").textContent=titles[id]||"Plumbing Supply Manager";
+  document.querySelectorAll(".navbtn").forEach(x=>x.classList.toggle("active",x.dataset.nav===id));
+  if(id==="home")renderHome();
+  if(id==="myorders")renderMyOrders("");
+  if(id==="team")renderTeam();
+  if(id==="quotes")renderQuotes();
+  if(id==="customers")renderCustomers();
+  if(id==="invoices")renderInvoices();
+  if(id==="reminders")renderReminders();
+  if(id==="create")initCreate();
+  window.scrollTo(0,0);
+}
+function orderCard(o){
+  const cls=o.status==="Received"?"green":o.status==="Missing"?"red":"amber";
+  return `<button class="card" style="width:100%;text-align:left" onclick="openOrder(${o.id})">
+    <div class="row"><div class="grow"><div class="strong">${o.company}</div><div>${o.job}</div></div><span class="badge ${cls}">${o.status}</span></div>
+    <div class="row" style="margin-top:10px"><span class="muted">Owner: ${o.owner}</span><span class="muted">Shelf: ${o.shelf||"Not assigned"}</span></div>
+  </button>`;
+}
+function renderHome(){
+  document.getElementById("recentOrders").innerHTML=data.orders.slice(-3).reverse().map(orderCard).join("");
+}
+function renderHomeSearch(){
+  const q=document.getElementById("globalSearch").value.trim().toLowerCase();
+  const box=document.getElementById("searchResults");
+  if(!q){box.innerHTML="";return}
+  const hits=data.orders.filter(o=>[o.company,o.job,o.owner,o.shelf,...o.items.map(i=>i[0])].join(" ").toLowerCase().includes(q));
+  box.innerHTML=`<div class="sectionTitle">Search Results</div>`+(hits.length?hits.map(orderCard).join(""):`<div class="card muted">No matching orders.</div>`);
+}
+function renderMyOrders(q=""){
+  let arr=data.orders.filter(o=>o.owner===currentUser);
+  q=q.toLowerCase(); if(q) arr=arr.filter(o=>(o.company+" "+o.job+" "+o.shelf).toLowerCase().includes(q));
+  document.getElementById("myOrdersList").innerHTML=arr.length?arr.map(orderCard).join(""):`<div class="card muted">No orders assigned to ${currentUser} yet.</div>`;
+}
+function renderTeam(){
+  document.getElementById("teamList").innerHTML=data.people.map(p=>{
+    const count=data.orders.filter(o=>o.owner===p).length;
+    return `<button class="card row" style="width:100%;text-align:left" onclick="openPerson('${p}')"><div class="personAvatar">${p[0]}</div><div class="grow"><div class="strong">${p}</div><div class="muted">${count} order${count===1?"":"s"}</div></div><span>›</span></button>`;
+  }).join("");
+}
+function openPerson(p){
+  const arr=data.orders.filter(o=>o.owner===p);
+  document.getElementById("pageTitle").textContent=p+"'s Orders";
+  document.querySelectorAll("#appShell .screen").forEach(x=>x.classList.remove("active"));
+  document.getElementById("personorders").classList.add("active");
+  document.getElementById("personOrdersList").innerHTML=arr.length?arr.map(orderCard).join(""):`<div class="card muted">No orders assigned to ${p}.</div>`;
+  lastOrderBack="personorders";
+}
+function openOrder(id){
+  const o=data.orders.find(x=>x.id===id); if(!o)return;
+  if(document.getElementById("personorders").classList.contains("active"))lastOrderBack="personorders"; else lastOrderBack="myorders";
+  document.querySelectorAll("#appShell .screen").forEach(x=>x.classList.remove("active"));document.getElementById("orderdetail").classList.add("active");
+  document.getElementById("pageTitle").textContent=o.job;
+  const rows=o.items.map((i,idx)=>{
+    const missing=Math.max(0,i[1]-i[2]); const st=missing===0?"Received":i[2]===0?"Missing":"Partial";
+    return `<div class="card"><div class="row"><div class="grow"><div class="strong">${i[0]}</div><div class="muted">Ordered: ${i[1]} · Received: ${i[2]} · Missing: ${missing}</div></div><span class="badge">${st}</span></div>
+      <div class="row" style="margin-top:10px"><button class="btn ghost" onclick="changeQty(${o.id},${idx},-1)">−</button><button class="btn ghost" onclick="changeQty(${o.id},${idx},1)">＋ Received</button></div></div>`;
+  }).join("");
+  document.getElementById("orderDetailContent").innerHTML=`
+    <div class="card">
+      <div class="strong" style="font-size:18px">${o.company}</div><div>${o.job}</div>
+      <div class="row" style="margin-top:10px"><span class="badge">${o.owner}</span><span class="badge">Shelf ${o.shelf||"—"}</span></div>
+      <label class="label">Assigned To</label><select class="select" onchange="assignOwner(${o.id},this.value)">${data.people.map(p=>`<option ${p===o.owner?"selected":""}>${p}</option>`).join("")}</select>
+      <label class="label">Shelf Location</label><input class="input" value="${o.shelf||""}" onchange="setShelf(${o.id},this.value)">
+      <label class="label">Notes</label><textarea class="textarea" onchange="setNotes(${o.id},this.value)">${o.notes||""}</textarea>
+    </div>
+    <div class="sectionTitle">Items</div>${rows}
+    <button class="btn secondary full" onclick="alert('In the next version, this opens the shelf QR scanner and then shelf photo.')">Scan Boxes / Shelf QR</button>`;
+}
+function goBackFromOrder(){showScreen(lastOrderBack==="personorders"?"team":"myorders")}
+function recompute(o){
+  const miss=o.items.reduce((s,i)=>s+Math.max(0,i[1]-i[2]),0);
+  const rec=o.items.reduce((s,i)=>s+i[2],0);
+  o.status=miss===0?"Received":rec===0?"Missing":"Partial";
+}
+function changeQty(id,idx,delta){const o=data.orders.find(x=>x.id===id);o.items[idx][2]=Math.max(0,Math.min(o.items[idx][1],o.items[idx][2]+delta));recompute(o);persist();openOrder(id)}
+function assignOwner(id,val){data.orders.find(x=>x.id===id).owner=val;persist()}
+function setShelf(id,val){data.orders.find(x=>x.id===id).shelf=val;persist()}
+function setNotes(id,val){data.orders.find(x=>x.id===id).notes=val;persist()}
+function initCreate(){
+  document.getElementById("newDate").value=new Date().toISOString().slice(0,10);
+  const lines=document.getElementById("orderLines");
+  if(!lines.children.length) for(let i=0;i<10;i++)addOrderLine();
+}
+function addOrderLine(){
+  const n=document.getElementById("orderLines").children.length+1;
+  const div=document.createElement("div");div.className="orderline";
+  div.innerHTML=`<div class="num">${n}</div><input type="number" min="0" placeholder="Qty"><input placeholder="Item / Description">`;
+  document.getElementById("orderLines").appendChild(div);
+}
+function saveNewOrder(){
+  const company=document.getElementById("newCompany").value.trim(),job=document.getElementById("newJob").value.trim();
+  if(!company||!job){alert("Please enter Company / Plumber and Job / Order.");return}
+  const items=[...document.querySelectorAll("#orderLines .orderline")].map(r=>{const ins=r.querySelectorAll("input");return [ins[1].value.trim(),Number(ins[0].value||0),0]}).filter(i=>i[0]&&i[1]>0);
+  data.orders.push({id:Date.now(),owner:currentUser,company,job,shelf:"",status:items.length?"Missing":"Partial",notes:document.getElementById("newNotes").value,items});
+  persist();document.getElementById("newCompany").value="";document.getElementById("newJob").value="";document.getElementById("newNotes").value="";document.getElementById("orderLines").innerHTML="";
+  alert("Order saved and assigned to "+currentUser+".");showScreen("myorders");
+}
+function scanFlow(type){
+  const msg={
+    "Box Scan":"Next: match the scanned box to an order → confirm quantity → scan shelf QR → take one shelf photo → save.",
+    "Invoice Scan":"Next: select Company → select Job → review scanned invoice → save.",
+    "Quote Scan":"Next: select Company → select/enter Job → review scanned quote → save.",
+    "Location Scan":"Next: scan shelf QR → view location details → optional shelf photo → done."
+  }[type];
+  document.getElementById("scanResult").innerHTML=`<div class="card"><div class="strong">${type}</div><p class="muted">${msg}</p><button class="btn primary" onclick="alert('Camera/QR features will be connected after the test layout is approved.')">Continue Test</button></div>`;
+}
+function renderQuotes(){document.getElementById("quotesList").innerHTML=["306 Preserve","507 Chestnut"].map((j,i)=>`<div class="card"><div class="strong">D Star Plumbing</div><div>${j}</div><div class="muted">Quote ${1008+i}</div><button class="btn secondary" style="margin-top:10px" onclick="alert('This will move a quote into Orders only when you choose to.')">Open Quote</button></div>`).join("")}
+function renderCustomers(){document.getElementById("customerList").innerHTML=["D Star Plumbing · 801-555-0110","Ann · 801-555-0133","Haley · 801-555-0159"].map(x=>`<div class="card row"><div class="personAvatar">👤</div><div class="grow strong">${x}</div></div>`).join("")}
+function renderInvoices(){document.getElementById("invoiceList").innerHTML=data.orders.slice(0,3).map((o,i)=>`<div class="card"><div class="strong">${o.company}</div><div>${o.job}</div><div class="muted">Invoice #INV-${2200+i}</div></div>`).join("")}
+function addReminder(){
+  const text=document.getElementById("remText").value.trim();if(!text){alert("Enter a reminder.");return}
+  data.reminders.unshift({text,company:document.getElementById("remCompany").value,job:document.getElementById("remJob").value,date:document.getElementById("remDate").value,notes:document.getElementById("remNotes").value});persist();renderReminders();
+  ["remText","remCompany","remJob","remDate","remNotes"].forEach(id=>document.getElementById(id).value="");
+}
+function renderReminders(){document.getElementById("reminderList").innerHTML=data.reminders.map((r,i)=>`<div class="card row"><button class="iconbtn" style="box-shadow:none;border:1px solid var(--line)" onclick="completeReminder(${i})">○</button><div class="grow"><div class="strong">${r.text}</div><div class="muted">${[r.company,r.job,r.date].filter(Boolean).join(" · ")}</div></div></div>`).join("")}
+function completeReminder(i){data.reminders.splice(i,1);persist();renderReminders()}
+boot();
+</script>
+</body>
+</html>
