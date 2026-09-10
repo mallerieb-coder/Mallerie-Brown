@@ -1,468 +1,282 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Plumbing Supply Manager</title>
 
 <style>
 :root{
   --purple:#7b4fe0;
-  --purple-light:#efe8ff;
+  --light:#efe8ff;
   --bg:#f7f7fb;
-  --card:#ffffff;
+  --card:#fff;
   --text:#17171c;
-  --muted:#72727d;
-  --line:#e7e6ed;
+  --muted:#73737d;
+  --line:#e5e5ec;
   --green:#2cac6d;
-  --green-light:#e7f8ef;
-  --orange:#c88c20;
-  --orange-light:#fff3db;
-  --red:#d64e4e;
-  --shadow:0 5px 20px rgba(0,0,0,.06);
+  --red:#d95353;
 }
-
-*{
-  box-sizing:border-box;
-}
-
+*{box-sizing:border-box}
 body{
   margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
 }
-
-button,input,textarea,select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
 .app{
   max-width:520px;
   margin:auto;
   min-height:100vh;
-  padding-bottom:90px;
+  padding-bottom:85px;
 }
-
-.topbar{
+header{
   position:sticky;
   top:0;
-  z-index:20;
+  z-index:10;
   display:flex;
   align-items:center;
-  gap:10px;
-  padding:14px;
-  background:rgba(247,247,251,.96);
+  padding:15px;
+  background:#fff;
   border-bottom:1px solid var(--line);
 }
-
-.topbar h1{
-  margin:0;
-  font-size:21px;
+header h1{
   flex:1;
+  margin:0;
+  font-size:20px;
 }
-
-.icon-button{
+.icon{
   border:0;
   background:transparent;
-  width:40px;
-  height:40px;
-  font-size:22px;
-  border-radius:12px;
+  font-size:23px;
+  padding:8px;
 }
-
-main{
-  padding:14px;
-}
-
-.hidden{
-  display:none !important;
-}
-
-.search{
-  width:100%;
+main{padding:15px}
+.card{
+  background:#fff;
   border:1px solid var(--line);
-  border-radius:14px;
-  padding:13px 14px;
-  margin-bottom:14px;
-  background:white;
-  outline:none;
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:12px;
 }
-
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
 }
-
-.card{
-  background:white;
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:16px;
-  box-shadow:var(--shadow);
-}
-
-.home-card{
+.home{
   min-height:110px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+  cursor:pointer;
 }
-
-.home-card .icon{
-  font-size:27px;
-}
-
-.home-card strong{
-  font-size:16px;
-}
-
-.home-card.create{
+.home .emoji{font-size:28px}
+.home.create{
   background:var(--purple);
-  color:white;
-  border-color:var(--purple);
+  color:#fff;
 }
-
-.section-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:14px;
-}
-
-.section-title h2{
-  margin:0;
-  font-size:20px;
-}
-
-.list{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.row{
-  background:white;
+.search,input,select,textarea{
+  width:100%;
   border:1px solid var(--line);
-  border-radius:16px;
-  padding:14px;
+  border-radius:13px;
+  padding:12px;
+  background:#fff;
+  font:inherit;
+}
+.search{margin-bottom:14px}
+label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin:12px 0 6px;
+}
+textarea{min-height:90px}
+.row{
   display:flex;
   align-items:center;
   gap:12px;
-  box-shadow:var(--shadow);
-}
-
-.row.clickable{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:14px;
+  margin-bottom:10px;
   cursor:pointer;
 }
-
-.row-main{
-  flex:1;
-}
-
-.row-title{
-  font-weight:800;
-  margin-bottom:4px;
-}
-
-.row-sub{
-  font-size:13px;
+.row-main{flex:1}
+.title{font-weight:800}
+.sub{
   color:var(--muted);
+  font-size:13px;
+  margin-top:3px;
 }
-
 .badge{
+  font-size:12px;
+  font-weight:700;
   padding:6px 9px;
   border-radius:999px;
-  font-size:12px;
-  font-weight:800;
 }
-
-.badge.green{
-  color:#18854f;
-  background:var(--green-light);
+.available{
+  background:#e5f8ee;
+  color:#16814c;
 }
-
-.badge.purple{
+.used{
+  background:var(--light);
   color:#6039c7;
-  background:var(--purple-light);
 }
-
-.badge.orange{
-  color:#9a6b12;
-  background:var(--orange-light);
-}
-
 .btn{
+  width:100%;
   border:0;
   border-radius:13px;
-  padding:12px 15px;
+  padding:13px;
   font-weight:800;
-  background:#ececf2;
-  color:#292932;
+  margin-top:10px;
+  cursor:pointer;
 }
-
-.btn.purple{
+.purple{
   background:var(--purple);
-  color:white;
+  color:#fff;
 }
-
-.btn.soft{
-  background:var(--purple-light);
+.soft{
+  background:var(--light);
   color:#6039c7;
 }
-
-.btn.green{
-  background:var(--green);
-  color:white;
+.gray{
+  background:#ededf2;
+  color:#222;
 }
-
-.btn.red{
+.red{
   background:var(--red);
-  color:white;
+  color:#fff;
 }
-
-.btn.full{
-  width:100%;
+.small{
+  width:auto;
+  padding:9px 12px;
+  margin:0;
 }
-
-.btn.small{
-  padding:8px 11px;
-  font-size:13px;
-}
-
-.field{
+.heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
   margin-bottom:14px;
 }
-
-.field label{
-  display:block;
-  font-size:13px;
-  font-weight:800;
-  margin-bottom:6px;
-}
-
-.field input,
-.field textarea,
-.field select{
-  width:100%;
-  padding:12px;
-  border:1px solid var(--line);
-  border-radius:13px;
-  background:white;
-  outline:none;
-}
-
-.field textarea{
-  min-height:90px;
-}
-
-.info-box{
-  background:white;
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:14px;
-  margin-bottom:12px;
-}
-
-.info-label{
-  font-size:12px;
-  color:var(--muted);
-}
-
-.info-value{
-  font-weight:800;
-  margin-top:4px;
-}
-
-.qr{
-  width:150px;
-  height:150px;
-  margin:15px auto;
-  border:10px solid white;
-  box-shadow:0 0 0 2px var(--line);
-  background:
-    linear-gradient(90deg,#111 12px,transparent 12px) 0 0/30px 30px,
-    linear-gradient(#111 12px,transparent 12px) 0 0/30px 30px,
-    linear-gradient(90deg,transparent 15px,#111 15px,#111 24px,transparent 24px) 0 0/30px 30px,
-    linear-gradient(transparent 15px,#111 15px,#111 24px,transparent 24px) 0 0/30px 30px;
-}
-
-.qr-label{
-  text-align:center;
-  font-size:32px;
-  font-weight:900;
-}
-
-.two-buttons{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.bottom-nav{
+.heading h2{margin:0}
+.bottom{
   position:fixed;
   bottom:0;
   left:50%;
   transform:translateX(-50%);
   width:min(520px,100%);
-  background:white;
+  background:#fff;
   border-top:1px solid var(--line);
   display:grid;
   grid-template-columns:repeat(5,1fr);
-  padding:8px 6px calc(8px + env(safe-area-inset-bottom));
-  z-index:40;
+  padding:8px;
 }
-
 .nav{
   border:0;
   background:transparent;
   font-size:11px;
-  color:#666674;
-  padding:5px;
 }
-
 .nav span{
   display:block;
   font-size:20px;
 }
-
-.nav.active{
-  color:var(--purple);
-  font-weight:900;
-}
-
 .drawer{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:50;
+}
+.drawer.open{display:block}
+.shade{
+  position:absolute;
+  inset:0;
+  background:#0006;
+}
+.menu{
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  width:82%;
+  max-width:340px;
+  background:#fff;
+  padding:22px 15px;
+}
+.menu h2{margin-top:10px}
+.menu div{
+  padding:14px;
+  border-radius:12px;
+  cursor:pointer;
+}
+.menu div:hover{background:var(--light)}
+.qr{
+  width:155px;
+  height:155px;
+  margin:18px auto;
+  border:10px solid white;
+  box-shadow:0 0 0 2px #ddd;
+  background:
+  repeating-linear-gradient(45deg,#111 0 10px,#fff 10px 20px),
+  repeating-linear-gradient(-45deg,#111 0 10px,#fff 10px 20px);
+}
+.qrcode{
+  font-size:34px;
+  font-weight:900;
+  text-align:center;
+}
+.center{text-align:center}
+.modal{
+  display:none;
   position:fixed;
   inset:0;
   z-index:100;
-  display:none;
-}
-
-.drawer.open{
-  display:block;
-}
-
-.drawer-shade{
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.28);
-}
-
-.drawer-panel{
-  position:absolute;
-  left:0;
-  top:0;
-  bottom:0;
-  width:min(350px,86vw);
-  background:white;
-  padding:20px 15px;
-}
-
-.drawer-title{
-  font-size:22px;
-  font-weight:900;
-  margin:12px 8px 22px;
-}
-
-.menu-item{
-  padding:14px;
-  border-radius:13px;
-  font-weight:750;
-}
-
-.menu-item:active{
-  background:var(--purple-light);
-}
-
-.modal{
-  position:fixed;
-  inset:0;
-  display:none;
-  z-index:200;
   align-items:center;
   justify-content:center;
   padding:20px;
 }
-
-.modal.open{
-  display:flex;
-}
-
+.modal.open{display:flex}
 .modal-bg{
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,.42);
+  background:#0007;
 }
-
 .modal-card{
   position:relative;
-  width:100%;
-  max-width:430px;
-  background:white;
+  background:#fff;
   border-radius:22px;
   padding:20px;
+  width:100%;
+  max-width:420px;
 }
-
-.modal-card h2{
-  margin-top:0;
-}
-
-.order-sheet table{
+table{
   width:100%;
   border-collapse:collapse;
 }
-
-.order-sheet th{
-  font-size:12px;
-  text-align:left;
-  color:var(--muted);
+th,td{
   padding:8px 4px;
+  border-bottom:1px solid var(--line);
 }
-
-.order-sheet td{
-  border-top:1px solid var(--line);
-  padding:7px 4px;
-}
-
-.order-sheet input{
-  width:100%;
+td input{
   border:0;
-  outline:none;
-  background:transparent;
+  padding:7px;
 }
-
-.scan-box{
+.scan{
   height:330px;
   border-radius:20px;
   background:#222;
-  color:white;
+  color:#fff;
   display:flex;
   align-items:center;
   justify-content:center;
   flex-direction:column;
-  text-align:center;
-  padding:20px;
 }
-
-.scan-frame{
-  width:180px;
-  height:180px;
+.frame{
+  width:175px;
+  height:175px;
   border:4px solid #a77cff;
   border-radius:20px;
-  margin-bottom:20px;
-}
-
-.center{
-  text-align:center;
-}
-
-.space{
-  height:10px;
 }
 </style>
 </head>
@@ -471,1516 +285,1116 @@ main{
 
 <div class="app">
 
-  <header class="topbar">
-    <button class="icon-button" onclick="openMenu()">☰</button>
-    <h1 id="pageTitle">Plumbing Supply Manager</h1>
-    <button class="icon-button">🔔</button>
-  </header>
+<header>
+<button class="icon" onclick="menuOpen()">☰</button>
+<h1 id="pageTitle">Plumbing Supply Manager</h1>
+<button class="icon">🔔</button>
+</header>
 
-  <main id="content"></main>
+<main id="main"></main>
 
 </div>
 
-<div class="bottom-nav">
-  <button class="nav active" onclick="showHome(this)">
-    <span>⌂</span>Home
-  </button>
-
-  <button class="nav" onclick="showMyOrders(this)">
-    <span>▣</span>My Orders
-  </button>
-
-  <button class="nav" onclick="showScan(this)">
-    <span>◎</span>Scan
-  </button>
-
-  <button class="nav" onclick="showReminders(this)">
-    <span>🔔</span>Reminders
-  </button>
-
-  <button class="nav" onclick="openMenu()">
-    <span>☰</span>More
-  </button>
+<div class="bottom">
+<button class="nav" onclick="home()"><span>⌂</span>Home</button>
+<button class="nav" onclick="orders()"><span>📦</span>My Orders</button>
+<button class="nav" onclick="scan()"><span>◎</span>Scan</button>
+<button class="nav" onclick="reminders()"><span>🔔</span>Reminders</button>
+<button class="nav" onclick="menuOpen()"><span>☰</span>More</button>
 </div>
 
 <div id="drawer" class="drawer">
-  <div class="drawer-shade" onclick="closeMenu()"></div>
+<div class="shade" onclick="menuClose()"></div>
+<div class="menu">
 
-  <div class="drawer-panel">
-    <div class="drawer-title">Plumbing Supply Manager</div>
+<h2>Plumbing Supply Manager</h2>
 
-    <div class="menu-item" onclick="showHome();closeMenu()">⌂ Home</div>
-    <div class="menu-item" onclick="showMyOrders();closeMenu()">▣ My Orders</div>
-    <div class="menu-item" onclick="showQuotes();closeMenu()">▤ Quotes</div>
-    <div class="menu-item" onclick="showCustomers();closeMenu()">👥 Customers</div>
-    <div class="menu-item" onclick="showCreateOrder();closeMenu()">＋ Create Order</div>
-    <div class="menu-item" onclick="showInvoices();closeMenu()">▧ Invoices</div>
-    <div class="menu-item" onclick="showReminders();closeMenu()">🔔 Reminders</div>
+<div onclick="home();menuClose()">⌂ Home</div>
+<div onclick="orders();menuClose()">📦 My Orders</div>
+<div onclick="quotes();menuClose()">📄 Quotes</div>
+<div onclick="customers();menuClose()">👥 Customers</div>
+<div onclick="createOrder();menuClose()">＋ Create Order</div>
+<div onclick="invoices();menuClose()">🧾 Invoices</div>
+<div onclick="reminders();menuClose()">🔔 Reminders</div>
 
-    <div class="menu-item"
-         onclick="showShelves();closeMenu()"
-         style="background:var(--purple-light);color:#6039c7;">
-      ▦ Shelf Locations
-    </div>
+<div onclick="shelfLocations();menuClose()"
+style="background:#efe8ff;color:#6039c7">
+▦ Shelf Locations
+</div>
 
-    <div class="menu-item" onclick="showCompleted();closeMenu()">✓ Completed Orders</div>
-    <div class="menu-item">👤 Team Members</div>
-    <div class="menu-item">⚙ Settings</div>
-  </div>
+<div onclick="completed();menuClose()">✅ Completed Orders</div>
+
+</div>
 </div>
 
 <div id="modal" class="modal">
-  <div class="modal-bg" onclick="closeModal()"></div>
-  <div id="modalContent" class="modal-card"></div>
+<div class="modal-bg" onclick="closeModal()"></div>
+<div id="modalCard" class="modal-card"></div>
 </div>
 
 <script>
 
-let shelves = [
-  {
-    code:"A1",
-    description:"Front Wall - Top Shelf",
-    orders:["Cross Roads"]
-  },
-  {
-    code:"A2",
-    description:"Front Wall - Middle Shelf",
-    orders:["K Knutson"]
-  },
-  {
-    code:"A3",
-    description:"Front Wall - Bottom Shelf",
-    orders:[]
-  },
-  {
-    code:"B1",
-    description:"Back Wall - Top Shelf",
-    orders:["Johnson"]
-  },
-  {
-    code:"B2",
-    description:"Back Wall - Middle Shelf",
-    orders:[]
-  },
-  {
-    code:"B3",
-    description:"Back Wall - Bottom Shelf",
-    orders:[]
-  },
-  {
-    code:"D4",
-    description:"Back Wall - Lower Shelf",
-    orders:["306 Preserve"]
-  }
+let shelves=[
+ {code:"A1",description:"Front Wall - Top Shelf",orders:[]},
+ {code:"A2",description:"Front Wall - Middle Shelf",orders:[]},
+ {code:"A3",description:"Front Wall - Bottom Shelf",orders:[]},
+ {code:"B1",description:"Back Wall - Top Shelf",orders:[]},
+ {code:"B2",description:"Back Wall - Middle Shelf",orders:[]},
+ {code:"B3",description:"Back Wall - Bottom Shelf",orders:[]}
 ];
 
-let completedOrders = [];
-
-let companies = {
-  "D Star Plumbing":[
-    "306 Preserve",
-    "Cross Roads",
-    "K Knutson",
-    "Johnson"
-  ],
-
-  "Ridgeline Plumbing":[
-    "Highland"
-  ],
-
-  "Durant / Slate":[
-    "Harvest Fields"
-  ],
-
-  "Goff Plumbing":[
-    "Stalker Farms"
-  ],
-
-  "Cable Plumbing":[]
+let companies={
+ "D Star Plumbing":["306 Preserve","Cross Roads","K Knutson","Johnson"],
+ "Ridgeline Plumbing":["Highland"],
+ "Durant / Slate":["Harvest Fields"],
+ "Goff Plumbing":["309 Stalker Farms"],
+ "Cable Plumbing":[]
 };
 
-let homeowners = [
-  "Ryan",
-  "Johnson Residence",
-  "Rebecca",
-  "John"
-];
+let homeowners=["Ryan","Johnson Residence","Rebecca","John"];
 
-function setTitle(text){
-  document.getElementById("pageTitle").textContent = text;
+let completedOrders=[];
+
+function title(t){
+ document.getElementById("pageTitle").textContent=t;
 }
 
-function setContent(html){
-  document.getElementById("content").innerHTML = html;
-  window.scrollTo(0,0);
+function content(h){
+ document.getElementById("main").innerHTML=h;
+ window.scrollTo(0,0);
 }
 
-function activeNav(button){
-  document.querySelectorAll(".nav").forEach(x => x.classList.remove("active"));
-  if(button) button.classList.add("active");
+function menuOpen(){
+ document.getElementById("drawer").classList.add("open");
 }
 
-function openMenu(){
-  document.getElementById("drawer").classList.add("open");
+function menuClose(){
+ document.getElementById("drawer").classList.remove("open");
 }
 
-function closeMenu(){
-  document.getElementById("drawer").classList.remove("open");
-}
-
-function openModal(html){
-  document.getElementById("modalContent").innerHTML = html;
-  document.getElementById("modal").classList.add("open");
+function modal(h){
+ document.getElementById("modalCard").innerHTML=h;
+ document.getElementById("modal").classList.add("open");
 }
 
 function closeModal(){
-  document.getElementById("modal").classList.remove("open");
+ document.getElementById("modal").classList.remove("open");
 }
 
-function showHome(button){
-  activeNav(button);
-  setTitle("Plumbing Supply Manager");
-
-  setContent(`
-    <input class="search" placeholder="Search anything..."
-      onkeyup="globalSearch(this.value)">
-
-    <div class="grid">
-
-      <div class="card home-card" onclick="showMyOrders()">
-        <div class="icon">📦</div>
-        <strong>My Orders</strong>
-      </div>
-
-      <div class="card home-card" onclick="showQuotes()">
-        <div class="icon">📄</div>
-        <strong>Quotes</strong>
-      </div>
-
-      <div class="card home-card" onclick="showCustomers()">
-        <div class="icon">👥</div>
-        <strong>Customers</strong>
-      </div>
-
-      <div class="card home-card create" onclick="showCreateOrder()">
-        <div class="icon">＋</div>
-        <strong>Create Order</strong>
-      </div>
-
-      <div class="card home-card" onclick="showInvoices()">
-        <div class="icon">🧾</div>
-        <strong>Invoices</strong>
-      </div>
-
-      <div class="card home-card" onclick="showReminders()">
-        <div class="icon">🔔</div>
-        <strong>Reminders</strong>
-      </div>
-
-    </div>
-  `);
+function save(){
+ localStorage.setItem("shelves",JSON.stringify(shelves));
+ localStorage.setItem("companies",JSON.stringify(companies));
+ localStorage.setItem("completed",JSON.stringify(completedOrders));
 }
 
-function globalSearch(value){
-  if(!value.trim()) return;
-
-  let v = value.toLowerCase();
-
-  for(let company in companies){
-    if(company.toLowerCase().includes(v)){
-      showCompany(company);
-      return;
-    }
-
-    let job = companies[company].find(x => x.toLowerCase().includes(v));
-
-    if(job){
-      showOrder(company,job);
-      return;
-    }
-  }
-
-  let shelf = shelves.find(x =>
-    x.code.toLowerCase() === v ||
-    x.description.toLowerCase().includes(v)
-  );
-
-  if(shelf){
-    showShelf(shelf.code);
-  }
+function load(){
+ if(localStorage.shelves) shelves=JSON.parse(localStorage.shelves);
+ if(localStorage.companies) companies=JSON.parse(localStorage.companies);
+ if(localStorage.completed) completedOrders=JSON.parse(localStorage.completed);
 }
 
-function showMyOrders(button){
-  activeNav(button);
-  setTitle("My Orders");
+function home(){
 
-  setContent(`
-    <div class="list">
+ title("Plumbing Supply Manager");
 
-      <div class="row clickable" onclick="showContractors()">
-        <div style="font-size:28px;">🔧</div>
+ content(`
+ <input class="search" placeholder="Search anything...">
 
-        <div class="row-main">
-          <div class="row-title">Plumbers / Contractors</div>
-          <div class="row-sub">Companies and jobs</div>
-        </div>
+ <div class="grid">
 
-        <div>›</div>
-      </div>
+ <div class="card home" onclick="orders()">
+ <div class="emoji">📦</div>
+ <strong>My Orders</strong>
+ </div>
 
-      <div class="row clickable" onclick="showHomeowners()">
-        <div style="font-size:28px;">🏠</div>
+ <div class="card home" onclick="quotes()">
+ <div class="emoji">📄</div>
+ <strong>Quotes</strong>
+ </div>
 
-        <div class="row-main">
-          <div class="row-title">Homeowners</div>
-          <div class="row-sub">Individual customer orders</div>
-        </div>
+ <div class="card home" onclick="customers()">
+ <div class="emoji">👥</div>
+ <strong>Customers</strong>
+ </div>
 
-        <div>›</div>
-      </div>
+ <div class="card home create" onclick="createOrder()">
+ <div class="emoji">＋</div>
+ <strong>Create Order</strong>
+ </div>
 
-    </div>
-  `);
+ <div class="card home" onclick="invoices()">
+ <div class="emoji">🧾</div>
+ <strong>Invoices</strong>
+ </div>
+
+ <div class="card home" onclick="reminders()">
+ <div class="emoji">🔔</div>
+ <strong>Reminders</strong>
+ </div>
+
+ </div>
+ `);
 }
 
-function showContractors(){
-  setTitle("Plumbers / Contractors");
+function orders(){
 
-  let rows = Object.keys(companies).map(company => `
-    <div class="row clickable" onclick="showCompany('${company.replaceAll("'","\\'")}')">
+ title("My Orders");
 
-      <div class="row-main">
-        <div class="row-title">${company}</div>
-        <div class="row-sub">${companies[company].length} active jobs</div>
-      </div>
+ content(`
+ <div class="row" onclick="contractors()">
+ <div style="font-size:28px">🔧</div>
+ <div class="row-main">
+ <div class="title">Plumbers / Contractors</div>
+ <div class="sub">Companies and jobs</div>
+ </div>
+ <div>›</div>
+ </div>
 
-      <div>›</div>
-    </div>
-  `).join("");
-
-  setContent(`
-    <button class="btn small" onclick="showMyOrders()">‹ Back</button>
-
-    <div class="space"></div>
-
-    <input class="search" placeholder="Search companies...">
-
-    <div class="list">
-      ${rows}
-    </div>
-  `);
+ <div class="row" onclick="homeownerList()">
+ <div style="font-size:28px">🏠</div>
+ <div class="row-main">
+ <div class="title">Homeowners</div>
+ <div class="sub">Individual orders</div>
+ </div>
+ <div>›</div>
+ </div>
+ `);
 }
 
-function showCompany(company){
-  setTitle(company);
+function contractors(){
 
-  let jobs = companies[company];
+ title("Plumbers / Contractors");
 
-  let rows = jobs.length
-    ? jobs.map(job => `
-      <div class="row clickable"
-           onclick="showOrder('${company.replaceAll("'","\\'")}','${job.replaceAll("'","\\'")}')">
+ let html=`<input class="search" placeholder="Search companies...">`;
 
-        <div class="row-main">
-          <div class="row-title">${job}</div>
-          <div class="row-sub">${getShelfForJob(job) || "No shelf assigned"}</div>
-        </div>
+ Object.keys(companies).forEach(c=>{
 
-        <div>›</div>
-      </div>
-    `).join("")
-    : `
-      <div class="card center">
-        No active jobs.
-      </div>
-    `;
+ html+=`
+ <div class="row" onclick="company('${c}')">
+ <div class="row-main">
+ <div class="title">${c}</div>
+ <div class="sub">${companies[c].length} active jobs</div>
+ </div>
+ <div>›</div>
+ </div>
+ `;
 
-  setContent(`
-    <button class="btn small" onclick="showContractors()">‹ Companies</button>
+ });
 
-    <div class="space"></div>
-
-    <div class="section-title">
-      <h2>Jobs / Orders</h2>
-    </div>
-
-    <div class="list">
-      ${rows}
-    </div>
-  `);
+ content(html);
 }
 
-function showHomeowners(){
-  setTitle("Homeowners");
+function company(c){
 
-  let rows = homeowners.map(name => `
-    <div class="row clickable"
-         onclick="showHomeownerOrder('${name.replaceAll("'","\\'")}')">
+ title(c);
 
-      <div class="row-main">
-        <div class="row-title">${name}</div>
-        <div class="row-sub">Homeowner</div>
-      </div>
+ let html=`
+ <button class="btn gray small" onclick="contractors()">‹ Companies</button>
+ <h2>Jobs / Orders</h2>
+ `;
 
-      <div>›</div>
-    </div>
-  `).join("");
+ companies[c].forEach(j=>{
 
-  setContent(`
-    <button class="btn small" onclick="showMyOrders()">‹ Back</button>
+ let shelf=findShelf(j);
 
-    <div class="space"></div>
+ html+=`
+ <div class="row" onclick="order('${c}','${j}')">
+ <div class="row-main">
+ <div class="title">${j}</div>
+ <div class="sub">${shelf ? "Shelf "+shelf.code : "No shelf assigned"}</div>
+ </div>
+ <div>›</div>
+ </div>
+ `;
 
-    <input class="search" placeholder="Search homeowners...">
+ });
 
-    <div class="list">
-      ${rows}
-    </div>
-  `);
+ content(html);
 }
 
-function showHomeownerOrder(name){
-  setTitle(name);
+function homeownerList(){
 
-  setContent(`
-    <button class="btn small" onclick="showHomeowners()">‹ Homeowners</button>
+ title("Homeowners");
 
-    <div class="space"></div>
+ let html=`<input class="search" placeholder="Search homeowners...">`;
 
-    <div class="card">
+ homeowners.forEach(h=>{
 
-      <h2 style="margin-top:0">${name}</h2>
+ html+=`
+ <div class="row">
+ <div class="row-main">
+ <div class="title">${h}</div>
+ <div class="sub">Homeowner</div>
+ </div>
+ <div>›</div>
+ </div>
+ `;
 
-      <div class="info-box">
-        <div class="info-label">Item</div>
-        <div class="info-value">Kitchen Faucet</div>
-        <div class="row-sub">Ordered: 1 &nbsp; Received: 1</div>
-      </div>
+ });
 
-      <div class="info-box">
-        <div class="info-label">Item</div>
-        <div class="info-value">Shower Trim</div>
-        <div class="row-sub">Ordered: 2 &nbsp; Received: 1</div>
-      </div>
-
-      <div class="field">
-        <label>Notes</label>
-        <textarea></textarea>
-      </div>
-
-      <div class="field">
-        <label>PO #</label>
-        <input>
-      </div>
-
-      <div class="field">
-        <label>SOE / Invoice</label>
-        <input>
-      </div>
-
-    </div>
-  `);
+ content(html);
 }
 
-function getShelfForJob(job){
-  let shelf = shelves.find(x => x.orders.includes(job));
-  return shelf ? "Shelf " + shelf.code : null;
+function findShelf(job){
+ return shelves.find(s=>s.orders.includes(job));
 }
 
-function showOrder(company,job){
-  setTitle("Order Details");
+function order(c,j){
 
-  let shelf = shelves.find(x => x.orders.includes(job));
+ title("Order Details");
 
-  let shelfHTML = shelf
-    ? `
-      <div class="info-box">
-        <div class="info-label">Shelf Location</div>
-        <div class="info-value">▦ ${shelf.code}</div>
-        <div class="row-sub">${shelf.description}</div>
-      </div>
-    `
-    : `
-      <div class="info-box">
-        <div class="info-label">Shelf Location</div>
-        <div class="info-value">Not Assigned</div>
-      </div>
-    `;
+ let shelf=findShelf(j);
 
-  setContent(`
-    <button class="btn small"
-      onclick="showCompany('${company.replaceAll("'","\\'")}')">
-      ‹ ${company}
-    </button>
+ content(`
 
-    <div class="space"></div>
+ <button class="btn gray small" onclick="company('${c}')">
+ ‹ ${c}
+ </button>
 
-    <div class="card">
+ <div class="card">
 
-      <h2 style="margin:0 0 5px;">${job}</h2>
-      <div class="row-sub" style="margin-bottom:16px;">${company}</div>
+ <h2>${j}</h2>
+ <div class="sub">${c}</div>
 
-      ${shelfHTML}
+ <br>
 
-      <div class="row clickable">
-        <div class="row-main">
-          <div class="row-title">Items</div>
-          <div class="row-sub">5 items</div>
-        </div>
-        <div>›</div>
-      </div>
+ <div class="card">
+ <div class="sub">Shelf Location</div>
+ <div class="title">
+ ${shelf ? "▦ "+shelf.code : "Not Assigned"}
+ </div>
+ ${shelf ? `<div class="sub">${shelf.description}</div>` : ""}
+ </div>
 
-      <div class="space"></div>
+ <div class="row">
+ <div class="row-main">
+ <div class="title">Items</div>
+ <div class="sub">View received and missing items</div>
+ </div>
+ <div>›</div>
+ </div>
 
-      <div class="row clickable">
-        <div class="row-main">
-          <div class="row-title">Notes</div>
-        </div>
-        <div>›</div>
-      </div>
+ <div class="row">
+ <div class="row-main">
+ <div class="title">Notes</div>
+ </div>
+ <div>›</div>
+ </div>
 
-      <div class="space"></div>
+ <div class="row">
+ <div class="row-main">
+ <div class="title">Shelf Photo</div>
+ <div class="sub">Photo of all boxes together</div>
+ </div>
+ <div>›</div>
+ </div>
 
-      <div class="row clickable">
-        <div class="row-main">
-          <div class="row-title">Shelf Photo</div>
-          <div class="row-sub">Photo of all boxes on shelf</div>
-        </div>
-        <div>›</div>
-      </div>
+ <div class="row">
+ <div class="row-main">
+ <div class="title">Invoices</div>
+ </div>
+ <div>›</div>
+ </div>
 
-      <div class="space"></div>
+ <button class="btn soft"
+ onclick="chooseShelf('${c}','${j}')">
+ ${shelf ? "Move to Another Shelf" : "Assign Shelf"}
+ </button>
 
-      <div class="row clickable">
-        <div class="row-main">
-          <div class="row-title">Invoices</div>
-        </div>
-        <div>›</div>
-      </div>
+ <button class="btn purple"
+ onclick="sendConfirm('${c}','${j}')">
+ Send Out Order
+ </button>
 
-      <div class="space"></div>
-
-      <button class="btn full soft"
-        onclick="chooseShelf('${company.replaceAll("'","\\'")}','${job.replaceAll("'","\\'")}')">
-        ${shelf ? "Move to Another Shelf" : "Assign Shelf"}
-      </button>
-
-      <div class="space"></div>
-
-      <button class="btn full purple"
-        onclick="confirmSendOut('${company.replaceAll("'","\\'")}','${job.replaceAll("'","\\'")}')">
-        Send Out Order
-      </button>
-
-    </div>
-  `);
+ </div>
+ `);
 }
 
-function chooseShelf(company,job){
+function chooseShelf(c,j){
 
-  let buttons = shelves.map(shelf => `
-    <div class="row clickable"
-         onclick="assignShelf(
-           '${company.replaceAll("'","\\'")}',
-           '${job.replaceAll("'","\\'")}',
-           '${shelf.code}'
-         )">
+ let h=`
+ <h2>Assign Shelf</h2>
 
-      <div class="row-main">
-        <div class="row-title">${shelf.code}</div>
-        <div class="row-sub">${shelf.description}</div>
-      </div>
+ <button class="btn purple"
+ onclick="closeModal();scanShelfForOrder('${c}','${j}')">
+ Scan Shelf QR
+ </button>
 
-      <span class="badge ${shelf.orders.length ? "purple" : "green"}">
-        ${shelf.orders.length ? shelf.orders.length+" Order" : "Available"}
-      </span>
+ <p class="sub">Or choose a shelf:</p>
+ `;
 
-    </div>
-  `).join("");
+ shelves.forEach(s=>{
 
-  openModal(`
-    <h2>Assign Shelf</h2>
-    <p style="color:var(--muted)">Choose a shelf or scan its QR code.</p>
+ h+=`
+ <div class="row"
+ onclick="assignShelf('${c}','${j}','${s.code}')">
 
-    <button class="btn full purple"
-      onclick="closeModal();showShelfScan('${company.replaceAll("'","\\'")}','${job.replaceAll("'","\\'")}')">
-      Scan Shelf QR
-    </button>
+ <div class="row-main">
+ <div class="title">${s.code}</div>
+ <div class="sub">${s.description}</div>
+ </div>
 
-    <div class="space"></div>
+ <span class="badge ${s.orders.length?"used":"available"}">
+ ${s.orders.length ? s.orders.length+" Order" : "Available"}
+ </span>
 
-    <div class="list">
-      ${buttons}
-    </div>
+ </div>
+ `;
 
-    <div class="space"></div>
+ });
 
-    <button class="btn full" onclick="closeModal()">Cancel</button>
-  `);
+ h+=`<button class="btn gray" onclick="closeModal()">Cancel</button>`;
+
+ modal(h);
 }
 
-function assignShelf(company,job,code){
+function assignShelf(c,j,code){
 
-  shelves.forEach(shelf => {
-    shelf.orders = shelf.orders.filter(x => x !== job);
-  });
+ shelves.forEach(s=>{
+   s.orders=s.orders.filter(x=>x!==j);
+ });
 
-  let shelf = shelves.find(x => x.code === code);
+ let shelf=shelves.find(s=>s.code===code);
 
-  if(shelf && !shelf.orders.includes(job)){
-    shelf.orders.push(job);
-  }
+ if(shelf) shelf.orders.push(j);
 
-  saveData();
+ save();
 
-  closeModal();
+ closeModal();
 
-  showOrder(company,job);
+ order(c,j);
 }
 
-function confirmSendOut(company,job){
+function sendConfirm(c,j){
 
-  let shelfCode = getShelfForJob(job);
+ let shelf=findShelf(j);
 
-  openModal(`
-    <h2>Send Out Order</h2>
+ modal(`
 
-    <p>
-      Has <strong>${job}</strong> left the showroom?
-    </p>
+ <h2>Send Out Order</h2>
 
-    <p style="color:var(--muted)">
-      This will remove the order from
-      ${shelfCode ? "<strong>"+shelfCode+"</strong>" : "its shelf"}
-      and move it to Completed Orders.
-    </p>
+ <p>
+ Has <strong>${j}</strong> left the showroom?
+ </p>
 
-    <button class="btn full purple"
-      onclick="sendOutOrder('${company.replaceAll("'","\\'")}','${job.replaceAll("'","\\'")}')">
-      Yes, Send Out Order
-    </button>
+ <p class="sub">
+ This will remove the job from
+ ${shelf ? "Shelf "+shelf.code : "its shelf location"}
+ and move it into Completed Orders.
+ </p>
 
-    <div class="space"></div>
+ <button class="btn purple"
+ onclick="sendOut('${c}','${j}')">
+ Yes, Send Out Order
+ </button>
 
-    <button class="btn full" onclick="closeModal()">
-      Cancel
-    </button>
-  `);
+ <button class="btn gray" onclick="closeModal()">
+ Cancel
+ </button>
+
+ `);
 }
 
-function sendOutOrder(company,job){
+function sendOut(c,j){
 
-  let oldShelf = shelves.find(x => x.orders.includes(job));
+ let shelf=findShelf(j);
 
-  shelves.forEach(shelf => {
-    shelf.orders = shelf.orders.filter(x => x !== job);
-  });
+ shelves.forEach(s=>{
+   s.orders=s.orders.filter(x=>x!==j);
+ });
 
-  companies[company] = companies[company].filter(x => x !== job);
+ companies[c]=companies[c].filter(x=>x!==j);
 
-  completedOrders.unshift({
-    company:company,
-    job:job,
-    shelf:oldShelf ? oldShelf.code : "None",
-    date:new Date().toLocaleDateString()
-  });
+ completedOrders.unshift({
+   company:c,
+   job:j,
+   shelf:shelf?shelf.code:"None",
+   date:new Date().toLocaleDateString()
+ });
 
-  saveData();
+ save();
 
-  openModal(`
-    <div class="center">
+ modal(`
 
-      <div style="font-size:65px;">✅</div>
+ <div class="center">
 
-      <h2>Order Sent Out!</h2>
+ <div style="font-size:60px">✅</div>
 
-      <p style="color:var(--muted)">
-        ${job} has been removed from
-        ${oldShelf ? "Shelf "+oldShelf.code : "its active location"}
-        and moved to Completed Orders.
-      </p>
+ <h2>Order Sent Out!</h2>
 
-      <button class="btn full purple"
-        onclick="closeModal();showCompleted()">
-        View Completed Orders
-      </button>
+ <p class="sub">
+ ${j} has been removed from
+ ${shelf ? "Shelf "+shelf.code : "the active orders"}
+ and moved to Completed Orders.
+ </p>
 
-      <div class="space"></div>
+ <button class="btn purple"
+ onclick="closeModal();completed()">
+ View Completed Orders
+ </button>
 
-      <button class="btn full"
-        onclick="closeModal();showCompany('${company.replaceAll("'","\\'")}')">
-        Back to ${company}
-      </button>
+ </div>
 
-    </div>
-  `);
+ `);
 }
 
-function showShelves(){
-  setTitle("Shelf Locations");
+function shelfLocations(){
 
-  let rows = shelves.map(shelf => `
-    <div class="row clickable"
-         onclick="showShelf('${shelf.code}')">
+ title("Shelf Locations");
 
-      <div style="font-size:24px;">▦</div>
+ let h=`
 
-      <div class="row-main">
-        <div class="row-title">${shelf.code}</div>
-        <div class="row-sub">${shelf.description}</div>
-      </div>
+ <div class="heading">
 
-      <span class="badge ${shelf.orders.length ? "purple" : "green"}">
-        ${
-          shelf.orders.length
-          ? shelf.orders.length + (shelf.orders.length===1 ? " Order" : " Orders")
-          : "Available"
-        }
-      </span>
+ <h2>All Shelves</h2>
 
-    </div>
-  `).join("");
+ <button class="btn purple small"
+ onclick="addShelf()">
+ + Add Shelf
+ </button>
 
-  setContent(`
-    <div class="section-title">
-      <h2>All Shelves</h2>
+ </div>
 
-      <button class="btn purple small"
-        onclick="showAddShelf()">
-        + Add Shelf
-      </button>
-    </div>
+ <input class="search" placeholder="Search shelves...">
+ `;
 
-    <input class="search"
-      placeholder="Search shelves..."
-      onkeyup="filterShelves(this.value)">
+ shelves.forEach(s=>{
 
-    <div id="shelfList" class="list">
-      ${rows}
-    </div>
-  `);
+ h+=`
+ <div class="row" onclick="viewShelf('${s.code}')">
+
+ <div style="font-size:24px">▦</div>
+
+ <div class="row-main">
+ <div class="title">${s.code}</div>
+ <div class="sub">${s.description}</div>
+ </div>
+
+ <span class="badge ${s.orders.length?"used":"available"}">
+
+ ${
+ s.orders.length
+ ? s.orders.length+(s.orders.length===1?" Order":" Orders")
+ : "Available"
+ }
+
+ </span>
+
+ </div>
+ `;
+
+ });
+
+ content(h);
 }
 
-function filterShelves(value){
+function addShelf(){
 
-  let v = value.toLowerCase();
+ title("Add Shelf");
 
-  document.querySelectorAll("#shelfList .row").forEach(row => {
-    row.style.display =
-      row.innerText.toLowerCase().includes(v)
-      ? "flex"
-      : "none";
-  });
+ content(`
+
+ <button class="btn gray small"
+ onclick="shelfLocations()">
+ ‹ Shelf Locations
+ </button>
+
+ <div class="card">
+
+ <label>Shelf Code *</label>
+
+ <input id="shelfCode"
+ placeholder="Example: D4">
+
+ <label>Description</label>
+
+ <input id="shelfDescription"
+ placeholder="Example: Back Wall - Lower Shelf">
+
+ <label>Shelf Photo</label>
+
+ <button class="btn soft">
+ 📷 Add Shelf Photo
+ </button>
+
+ <button class="btn purple"
+ onclick="saveShelf()">
+ Save Shelf
+ </button>
+
+ </div>
+
+ `);
 }
 
-function showAddShelf(){
-  setTitle("Add Shelf");
+function saveShelf(){
 
-  setContent(`
-    <button class="btn small"
-      onclick="showShelves()">
-      ‹ Shelf Locations
-    </button>
+ let code=document
+ .getElementById("shelfCode")
+ .value.trim().toUpperCase();
 
-    <div class="space"></div>
+ let description=document
+ .getElementById("shelfDescription")
+ .value.trim();
 
-    <div class="card">
+ if(!code){
+   alert("Please enter a shelf code.");
+   return;
+ }
 
-      <div class="field">
-        <label>Shelf Code *</label>
-        <input id="newShelfCode"
-          placeholder="Example: D4">
-      </div>
+ if(shelves.find(s=>s.code===code)){
+   alert("That shelf already exists.");
+   return;
+ }
 
-      <div class="field">
-        <label>Description</label>
-        <input id="newShelfDescription"
-          placeholder="Example: Back Wall - Lower Shelf">
-      </div>
+ shelves.push({
+   code:code,
+   description:description||"Shelf Location",
+   orders:[]
+ });
 
-      <div class="field">
-        <label>Shelf Photo</label>
-        <button class="btn full">
-          📷 Add Shelf Photo
-        </button>
-      </div>
+ save();
 
-      <button class="btn full purple"
-        onclick="saveNewShelf()">
-        Save Shelf
-      </button>
-
-    </div>
-  `);
+ shelfAdded(code);
 }
 
-function saveNewShelf(){
+function shelfAdded(code){
 
-  let code =
-    document.getElementById("newShelfCode")
-    .value
-    .trim()
-    .toUpperCase();
+ let shelf=shelves.find(s=>s.code===code);
 
-  let description =
-    document.getElementById("newShelfDescription")
-    .value
-    .trim();
+ title("Shelf Added");
 
-  if(!code){
-    alert("Please enter a Shelf Code.");
-    return;
-  }
+ content(`
 
-  if(shelves.some(x => x.code === code)){
-    alert("That shelf already exists.");
-    return;
-  }
+ <div class="card center">
 
-  shelves.push({
-    code:code,
-    description:description || "Shelf Location",
-    orders:[]
-  });
+ <div style="font-size:60px">✅</div>
 
-  saveData();
+ <h2>Shelf ${code} Added!</h2>
 
-  showShelfAdded(code);
+ <p class="sub">${shelf.description}</p>
+
+ <div class="qr"></div>
+
+ <div class="qrcode">${code}</div>
+
+ <p class="sub">
+ This QR belongs permanently to Shelf ${code}.
+ </p>
+
+ <button class="btn purple"
+ onclick="viewShelf('${code}')">
+ View Shelf
+ </button>
+
+ <button class="btn soft"
+ onclick="addShelf()">
+ Add Another Shelf
+ </button>
+
+ </div>
+
+ `);
 }
 
-function showShelfAdded(code){
+function viewShelf(code){
 
-  let shelf = shelves.find(x => x.code === code);
+ let shelf=shelves.find(s=>s.code===code);
 
-  setTitle("Shelf Added");
+ title("Shelf Details");
 
-  setContent(`
-    <div class="card center">
+ let ordersHTML="";
 
-      <div style="font-size:62px;">✅</div>
+ if(shelf.orders.length===0){
 
-      <h2>Shelf ${code} Added!</h2>
+ ordersHTML=`
+ <div class="card center">
+ <div style="font-size:42px">📭</div>
+ <h3>No orders on this shelf</h3>
+ <p class="sub">Shelf ${code} is available.</p>
+ </div>
+ `;
 
-      <p style="color:var(--muted)">
-        ${shelf.description}
-      </p>
+ }else{
 
-      <div class="qr"></div>
+ shelf.orders.forEach(j=>{
 
-      <div class="qr-label">
-        ${code}
-      </div>
+ let c=Object.keys(companies)
+ .find(x=>companies[x].includes(j))||"";
 
-      <p style="color:var(--muted)">
-        This QR represents Shelf ${code}.
-        Print the label and place it permanently on the shelf.
-      </p>
+ ordersHTML+=`
+ <div class="row" onclick="order('${c}','${j}')">
+ <div class="row-main">
+ <div class="title">${j}</div>
+ <div class="sub">${c}</div>
+ </div>
+ <div>›</div>
+ </div>
+ `;
 
-      <button class="btn full purple"
-        onclick="showShelf('${code}')">
-        View Shelf
-      </button>
+ });
 
-      <div class="space"></div>
+ }
 
-      <button class="btn full soft"
-        onclick="showAddShelf()">
-        Add Another Shelf
-      </button>
+ content(`
 
-    </div>
-  `);
+ <button class="btn gray small"
+ onclick="shelfLocations()">
+ ‹ Shelf Locations
+ </button>
+
+ <div class="card center">
+
+ <div class="qr"></div>
+
+ <div class="qrcode">${shelf.code}</div>
+
+ <strong>${shelf.description}</strong>
+
+ <br><br>
+
+ <span class="badge ${shelf.orders.length?"used":"available"}">
+
+ ${
+ shelf.orders.length
+ ? shelf.orders.length+" Order"
+ : "Available"
+ }
+
+ </span>
+
+ <button class="btn purple"
+ onclick="scanShelf()">
+ Scan Shelf
+ </button>
+
+ </div>
+
+ <h2>Orders on This Shelf</h2>
+
+ ${ordersHTML}
+
+ `);
 }
 
-function showShelf(code){
+function scan(){
 
-  let shelf = shelves.find(x => x.code === code);
+ title("Scan");
 
-  if(!shelf) return;
+ content(`
 
-  setTitle("Shelf Details");
+ <div class="scan">
 
-  let orderRows = shelf.orders.length
-    ? shelf.orders.map(job => {
+ <div class="frame"></div>
 
-        let company =
-          Object.keys(companies)
-          .find(c => companies[c].includes(job)) || "";
+ <h2>Camera</h2>
 
-        return `
-          <div class="row clickable"
-            onclick="showOrder('${company.replaceAll("'","\\'")}','${job.replaceAll("'","\\'")}')">
+ <p>Scan or take a photo</p>
 
-            <div class="row-main">
-              <div class="row-title">${job}</div>
-              <div class="row-sub">${company}</div>
-            </div>
+ </div>
 
-            <div>›</div>
-          </div>
-        `;
-      }).join("")
-    : `
-      <div class="card center">
-        <div style="font-size:42px;">📭</div>
+ <button class="btn purple"
+ onclick="scanChoices()">
+ TEST SCAN
+ </button>
 
-        <h3>No orders on this shelf</h3>
-
-        <p style="color:var(--muted)">
-          Shelf ${code} is available.
-        </p>
-      </div>
-    `;
-
-  setContent(`
-    <button class="btn small"
-      onclick="showShelves()">
-      ‹ Shelf Locations
-    </button>
-
-    <div class="space"></div>
-
-    <div class="card center">
-
-      <div class="qr"></div>
-
-      <div class="qr-label">${shelf.code}</div>
-
-      <div style="font-weight:800;margin-top:5px;">
-        ${shelf.description}
-      </div>
-
-      <div style="margin-top:10px;">
-        <span class="badge ${shelf.orders.length ? "purple" : "green"}">
-          ${
-            shelf.orders.length
-            ? shelf.orders.length + " Order"
-            : "Available"
-          }
-        </span>
-      </div>
-
-      <div class="space"></div>
-
-      <div class="two-buttons">
-        <button class="btn soft"
-          onclick="editShelf('${shelf.code}')">
-          Edit Shelf
-        </button>
-
-        <button class="btn purple"
-          onclick="showLocationScan()">
-          Scan Shelf
-        </button>
-      </div>
-
-    </div>
-
-    <div class="space"></div>
-
-    <div class="section-title">
-      <h2>Orders on This Shelf</h2>
-    </div>
-
-    <div class="list">
-      ${orderRows}
-    </div>
-  `);
+ `);
 }
 
-function editShelf(code){
+function scanChoices(){
 
-  let shelf = shelves.find(x => x.code === code);
+ title("What is this?");
 
-  openModal(`
-    <h2>Edit Shelf ${code}</h2>
+ content(`
 
-    <div class="field">
-      <label>Description</label>
-      <input id="editShelfDescription"
-        value="${shelf.description}">
-    </div>
+ <div class="grid">
 
-    <button class="btn full purple"
-      onclick="saveShelfEdit('${code}')">
-      Save Changes
-    </button>
+ <div class="card home" onclick="boxScan()">
+ <div class="emoji">📦</div>
+ <strong>Box Scan</strong>
+ </div>
 
-    <div class="space"></div>
+ <div class="card home" onclick="invoices()">
+ <div class="emoji">🧾</div>
+ <strong>Invoice Scan</strong>
+ </div>
 
-    <button class="btn full"
-      onclick="closeModal()">
-      Cancel
-    </button>
-  `);
+ <div class="card home" onclick="quotes()">
+ <div class="emoji">📄</div>
+ <strong>Quote Scan</strong>
+ </div>
+
+ <div class="card home" onclick="scanShelf()">
+ <div class="emoji">▦</div>
+ <strong>Location Scan</strong>
+ </div>
+
+ </div>
+
+ `);
 }
 
-function saveShelfEdit(code){
+function boxScan(){
 
-  let shelf = shelves.find(x => x.code === code);
+ title("Box Scan");
 
-  shelf.description =
-    document.getElementById("editShelfDescription").value;
+ content(`
 
-  saveData();
+ <div class="card">
 
-  closeModal();
+ <h2>Scan the Box</h2>
 
-  showShelf(code);
+ <p class="sub">
+ Scan the actual product box or item label.
+ </p>
+
+ <label>Company / Plumber</label>
+
+ <select>
+ <option>D Star Plumbing</option>
+ <option>Ridgeline Plumbing</option>
+ </select>
+
+ <label>Job / Order</label>
+
+ <select>
+ <option>306 Preserve</option>
+ <option>Cross Roads</option>
+ </select>
+
+ <label>Item</label>
+ <input value="Shower Trim">
+
+ <label>Quantity</label>
+ <input type="number" value="1">
+
+ <button class="btn purple"
+ onclick="scanShelfForOrder('D Star Plumbing','306 Preserve')">
+ Next: Scan Shelf QR
+ </button>
+
+ </div>
+
+ `);
 }
 
-function showShelfScan(company="",job=""){
+function scanShelfForOrder(c,j){
 
-  setTitle("Scan Shelf");
+ title("Scan Shelf to Assign");
 
-  setContent(`
-    <div class="scan-box">
+ content(`
 
-      <div class="scan-frame"></div>
+ <div class="scan">
 
-      <h2>Scan Shelf QR Code</h2>
+ <div class="frame"></div>
 
-      <p>
-        Position the shelf QR code inside the frame.
-      </p>
+ <h2>Scan Shelf QR</h2>
 
-    </div>
+ <p>
+ Position the shelf QR code in the frame.
+ </p>
 
-    <div class="space"></div>
+ </div>
 
-    <button class="btn full purple"
-      onclick="${
-        company && job
-          ? `assignShelf('${company.replaceAll("'","\\'")}','${job.replaceAll("'","\\'")}','D4')`
-          : `showShelf('D4')`
-      }">
-      TEST SCAN: D4
-    </button>
+ <button class="btn purple"
+ onclick="assignShelf('${c}','${j}','A1')">
+ TEST SCAN A1
+ </button>
 
-    <div class="space"></div>
-
-    <button class="btn full"
-      onclick="${company && job ? `showOrder('${company.replaceAll("'","\\'")}','${job.replaceAll("'","\\'")}')` : `showShelves()`}">
-      Cancel
-    </button>
-  `);
+ `);
 }
 
-function showLocationScan(){
-  showShelfScan();
+function scanShelf(){
+
+ title("Scan Shelf");
+
+ content(`
+
+ <div class="scan">
+
+ <div class="frame"></div>
+
+ <h2>Scan Shelf QR Code</h2>
+
+ <p>Position the QR code in the frame.</p>
+
+ </div>
+
+ <button class="btn purple"
+ onclick="viewShelf('A1')">
+ TEST SCAN A1
+ </button>
+
+ `);
 }
 
-function showScan(button){
-  activeNav(button);
-  setTitle("Scan");
+function completed(){
 
-  setContent(`
-    <div class="scan-box">
+ title("Completed Orders");
 
-      <div class="scan-frame"></div>
+ let h=`<input class="search" placeholder="Search completed orders...">`;
 
-      <h2>Camera</h2>
+ if(completedOrders.length===0){
 
-      <p>Take a picture or scan an item.</p>
+ h+=`
+ <div class="card center">
+ <div style="font-size:45px">📦</div>
+ <h3>No completed orders yet</h3>
+ </div>
+ `;
 
-    </div>
+ }else{
 
-    <div class="space"></div>
+ completedOrders.forEach(o=>{
 
-    <button class="btn full purple"
-      onclick="showScanChoices()">
-      TEST SCAN / TAKE PHOTO
-    </button>
-  `);
+ h+=`
+ <div class="row">
+
+ <div>✅</div>
+
+ <div class="row-main">
+
+ <div class="title">${o.job}</div>
+
+ <div class="sub">${o.company}</div>
+
+ <div class="sub">
+ Previous Shelf: ${o.shelf} • ${o.date}
+ </div>
+
+ </div>
+
+ </div>
+ `;
+
+ });
+
+ }
+
+ content(h);
 }
 
-function showScanChoices(){
-  setTitle("What is this?");
+function quotes(){
 
-  setContent(`
-    <div class="grid">
+ title("Quotes");
 
-      <div class="card home-card"
-        onclick="showBoxScan()">
-        <div class="icon">📦</div>
-        <strong>Box Scan</strong>
-      </div>
+ content(`
 
-      <div class="card home-card"
-        onclick="showInvoiceScan()">
-        <div class="icon">🧾</div>
-        <strong>Invoice Scan</strong>
-      </div>
+ <div class="heading">
+ <h2>Quotes</h2>
+ <button class="btn purple small">+ Add / Scan Quote</button>
+ </div>
 
-      <div class="card home-card"
-        onclick="showQuoteScan()">
-        <div class="icon">📄</div>
-        <strong>Quote Scan</strong>
-      </div>
+ <input class="search"
+ placeholder="Search company or job...">
 
-      <div class="card home-card"
-        onclick="showLocationScan()">
-        <div class="icon">▦</div>
-        <strong>Location Scan</strong>
-      </div>
+ <div class="row">
+ <div class="row-main">
+ <div class="title">D Star Plumbing</div>
+ <div class="sub">306 Preserve • Quote</div>
+ </div>
+ <div>›</div>
+ </div>
 
-    </div>
-  `);
+ `);
 }
 
-function showBoxScan(){
-  setTitle("Box Scan");
+function customers(){
 
-  setContent(`
-    <div class="card">
+ title("Customers");
 
-      <h2>1. Scan the Box</h2>
+ content(`
 
-      <p style="color:var(--muted)">
-        Scan the product box or item label.
-      </p>
+ <div class="heading">
+ <h2>Customers</h2>
+ <button class="btn purple small">+ Add Customer</button>
+ </div>
 
-      <div class="field">
-        <label>Company</label>
-        <select>
-          <option>D Star Plumbing</option>
-          <option>Ridgeline Plumbing</option>
-          <option>Durant / Slate</option>
-        </select>
-      </div>
+ <input class="search"
+ placeholder="Search name or phone...">
 
-      <div class="field">
-        <label>Job / Order</label>
-        <select>
-          <option>306 Preserve</option>
-          <option>Cross Roads</option>
-          <option>K Knutson</option>
-        </select>
-      </div>
+ <div class="row">
+ <div class="row-main">
+ <div class="title">Ryan</div>
+ <div class="sub">(801) 555-0185</div>
+ </div>
+ </div>
 
-      <div class="field">
-        <label>Item</label>
-        <input value="Shower Trim">
-      </div>
+ <div class="row">
+ <div class="row-main">
+ <div class="title">Rebecca</div>
+ <div class="sub">(801) 555-0129</div>
+ </div>
+ </div>
 
-      <div class="field">
-        <label>Quantity</label>
-        <input type="number" value="1">
-      </div>
+ <div class="row">
+ <div class="row-main">
+ <div class="title">John</div>
+ <div class="sub">(801) 555-0162</div>
+ </div>
+ </div>
 
-      <button class="btn full purple"
-        onclick="showShelfScan('D Star Plumbing','306 Preserve')">
-        Next: Scan Shelf QR
-      </button>
-
-    </div>
-  `);
+ `);
 }
 
-function showQuotes(){
-  setTitle("Quotes");
+function invoices(){
 
-  setContent(`
-    <div class="section-title">
-      <h2>Quotes</h2>
-      <button class="btn purple small">
-        + Add / Scan Quote
-      </button>
-    </div>
+ title("Invoices");
 
-    <input class="search"
-      placeholder="Search company or job...">
+ content(`
 
-    <div class="list">
+ <div class="heading">
+ <h2>Invoices</h2>
+ <button class="btn purple small">+ Scan Invoice</button>
+ </div>
 
-      <div class="row">
-        <div class="row-main">
-          <div class="row-title">D Star Plumbing</div>
-          <div class="row-sub">306 Preserve • Quote</div>
-        </div>
-        <div>›</div>
-      </div>
+ <input class="search"
+ placeholder="Search company or job...">
 
-      <div class="row">
-        <div class="row-main">
-          <div class="row-title">Ridgeline Plumbing</div>
-          <div class="row-sub">Highland • Quote</div>
-        </div>
-        <div>›</div>
-      </div>
+ <div class="row">
+ <div class="row-main">
+ <div class="title">D Star Plumbing</div>
+ <div class="sub">306 Preserve</div>
+ </div>
+ <div>›</div>
+ </div>
 
-    </div>
-  `);
+ `);
 }
 
-function showQuoteScan(){
-  showQuotes();
+function reminders(){
+
+ title("Reminders");
+
+ content(`
+
+ <div class="card">
+
+ <label>Company / Plumber</label>
+
+ <select>
+ <option>D Star Plumbing</option>
+ <option>Ridgeline Plumbing</option>
+ </select>
+
+ <label>Job / Order</label>
+
+ <select>
+ <option>306 Preserve</option>
+ <option>Cross Roads</option>
+ </select>
+
+ <label>Date & Time</label>
+
+ <input type="datetime-local">
+
+ <label>
+ What do you want to be reminded about?
+ </label>
+
+ <input placeholder="Follow up on quote">
+
+ <label>Notes</label>
+
+ <textarea></textarea>
+
+ <button class="btn purple">
+ Save Reminder
+ </button>
+
+ </div>
+
+ `);
 }
 
-function showInvoices(){
-  setTitle("Invoices");
+function createOrder(){
 
-  setContent(`
-    <div class="section-title">
-      <h2>Invoices</h2>
-      <button class="btn purple small">
-        + Scan Invoice
-      </button>
-    </div>
+ title("New Order Sheet");
 
-    <input class="search"
-      placeholder="Search company or job...">
+ let lines="";
 
-    <div class="list">
+ for(let i=1;i<=10;i++){
 
-      <div class="row">
-        <div class="row-main">
-          <div class="row-title">D Star Plumbing</div>
-          <div class="row-sub">306 Preserve</div>
-        </div>
-        <div>›</div>
-      </div>
+ lines+=`
+ <tr>
+ <td>${i}</td>
+ <td><input type="number"></td>
+ <td><input></td>
+ </tr>
+ `;
 
-    </div>
-  `);
+ }
+
+ content(`
+
+ <div class="card">
+
+ <label>Company / Plumber</label>
+ <input id="companyInput">
+
+ <label>Job / Order</label>
+ <input id="jobInput">
+
+ <label>Date</label>
+ <input type="date">
+
+ <br><br>
+
+ <table>
+
+ <thead>
+ <tr>
+ <th>#</th>
+ <th>Qty.</th>
+ <th>Item / Description</th>
+ </tr>
+ </thead>
+
+ <tbody>
+ ${lines}
+ </tbody>
+
+ </table>
+
+ <button class="btn soft">
+ + Add Another Line
+ </button>
+
+ <label>Notes / Special Instructions</label>
+
+ <textarea></textarea>
+
+ <button class="btn purple"
+ onclick="saveOrder()">
+ Save Order
+ </button>
+
+ </div>
+
+ `);
 }
 
-function showInvoiceScan(){
-  showInvoices();
+function saveOrder(){
+
+ let c=document.getElementById("companyInput").value.trim();
+ let j=document.getElementById("jobInput").value.trim();
+
+ if(!c||!j){
+   alert("Please enter the Company and Job.");
+   return;
+ }
+
+ if(!companies[c]) companies[c]=[];
+
+ companies[c].push(j);
+
+ save();
+
+ order(c,j);
 }
 
-function showCustomers(){
-  setTitle("Customers");
-
-  setContent(`
-    <div class="section-title">
-      <h2>Customers</h2>
-
-      <button class="btn purple small">
-        + Add Customer
-      </button>
-    </div>
-
-    <input class="search"
-      placeholder="Search name or phone...">
-
-    <div class="list">
-
-      <div class="row">
-        <div class="row-main">
-          <div class="row-title">Ryan</div>
-          <div class="row-sub">(801) 555-0185</div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="row-main">
-          <div class="row-title">Rebecca</div>
-          <div class="row-sub">(801) 555-0129</div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="row-main">
-          <div class="row-title">John</div>
-          <div class="row-sub">(801) 555-0162</div>
-        </div>
-      </div>
-
-    </div>
-  `);
-}
-
-function showCreateOrder(){
-  setTitle("New Order Sheet");
-
-  let rows="";
-
-  for(let i=1;i<=10;i++){
-    rows += `
-      <tr>
-        <td style="width:34px;">${i}</td>
-        <td style="width:65px;">
-          <input type="number">
-        </td>
-        <td>
-          <input>
-        </td>
-      </tr>
-    `;
-  }
-
-  setContent(`
-    <div class="card order-sheet">
-
-      <div class="field">
-        <label>Company / Plumber</label>
-        <input id="newCompany">
-      </div>
-
-      <div class="field">
-        <label>Job / Order</label>
-        <input id="newJob">
-      </div>
-
-      <div class="field">
-        <label>Date</label>
-        <input type="date">
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Qty.</th>
-            <th>Item / Description</th>
-          </tr>
-        </thead>
-
-        <tbody id="orderLines">
-          ${rows}
-        </tbody>
-      </table>
-
-      <button class="btn full soft"
-        onclick="addOrderLine()">
-        + Add Another Line
-      </button>
-
-      <div class="space"></div>
-
-      <div class="field">
-        <label>Notes / Special Instructions</label>
-        <textarea></textarea>
-      </div>
-
-      <button class="btn full purple"
-        onclick="saveNewOrder()">
-        Save Order
-      </button>
-
-    </div>
-  `);
-}
-
-function addOrderLine(){
-
-  let tbody=document.getElementById("orderLines");
-
-  let num=tbody.children.length+1;
-
-  tbody.insertAdjacentHTML("beforeend",`
-    <tr>
-      <td>${num}</td>
-      <td><input type="number"></td>
-      <td><input></td>
-    </tr>
-  `);
-}
-
-function saveNewOrder(){
-
-  let company=
-    document.getElementById("newCompany").value.trim();
-
-  let job=
-    document.getElementById("newJob").value.trim();
-
-  if(!company || !job){
-    alert("Please enter Company / Plumber and Job / Order.");
-    return;
-  }
-
-  if(!companies[company]){
-    companies[company]=[];
-  }
-
-  companies[company].push(job);
-
-  saveData();
-
-  alert("Order saved!");
-
-  showOrder(company,job);
-}
-
-function showReminders(button){
-  activeNav(button);
-  setTitle("Reminders");
-
-  setContent(`
-    <div class="card">
-
-      <div class="field">
-        <label>Company / Plumber</label>
-        <select>
-          <option>D Star Plumbing</option>
-          <option>Ridgeline Plumbing</option>
-          <option>Goff Plumbing</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Job / Order</label>
-        <select>
-          <option>306 Preserve</option>
-          <option>Cross Roads</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Date & Time</label>
-        <input type="datetime-local">
-      </div>
-
-      <div class="field">
-        <label>What do you want to be reminded about?</label>
-        <input placeholder="Example: Follow up on quote">
-      </div>
-
-      <div class="field">
-        <label>Notes</label>
-        <textarea></textarea>
-      </div>
-
-      <button class="btn full purple">
-        Save Reminder
-      </button>
-
-    </div>
-
-    <div class="space"></div>
-
-    <div class="section-title">
-      <h2>Upcoming</h2>
-    </div>
-
-    <div class="list">
-
-      <div class="row">
-        <div>○</div>
-
-        <div class="row-main">
-          <div class="row-title">
-            Follow up on quote for 306 Preserve
-          </div>
-
-          <div class="row-sub">
-            D Star Plumbing
-          </div>
-        </div>
-
-        <span class="badge purple">
-          Follow Up
-        </span>
-      </div>
-
-      <div class="row">
-        <div>○</div>
-
-        <div class="row-main">
-          <div class="row-title">
-            Check status of Moen order
-          </div>
-        </div>
-
-        <span class="badge orange">
-          Order
-        </span>
-      </div>
-
-    </div>
-  `);
-}
-
-function showCompleted(){
-  setTitle("Completed Orders");
-
-  let rows = completedOrders.length
-    ? completedOrders.map(item => `
-      <div class="row">
-
-        <div style="font-size:22px;">✅</div>
-
-        <div class="row-main">
-
-          <div class="row-title">
-            ${item.job}
-          </div>
-
-          <div class="row-sub">
-            ${item.company}
-          </div>
-
-          <div class="row-sub">
-            Previous Shelf: ${item.shelf} • ${item.date}
-          </div>
-
-        </div>
-
-      </div>
-    `).join("")
-    : `
-      <div class="card center">
-        <div style="font-size:45px;">📦</div>
-        <h3>No completed orders yet</h3>
-      </div>
-    `;
-
-  setContent(`
-    <input class="search"
-      placeholder="Search completed orders...">
-
-    <div class="list">
-      ${rows}
-    </div>
-  `);
-}
-
-function saveData(){
-
-  localStorage.setItem(
-    "psmShelves",
-    JSON.stringify(shelves)
-  );
-
-  localStorage.setItem(
-    "psmCompanies",
-    JSON.stringify(companies)
-  );
-
-  localStorage.setItem(
-    "psmCompleted",
-    JSON.stringify(completedOrders)
-  );
-}
-
-function loadData(){
-
-  let savedShelves =
-    localStorage.getItem("psmShelves");
-
-  let savedCompanies =
-    localStorage.getItem("psmCompanies");
-
-  let savedCompleted =
-    localStorage.getItem("psmCompleted");
-
-  if(savedShelves){
-    shelves=JSON.parse(savedShelves);
-  }
-
-  if(savedCompanies){
-    companies=JSON.parse(savedCompanies);
-  }
-
-  if(savedCompleted){
-    completedOrders=JSON.parse(savedCompleted);
-  }
-}
-
-loadData();
-showHome();
+load();
+home();
 
 </script>
 
