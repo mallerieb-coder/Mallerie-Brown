@@ -3142,915 +3142,109 @@ function viewShelf(code){
 
     ${ordersHTML}
 
-  `);/* -----------------------------
-   ORDER DETAILS
+  `);
+
+}/* -----------------------------
+   TEAM MEMBER ORDERS
 ----------------------------- */
 
-function order(companyName,job){
+function viewCoworkerOrders(name){
 
-  title("Order Details");
+  title(
+    name + "'s Orders"
+  );
 
-  let shelf =
-    findShelf(job);
+  let html = `
 
-  content(`
+    <h2>
+      ${name}'s Orders
+    </h2>
 
-    <button
-      class="btn gray small"
-      onclick="company('${companyName}')"
-    >
-      ‹ ${companyName}
-    </button>
+  `;
 
-    <div class="card">
-
-      <h2 style="margin-bottom:4px">
-        ${job}
-      </h2>
-
-      <div class="sub">
-        ${companyName}
-      </div>
-
-      <br>
+  let personOrders =
+    teamOrders[name] || [];
 
 
-      <div class="card">
+  if(personOrders.length === 0){
 
-        <div class="sub">
-          Shelf Location
+    html += `
+
+      <div class="card center">
+
+        <div style="font-size:45px">
+          📦
         </div>
 
-        <div class="title">
-
-          ${
-            shelf
-            ? "▦ " + shelf.code
-            : "Not Assigned"
-          }
-
-        </div>
-
-        ${
-          shelf
-          ? `
-            <div class="sub">
-              ${shelf.description}
-            </div>
-          `
-          : ""
-        }
+        <h3>
+          No active orders
+        </h3>
 
       </div>
 
+    `;
 
-      <div class="row">
+  }
+
+
+  personOrders.forEach(job => {
+
+    let companyName =
+      Object.keys(companies)
+      .find(
+        companyName =>
+          companies[
+            companyName
+          ]
+          .includes(job)
+      ) || "Company";
+
+
+    let shelf =
+      findShelf(job);
+
+
+    html += `
+
+      <div
+        class="row"
+        onclick="order(
+          '${companyName}',
+          '${job}'
+        )"
+      >
 
         <div class="row-main">
 
           <div class="title">
-            Items
+            ${job}
           </div>
 
           <div class="sub">
-            View received and missing items
-          </div>
-
-        </div>
-
-        <div>›</div>
-
-      </div>
-
-
-      <div class="row">
-
-        <div class="row-main">
-
-          <div class="title">
-            Notes
-          </div>
-
-        </div>
-
-        <div>›</div>
-
-      </div>
-
-
-      <div class="row">
-
-        <div class="row-main">
-
-          <div class="title">
-            Shelf Photo
+            ${companyName}
           </div>
 
           <div class="sub">
 
             ${
-              shelf &&
-              shelfPhotos[shelf.code]
-
-              ? "Shelf photo saved"
-
-              : "Photo of all boxes together"
+              shelf
+              ? "Shelf " + shelf.code
+              : "No shelf assigned"
             }
 
           </div>
 
         </div>
 
-        <div>›</div>
-
-      </div>
-
-
-      <div class="row">
-
-        <div class="row-main">
-
-          <div class="title">
-            Invoices
-          </div>
-
+        <div>
+          ›
         </div>
-
-        <div>›</div>
-
-      </div>
-
-
-      <button
-        class="btn soft"
-        onclick="chooseShelf(
-          '${companyName}',
-          '${job}'
-        )"
-      >
-
-        ${
-          shelf
-          ? "Move to Another Shelf"
-          : "Assign Shelf"
-        }
-
-      </button>
-
-
-      <button
-        class="btn purple"
-        onclick="sendConfirm(
-          '${companyName}',
-          '${job}'
-        )"
-      >
-        Send Out Order
-      </button>
-
-    </div>
-
-  `);
-
-}
-
-
-/* -----------------------------
-   CHOOSE SHELF
------------------------------ */
-
-function chooseShelf(companyName,job){
-
-  let html = `
-
-    <h2>
-      Assign Shelf
-    </h2>
-
-    <p class="sub">
-      Scan the permanent barcode
-      attached to the shelf.
-    </p>
-
-    <button
-      class="btn purple"
-      onclick="
-        closeModal();
-        scanShelfForOrder(
-          '${companyName}',
-          '${job}'
-        )
-      "
-    >
-      ▥ Scan Shelf Barcode
-    </button>
-
-
-    <p class="sub">
-      Or choose a shelf manually:
-    </p>
-
-  `;
-
-
-  shelves.forEach(shelf => {
-
-    html += `
-
-      <div
-        class="row"
-        onclick="assignShelf(
-          '${companyName}',
-          '${job}',
-          '${shelf.code}',
-          true
-        )"
-      >
-
-        <div class="row-main">
-
-          <div class="title">
-            ${shelf.code}
-          </div>
-
-          <div class="sub">
-            ${shelf.description}
-          </div>
-
-        </div>
-
-
-        <span
-          class="badge ${
-            shelf.orders.length
-            ? "used"
-            : "available"
-          }"
-        >
-
-          ${
-            shelf.orders.length
-
-            ? shelf.orders.length +
-              (
-                shelf.orders.length === 1
-                ? " Order"
-                : " Orders"
-              )
-
-            : "Available"
-          }
-
-        </span>
 
       </div>
 
     `;
 
   });
-
-
-  html += `
-
-    <button
-      class="btn gray"
-      onclick="closeModal()"
-    >
-      Cancel
-    </button>
-
-  `;
-
-
-  modal(html);
-
-}
-
-
-/* -----------------------------
-   ASSIGN ORDER TO SHELF
------------------------------ */
-
-function assignShelf(
-  companyName,
-  job,
-  code,
-  takePhoto
-){
-
-  code =
-    normalizeCode(code);
-
-
-  let shelf =
-    shelves.find(
-      shelf =>
-        shelf.code === code
-    );
-
-
-  if(!shelf){
-
-    alert(
-      "Shelf " +
-      code +
-      " was not found."
-    );
-
-    return;
-
-  }
-
-
-  /*
-    Remove this job from any
-    previous shelf.
-  */
-
-  shelves.forEach(shelf => {
-
-    shelf.orders =
-      (
-        shelf.orders || []
-      )
-      .filter(
-        existingJob =>
-          existingJob !== job
-      );
-
-  });
-
-
-  /*
-    Add the job to the new shelf.
-  */
-
-  if(
-    !shelf.orders.includes(job)
-  ){
-
-    shelf.orders.push(job);
-
-  }
-
-
-  save();
-
-  closeModal();
-
-
-  if(takePhoto){
-
-    shelfPhotoStep(
-      companyName,
-      job,
-      code
-    );
-
-  }
-  else{
-
-    order(
-      companyName,
-      job
-    );
-
-  }
-
-}
-
-
-/* -----------------------------
-   SHELF PHOTO
------------------------------ */
-
-function shelfPhotoStep(
-  companyName,
-  job,
-  code
-){
-
-  title(
-    "Shelf Photo"
-  );
-
-
-  content(`
-
-    <button
-      class="btn gray small"
-      onclick="order(
-        '${companyName}',
-        '${job}'
-      )"
-    >
-      ‹ Order
-    </button>
-
-
-    <div class="card center">
-
-      <div style="font-size:52px">
-        📷
-      </div>
-
-      <h2>
-        Take Shelf Photo
-      </h2>
-
-      <p class="sub">
-        Take one photo showing all
-        boxes/items together on
-        Shelf ${code}.
-      </p>
-
-
-      <input
-        id="shelfPhotoInput"
-        type="file"
-        accept="image/*"
-        capture="environment"
-        onchange="previewShelfPhoto(
-          event,
-          '${code}'
-        )"
-      >
-
-
-      <div id="photoPreview"></div>
-
-
-      <button
-        class="btn purple"
-        onclick="finishShelfPhoto(
-          '${companyName}',
-          '${job}',
-          '${code}'
-        )"
-      >
-        Save Location
-      </button>
-
-    </div>
-
-  `);
-
-}
-
-
-function previewShelfPhoto(
-  event,
-  code
-){
-
-  let file =
-    event.target.files[0];
-
-
-  if(!file){
-    return;
-  }
-
-
-  let reader =
-    new FileReader();
-
-
-  reader.onload =
-    function(){
-
-      shelfPhotos[code] =
-        reader.result;
-
-
-      document
-        .getElementById(
-          "photoPreview"
-        )
-        .innerHTML = `
-
-          <img
-            class="photo-preview"
-            src="${reader.result}"
-          >
-
-        `;
-
-    };
-
-
-  reader.readAsDataURL(file);
-
-}
-
-
-function finishShelfPhoto(
-  companyName,
-  job,
-  code
-){
-
-  save();
-
-
-  modal(`
-
-    <div class="center">
-
-      <div style="font-size:60px">
-        ✅
-      </div>
-
-      <h2>
-        Location Saved!
-      </h2>
-
-      <p class="sub">
-
-        ${job}
-        is now assigned to
-        Shelf ${code}.
-
-      </p>
-
-
-      <button
-        class="btn purple"
-        onclick="
-          closeModal();
-          order(
-            '${companyName}',
-            '${job}'
-          )
-        "
-      >
-        View Order
-      </button>
-
-    </div>
-
-  `);
-
-}
-
-
-/* -----------------------------
-   SEND OUT ORDER
------------------------------ */
-
-function sendConfirm(
-  companyName,
-  job
-){
-
-  let shelf =
-    findShelf(job);
-
-
-  modal(`
-
-    <h2>
-      Send Out Order
-    </h2>
-
-
-    <p>
-      Has
-      <strong>${job}</strong>
-      left the showroom?
-    </p>
-
-
-    <p class="sub">
-
-      This will remove the order from
-
-      ${
-        shelf
-        ? "Shelf " + shelf.code
-        : "its shelf location"
-      }
-
-      and move it into
-      Completed Orders.
-
-    </p>
-
-
-    <button
-      class="btn purple"
-      onclick="sendOut(
-        '${companyName}',
-        '${job}'
-      )"
-    >
-      Yes, Send Out Order
-    </button>
-
-
-    <button
-      class="btn gray"
-      onclick="closeModal()"
-    >
-      Cancel
-    </button>
-
-  `);
-
-}
-
-
-function sendOut(
-  companyName,
-  job
-){
-
-  let shelf =
-    findShelf(job);
-
-
-  /*
-    Remove order from shelf.
-  */
-
-  shelves.forEach(shelf => {
-
-    shelf.orders =
-      (
-        shelf.orders || []
-      )
-      .filter(
-        existingJob =>
-          existingJob !== job
-      );
-
-  });
-
-
-  /*
-    Remove from active company jobs.
-  */
-
-  if(companies[companyName]){
-
-    companies[companyName] =
-      companies[companyName]
-      .filter(
-        existingJob =>
-          existingJob !== job
-      );
-
-  }
-
-
-  /*
-    Remove from team member's
-    active order list.
-  */
-
-  Object
-    .keys(teamOrders)
-    .forEach(person => {
-
-      teamOrders[person] =
-        teamOrders[person]
-        .filter(
-          existingJob =>
-            existingJob !== job
-        );
-
-    });
-
-
-  /*
-    Preserve history.
-  */
-
-  completedOrders.unshift({
-
-    company:
-      companyName,
-
-    job:
-      job,
-
-    shelf:
-      shelf
-      ? shelf.code
-      : "None",
-
-    date:
-      new Date()
-      .toLocaleDateString()
-
-  });
-
-
-  save();
-
-
-  modal(`
-
-    <div class="center">
-
-      <div style="font-size:60px">
-        ✅
-      </div>
-
-
-      <h2>
-        Order Sent Out!
-      </h2>
-
-
-      <p class="sub">
-
-        ${job}
-        has been moved to
-        Completed Orders.
-
-        <br><br>
-
-        ${
-          shelf
-          ? "Shelf " +
-            shelf.code +
-            " is now available."
-          : ""
-        }
-
-      </p>
-
-
-      <button
-        class="btn purple"
-        onclick="
-          closeModal();
-          completed()
-        "
-      >
-        View Completed Orders
-      </button>
-
-    </div>
-
-  `);
-
-}
-
-
-/* -----------------------------
-   SETTINGS
------------------------------ */
-
-function settings(){
-
-  title(
-    "Settings"
-  );
-
-
-  content(`
-
-    <div class="section">
-      Order & Storage
-    </div>
-
-
-    <div
-      class="row"
-      onclick="shelfLocations()"
-    >
-
-      <div style="font-size:28px">
-        ▦
-      </div>
-
-      <div class="row-main">
-
-        <div class="title">
-          Shelf Locations
-        </div>
-
-        <div class="sub">
-          View, add and scan
-          showroom shelves
-        </div>
-
-      </div>
-
-      <div>
-        ›
-      </div>
-
-    </div>
-
-
-    <div
-      class="row"
-      onclick="completed()"
-    >
-
-      <div style="font-size:28px">
-        ✅
-      </div>
-
-      <div class="row-main">
-
-        <div class="title">
-          Completed Orders
-        </div>
-
-        <div class="sub">
-          Orders that have left
-          the showroom
-        </div>
-
-      </div>
-
-      <div>
-        ›
-      </div>
-
-    </div>
-
-
-    <div class="section">
-      App
-    </div>
-
-
-    <div class="card">
-
-      <div class="title">
-        Plumbing Supply Manager
-      </div>
-
-      <div class="sub">
-        Showroom Team App
-      </div>
-
-    </div>
-
-  `);
-
-}
-
-
-/* -----------------------------
-   SHELF LOCATIONS
------------------------------ */
-
-function shelfLocations(){
-
-  title(
-    "Shelf Locations"
-  );
-
-
-  let html = `
-
-    <div class="heading">
-
-      <h2>
-        All Shelves
-      </h2>
-
-      <button
-        class="btn purple small"
-        onclick="addShelf()"
-      >
-        + Add Shelf
-      </button>
-
-    </div>
-
-
-    <input
-      class="search"
-      placeholder="Search shelves..."
-      oninput="filterShelves(
-        this.value
-      )"
-    >
-
-
-    <div id="shelfList">
-
-  `;
-
-
-  shelves.forEach(shelf => {
-
-    html +=
-      shelfRow(shelf);
-
-  });
-
-
-  html += `
-    </div>
-  `;
 
 
   content(html);
@@ -4058,65 +3252,151 @@ function shelfLocations(){
 }
 
 
-function shelfRow(shelf){
+/* -----------------------------
+   BARCODE HELPERS
+----------------------------- */
+
+function normalizeCode(value){
+
+  return String(
+    value || ""
+  )
+  .trim()
+  .toUpperCase()
+  .replace(/\s+/g,"");
+
+}
+
+
+/*
+  Stops the camera whenever
+  the user leaves the scan screen.
+*/
+
+function stopScanner(){
+
+  scanLocked = false;
+
+  try{
+
+    if(codeReader){
+      codeReader.reset();
+    }
+
+  }
+  catch(error){
+    console.log(error);
+  }
+
+
+  let video =
+    document.getElementById(
+      "scannerVideo"
+    );
+
+
+  if(
+    video &&
+    video.srcObject
+  ){
+
+    video
+      .srcObject
+      .getTracks()
+      .forEach(
+        track =>
+          track.stop()
+      );
+
+    video.srcObject = null;
+
+  }
+
+}
+
+
+/* -----------------------------
+   CAMERA SCREEN
+----------------------------- */
+
+function scannerUI(
+  mode,
+  companyName = "",
+  job = ""
+){
+
+  let message =
+
+    mode === "product"
+
+    ? "Point the camera at the barcode on the product box."
+
+    : "Point the camera at the permanent Code 128 shelf barcode.";
+
+
+  let placeholder =
+
+    mode === "product"
+
+    ? "Enter product barcode"
+
+    : "Example: GH2";
+
 
   return `
 
+    <div class="scanbox">
+
+      <video
+        id="scannerVideo"
+        playsinline
+        muted
+      ></video>
+
+
+      <div class="frame"></div>
+
+
+      <div class="scan-label">
+        ${message}
+      </div>
+
+    </div>
+
+
     <div
-      class="row shelf-row"
-      data-search="${
-        (
-          shelf.code +
-          " " +
-          shelf.description
-        )
-        .toLowerCase()
-      }"
-      onclick="viewShelf(
-        '${shelf.code}'
-      )"
+      id="scanStatus"
+      class="status"
     >
-
-      <div style="font-size:24px">
-        ▦
-      </div>
+      Starting camera…
+    </div>
 
 
-      <div class="row-main">
+    <div class="manual">
 
-        <div class="title">
-          ${shelf.code}
-        </div>
-
-        <div class="sub">
-          ${shelf.description}
-        </div>
-
-      </div>
+      <label>
+        Manual Barcode Entry
+      </label>
 
 
-      <span
-        class="badge ${
-          shelf.orders.length
-          ? "used"
-          : "available"
-        }"
+      <input
+        id="manualBarcode"
+        autocomplete="off"
+        autocapitalize="characters"
+        placeholder="${placeholder}"
       >
 
-        ${
-          shelf.orders.length
 
-          ? shelf.orders.length +
-            (
-              shelf.orders.length === 1
-              ? " Order"
-              : " Orders"
-            )
-
-          : "Available"
-        }
-
-      </span>
+      <button
+        class="btn soft"
+        onclick="manualScan(
+          '${mode}',
+          '${companyName}',
+          '${job}'
+        )"
+      >
+        Use Manual Entry
+      </button>
 
     </div>
 
@@ -4125,286 +3405,496 @@ function shelfRow(shelf){
 }
 
 
-function filterShelves(value){
+/* -----------------------------
+   START REAL CAMERA SCANNER
+----------------------------- */
 
-  let search =
-    value
-      .toLowerCase();
+async function startBarcodeScanner(
+  mode,
+  companyName = "",
+  job = ""
+){
+
+  scanLocked = false;
 
 
-  document
-    .querySelectorAll(
-      ".shelf-row"
-    )
-    .forEach(row => {
+  let status =
+    document.getElementById(
+      "scanStatus"
+    );
 
-      row.style.display =
-        row.dataset.search
-        .includes(search)
 
-        ? "flex"
-        : "none";
+  /*
+    Check that the ZXing barcode
+    scanner loaded correctly.
+  */
 
-    });
+  if(
+    typeof ZXing === "undefined"
+  ){
+
+    if(status){
+
+      status.innerHTML =
+
+        "The barcode scanner could not load. " +
+        "You can still enter the barcode manually below.";
+
+    }
+
+    return;
+
+  }
+
+
+  try{
+
+    codeReader =
+      new ZXing
+      .BrowserMultiFormatReader();
+
+
+    /*
+      Ask the iPad/iPhone for
+      available cameras.
+    */
+
+    let videoDevices =
+      await codeReader
+      .listVideoInputDevices();
+
+
+    let selectedDevice = null;
+
+
+    /*
+      Try to find the back camera.
+    */
+
+    for(
+      let device of videoDevices
+    ){
+
+      let label =
+        (
+          device.label || ""
+        )
+        .toLowerCase();
+
+
+      if(
+        label.includes("back") ||
+        label.includes("rear") ||
+        label.includes("environment")
+      ){
+
+        selectedDevice = device;
+
+        break;
+
+      }
+
+    }
+
+
+    /*
+      If Safari doesn't label the
+      cameras, use the last camera,
+      which is commonly the rear
+      camera on iPhone/iPad.
+    */
+
+    if(
+      !selectedDevice &&
+      videoDevices.length
+    ){
+
+      selectedDevice =
+        videoDevices[
+          videoDevices.length - 1
+        ];
+
+    }
+
+
+    let deviceId =
+
+      selectedDevice
+
+      ? selectedDevice.deviceId
+
+      : undefined;
+
+
+    if(status){
+
+      status.innerHTML =
+        "Camera ready — scan a barcode.";
+
+    }
+
+
+    codeReader.decodeFromVideoDevice(
+
+      deviceId,
+
+      "scannerVideo",
+
+      function(
+        result,
+        error
+      ){
+
+        if(
+          result &&
+          !scanLocked
+        ){
+
+          scanLocked = true;
+
+
+          let barcode =
+            result.getText();
+
+
+          handleBarcode(
+
+            barcode,
+
+            mode,
+
+            companyName,
+
+            job
+
+          );
+
+        }
+
+      }
+
+    );
+
+  }
+  catch(error){
+
+    console.log(error);
+
+
+    if(status){
+
+      status.innerHTML =
+
+        "Camera could not start. " +
+        "Make sure Safari has camera permission. " +
+        "You can also enter the barcode manually below.";
+
+    }
+
+  }
 
 }
 
 
 /* -----------------------------
-   ADD A NEW SHELF
+   MANUAL SCAN BACKUP
 ----------------------------- */
 
-function addShelf(){
+function manualScan(
+  mode,
+  companyName,
+  job
+){
+
+  let input =
+    document.getElementById(
+      "manualBarcode"
+    );
+
+
+  let value =
+    input.value;
+
+
+  if(!value){
+
+    alert(
+      "Enter the barcode or shelf code."
+    );
+
+    return;
+
+  }
+
+
+  handleBarcode(
+
+    value,
+
+    mode,
+
+    companyName,
+
+    job
+
+  );
+
+}
+
+
+/* -----------------------------
+   HANDLE SCANNED BARCODE
+----------------------------- */
+
+function handleBarcode(
+  rawBarcode,
+  mode,
+  companyName,
+  job
+){
+
+  stopScanner();
+
+
+  let barcode =
+    String(
+      rawBarcode || ""
+    )
+    .trim();
+
+
+  /*
+    SHELF BARCODE
+  */
+
+  if(
+    mode === "shelf" ||
+    mode === "assign"
+  ){
+
+    let code =
+      normalizeCode(barcode);
+
+
+    let shelf =
+      shelves.find(
+        shelf =>
+          shelf.code === code
+      );
+
+
+    if(!shelf){
+
+      alert(
+
+        "I scanned " +
+        barcode +
+        ", but it does not match a saved shelf."
+
+      );
+
+
+      if(mode === "assign"){
+
+        scanShelfForOrder(
+          companyName,
+          job
+        );
+
+      }
+      else{
+
+        scanShelf();
+
+      }
+
+
+      return;
+
+    }
+
+
+    /*
+      Assign shelf to an order.
+    */
+
+    if(mode === "assign"){
+
+      assignShelf(
+
+        companyName,
+
+        job,
+
+        code,
+
+        true
+
+      );
+
+    }
+
+
+    /*
+      Or simply open the shelf.
+    */
+
+    else{
+
+      viewShelf(code);
+
+    }
+
+
+    return;
+
+  }
+
+
+  /*
+    PRODUCT BOX BARCODE
+  */
+
+  if(mode === "product"){
+
+    boxMatch(barcode);
+
+  }
+
+}
+
+
+/* -----------------------------
+   MAIN SCAN BUTTON
+----------------------------- */
+
+function scan(){
 
   title(
-    "Add Shelf"
+    "Scan Box"
+  );
+
+
+  content(
+
+    scannerUI(
+      "product"
+    )
+
+  );
+
+
+  setTimeout(
+
+    function(){
+
+      startBarcodeScanner(
+        "product"
+      );
+
+    },
+
+    200
+
+  );
+
+}
+
+
+/* -----------------------------
+   AFTER PRODUCT BARCODE SCANS
+----------------------------- */
+
+function boxMatch(barcode){
+
+  title(
+    "What is this?"
   );
 
 
   content(`
-
-    <button
-      class="btn gray small"
-      onclick="shelfLocations()"
-    >
-      ‹ Shelf Locations
-    </button>
-
 
     <div class="card">
 
-      <label>
-        Shelf Code *
-      </label>
+      <div class="sub">
+        Scanned Barcode
+      </div>
 
-      <input
-        id="shelfCode"
-        placeholder="Example: GK1"
-      >
-
-
-      <label>
-        Description
-      </label>
-
-      <input
-        id="shelfDescription"
-        placeholder="Example: Mountain Green"
-      >
-
-
-      <label>
-        Shelf Photo
-      </label>
-
-      <input
-        id="newShelfPhoto"
-        type="file"
-        accept="image/*"
-        capture="environment"
-      >
-
-
-      <button
-        class="btn purple"
-        onclick="saveShelf()"
-      >
-        Save Shelf
-      </button>
+      <div class="title">
+        ${barcode}
+      </div>
 
     </div>
 
-  `);
 
-}
-
-
-function saveShelf(){
-
-  let code =
-    normalizeCode(
-      document
-        .getElementById(
-          "shelfCode"
-        )
-        .value
-    );
+    <div class="grid">
 
 
-  let description =
-    document
-      .getElementById(
-        "shelfDescription"
-      )
-      .value
-      .trim();
+      <div
+        class="card home"
+        onclick="boxScan(
+          '${barcode}'
+        )"
+      >
 
+        <div class="emoji">
+          📦
+        </div>
 
-  if(!code){
+        <strong>
+          Box Scan
+        </strong>
 
-    alert(
-      "Please enter a shelf code."
-    );
-
-    return;
-
-  }
-
-
-  if(
-    shelves.some(
-      shelf =>
-        shelf.code === code
-    )
-  ){
-
-    alert(
-      "That shelf already exists."
-    );
-
-    return;
-
-  }
-
-
-  let photoInput =
-    document.getElementById(
-      "newShelfPhoto"
-    );
-
-
-  let file =
-    photoInput.files[0];
-
-
-  function finishSaving(){
-
-    shelves.push({
-
-      code:code,
-
-      description:
-        description ||
-        "Shelf Location",
-
-      orders:[]
-
-    });
-
-
-    save();
-
-    shelfAdded(code);
-
-  }
-
-
-  if(file){
-
-    let reader =
-      new FileReader();
-
-
-    reader.onload =
-      function(){
-
-        shelfPhotos[code] =
-          reader.result;
-
-        finishSaving();
-
-      };
-
-
-    reader.readAsDataURL(file);
-
-  }
-  else{
-
-    finishSaving();
-
-  }
-
-}
-
-
-/* -----------------------------
-   SHELF ADDED
------------------------------ */
-
-function shelfAdded(code){
-
-  let shelf =
-    shelves.find(
-      shelf =>
-        shelf.code === code
-    );
-
-
-  title(
-    "Shelf Added"
-  );
-
-
-  content(`
-
-    <div class="card center">
-
-      <div style="font-size:60px">
-        ✅
-      </div>
-
-
-      <h2>
-        Shelf ${code} Added!
-      </h2>
-
-
-      <p class="sub">
-        ${shelf.description}
-      </p>
-
-
-      <div style="font-size:60px">
-        ▥
       </div>
 
 
       <div
-        style="
-          font-size:34px;
-          font-weight:900;
-        "
+        class="card home"
+        onclick="invoiceScan()"
       >
-        ${code}
+
+        <div class="emoji">
+          🧾
+        </div>
+
+        <strong>
+          Invoice Scan
+        </strong>
+
       </div>
 
 
-      <p class="sub">
-
-        Your physical Code 128
-        barcode for Shelf ${code}
-        can now be scanned.
-
-      </p>
-
-
-      <button
-        class="btn purple"
-        onclick="viewShelf(
-          '${code}'
-        )"
+      <div
+        class="card home"
+        onclick="quoteScan()"
       >
-        View Shelf
-      </button>
+
+        <div class="emoji">
+          📄
+        </div>
+
+        <strong>
+          Quote Scan
+        </strong>
+
+      </div>
 
 
-      <button
-        class="btn soft"
-        onclick="addShelf()"
+      <div
+        class="card home"
+        onclick="scanShelf()"
       >
-        Add Another Shelf
-      </button>
+
+        <div class="emoji">
+          ▦
+        </div>
+
+        <strong>
+          Location Scan
+        </strong>
+
+      </div>
+
 
     </div>
 
@@ -4414,50 +3904,352 @@ function shelfAdded(code){
 
 
 /* -----------------------------
-   VIEW A SHELF
+   BOX SCAN
 ----------------------------- */
 
-function viewShelf(code){
+function boxScan(
+  barcode = ""
+){
 
-  let shelf =
-    shelves.find(
-      shelf =>
-        shelf.code === code
+  title(
+    "Box Scan"
+  );
+
+
+  let companyOptions = "";
+
+
+  Object
+    .keys(companies)
+    .forEach(companyName => {
+
+      companyOptions += `
+
+        <option value="${companyName}">
+          ${companyName}
+        </option>
+
+      `;
+
+    });
+
+
+  content(`
+
+    <div class="card">
+
+      <h2>
+        Match Box to Order
+      </h2>
+
+
+      <div class="sub">
+        Product Barcode
+      </div>
+
+      <div class="title">
+        ${
+          barcode ||
+          "Not scanned"
+        }
+      </div>
+
+
+      <label>
+        Company / Plumber
+      </label>
+
+
+      <select
+        id="boxCompany"
+        onchange="updateJobSelect()"
+      >
+        ${companyOptions}
+      </select>
+
+
+      <label>
+        Job / Order
+      </label>
+
+
+      <select
+        id="boxJob"
+      ></select>
+
+
+      <label>
+        Item / Description
+      </label>
+
+
+      <input
+        id="boxItem"
+        placeholder="Example: Moen shower trim"
+      >
+
+
+      <label>
+        Quantity
+      </label>
+
+
+      <input
+        id="boxQty"
+        type="number"
+        min="1"
+        value="1"
+      >
+
+
+      <button
+        class="btn purple"
+        onclick="nextBoxShelf()"
+      >
+        Next: Scan Shelf Barcode
+      </button>
+
+    </div>
+
+  `);
+
+
+  updateJobSelect();
+
+}
+
+
+/* -----------------------------
+   UPDATE JOB LIST
+----------------------------- */
+
+function updateJobSelect(){
+
+  let companySelect =
+    document.getElementById(
+      "boxCompany"
     );
 
 
-  if(!shelf){
+  let jobSelect =
+    document.getElementById(
+      "boxJob"
+    );
+
+
+  if(
+    !companySelect ||
+    !jobSelect
+  ){
     return;
   }
 
 
+  let companyName =
+    companySelect.value;
+
+
+  let jobs =
+    companies[
+      companyName
+    ] || [];
+
+
+  jobSelect.innerHTML =
+    jobs
+    .map(
+      job => `
+
+        <option value="${job}">
+          ${job}
+        </option>
+
+      `
+    )
+    .join("");
+
+}
+
+
+/* -----------------------------
+   BOX -> SHELF
+----------------------------- */
+
+function nextBoxShelf(){
+
+  let companyName =
+    document
+      .getElementById(
+        "boxCompany"
+      )
+      .value;
+
+
+  let job =
+    document
+      .getElementById(
+        "boxJob"
+      )
+      .value;
+
+
+  if(!job){
+
+    alert(
+      "Please choose a job/order."
+    );
+
+    return;
+
+  }
+
+
+  scanShelfForOrder(
+
+    companyName,
+
+    job
+
+  );
+
+}
+
+
+/* -----------------------------
+   SCAN SHELF FOR AN ORDER
+----------------------------- */
+
+function scanShelfForOrder(
+  companyName,
+  job
+){
+
   title(
-    "Shelf Details"
+    "Scan Shelf Barcode"
   );
 
 
-  let ordersHTML = "";
+  content(
+
+    scannerUI(
+
+      "assign",
+
+      companyName,
+
+      job
+
+    )
+
+  );
 
 
-  if(
-    shelf.orders.length === 0
-  ){
+  setTimeout(
 
-    ordersHTML = `
+    function(){
+
+      startBarcodeScanner(
+
+        "assign",
+
+        companyName,
+
+        job
+
+      );
+
+    },
+
+    200
+
+  );
+
+}
+
+
+/* -----------------------------
+   LOCATION SCAN
+----------------------------- */
+
+function scanShelf(){
+
+  title(
+    "Location Scan"
+  );
+
+
+  content(
+
+    scannerUI(
+      "shelf"
+    )
+
+  );
+
+
+  setTimeout(
+
+    function(){
+
+      startBarcodeScanner(
+        "shelf"
+      );
+
+    },
+
+    200
+
+  );
+
+}
+
+
+/*
+  Stop camera when Safari moves
+  away from the page.
+*/
+
+window.addEventListener(
+
+  "pagehide",
+
+  stopScanner
+
+);/* -----------------------------
+   COMPLETED ORDERS
+----------------------------- */
+
+function completed(){
+
+  title("Completed Orders");
+
+  let html = `
+
+    <input
+      class="search"
+      placeholder="Search completed orders..."
+    >
+
+  `;
+
+
+  if(completedOrders.length === 0){
+
+    html += `
 
       <div class="card center">
 
-        <div style="font-size:42px">
-          📭
+        <div style="font-size:45px">
+          📦
         </div>
 
         <h3>
-          No orders on this shelf
+          No completed orders yet
         </h3>
 
         <p class="sub">
-          Shelf ${code}
-          is available.
+          Orders will appear here after
+          they leave the showroom.
         </p>
 
       </div>
@@ -4465,1055 +4257,42 @@ function viewShelf(code){
     `;
 
   }
-  else{
 
-    shelf.orders.forEach(job => {
 
-      let companyName =
-        Object.keys(companies)
-        .find(
-          companyName =>
-            companies[
-              companyName
-            ]
-            .includes(job)
-        ) || "";
-
-
-      ordersHTML += `
-
-        <div
-          class="row"
-          onclick="order(
-            '${companyName}',
-            '${job}'
-          )"
-        >
-
-          <div class="row-main">
-
-            <div class="title">
-              ${job}
-            </div>
-
-            <div class="sub">
-              ${companyName}
-            </div>
-
-          </div>
-
-          <div>
-            ›
-          </div>
-
-        </div>
-
-      `;
-
-    });
-
-  }
-
-
-  content(`
-
-    <button
-      class="btn gray small"
-      onclick="shelfLocations()"
-    >
-      ‹ Shelf Locations
-    </button>
-
-
-    <div class="card center">
-
-      <div style="font-size:58px">
-        ▥
-      </div>
-
-
-      <div
-        style="
-          font-size:34px;
-          font-weight:900;
-        "
-      >
-        ${shelf.code}
-      </div>
-
-
-      <strong>
-        ${shelf.description}
-      </strong>
-
-
-      <br><br>
-
-
-      <span
-        class="badge ${
-          shelf.orders.length
-          ? "used"
-          : "available"
-        }"
-      >
-
-        ${
-          shelf.orders.length
-
-          ? shelf.orders.length +
-            (
-              shelf.orders.length === 1
-              ? " Order"
-              : " Orders"
-            )
-
-          : "Available"
-        }
-
-      </span>
-
-
-      ${
-        shelfPhotos[code]
-
-        ? `
-          <img
-            class="photo-preview"
-            src="${shelfPhotos[code]}"
-          >
-        `
-
-        : ""
-      }
-
-
-      <button
-        class="btn purple"
-        onclick="scanShelf()"
-      >
-        Scan Another Shelf
-      </button>
-
-    </div>
-
-
-    <h2>
-      Orders on This Shelf
-    </h2>
-
-
-    ${ordersHTML}
-
-  `);/* -----------------------------
-   ORDER DETAILS
------------------------------ */
-
-function order(companyName,job){
-
-  title("Order Details");
-
-  let shelf =
-    findShelf(job);
-
-  content(`
-
-    <button
-      class="btn gray small"
-      onclick="company('${companyName}')"
-    >
-      ‹ ${companyName}
-    </button>
-
-    <div class="card">
-
-      <h2 style="margin-bottom:4px">
-        ${job}
-      </h2>
-
-      <div class="sub">
-        ${companyName}
-      </div>
-
-      <br>
-
-
-      <div class="card">
-
-        <div class="sub">
-          Shelf Location
-        </div>
-
-        <div class="title">
-
-          ${
-            shelf
-            ? "▦ " + shelf.code
-            : "Not Assigned"
-          }
-
-        </div>
-
-        ${
-          shelf
-          ? `
-            <div class="sub">
-              ${shelf.description}
-            </div>
-          `
-          : ""
-        }
-
-      </div>
-
-
-      <div class="row">
-
-        <div class="row-main">
-
-          <div class="title">
-            Items
-          </div>
-
-          <div class="sub">
-            View received and missing items
-          </div>
-
-        </div>
-
-        <div>›</div>
-
-      </div>
-
-
-      <div class="row">
-
-        <div class="row-main">
-
-          <div class="title">
-            Notes
-          </div>
-
-        </div>
-
-        <div>›</div>
-
-      </div>
-
-
-      <div class="row">
-
-        <div class="row-main">
-
-          <div class="title">
-            Shelf Photo
-          </div>
-
-          <div class="sub">
-
-            ${
-              shelf &&
-              shelfPhotos[shelf.code]
-
-              ? "Shelf photo saved"
-
-              : "Photo of all boxes together"
-            }
-
-          </div>
-
-        </div>
-
-        <div>›</div>
-
-      </div>
-
-
-      <div class="row">
-
-        <div class="row-main">
-
-          <div class="title">
-            Invoices
-          </div>
-
-        </div>
-
-        <div>›</div>
-
-      </div>
-
-
-      <button
-        class="btn soft"
-        onclick="chooseShelf(
-          '${companyName}',
-          '${job}'
-        )"
-      >
-
-        ${
-          shelf
-          ? "Move to Another Shelf"
-          : "Assign Shelf"
-        }
-
-      </button>
-
-
-      <button
-        class="btn purple"
-        onclick="sendConfirm(
-          '${companyName}',
-          '${job}'
-        )"
-      >
-        Send Out Order
-      </button>
-
-    </div>
-
-  `);
-
-}
-
-
-/* -----------------------------
-   CHOOSE SHELF
------------------------------ */
-
-function chooseShelf(companyName,job){
-
-  let html = `
-
-    <h2>
-      Assign Shelf
-    </h2>
-
-    <p class="sub">
-      Scan the permanent barcode
-      attached to the shelf.
-    </p>
-
-    <button
-      class="btn purple"
-      onclick="
-        closeModal();
-        scanShelfForOrder(
-          '${companyName}',
-          '${job}'
-        )
-      "
-    >
-      ▥ Scan Shelf Barcode
-    </button>
-
-
-    <p class="sub">
-      Or choose a shelf manually:
-    </p>
-
-  `;
-
-
-  shelves.forEach(shelf => {
+  completedOrders.forEach(order => {
 
     html += `
 
-      <div
-        class="row"
-        onclick="assignShelf(
-          '${companyName}',
-          '${job}',
-          '${shelf.code}',
-          true
-        )"
-      >
+      <div class="row">
+
+        <div style="font-size:24px">
+          ✅
+        </div>
 
         <div class="row-main">
 
           <div class="title">
-            ${shelf.code}
+            ${order.job}
           </div>
 
           <div class="sub">
-            ${shelf.description}
+            ${order.company}
+          </div>
+
+          <div class="sub">
+            Previous Shelf:
+            ${order.shelf}
+            •
+            ${order.date}
           </div>
 
         </div>
-
-
-        <span
-          class="badge ${
-            shelf.orders.length
-            ? "used"
-            : "available"
-          }"
-        >
-
-          ${
-            shelf.orders.length
-
-            ? shelf.orders.length +
-              (
-                shelf.orders.length === 1
-                ? " Order"
-                : " Orders"
-              )
-
-            : "Available"
-          }
-
-        </span>
 
       </div>
 
     `;
 
   });
-
-
-  html += `
-
-    <button
-      class="btn gray"
-      onclick="closeModal()"
-    >
-      Cancel
-    </button>
-
-  `;
-
-
-  modal(html);
-
-}
-
-
-/* -----------------------------
-   ASSIGN ORDER TO SHELF
------------------------------ */
-
-function assignShelf(
-  companyName,
-  job,
-  code,
-  takePhoto
-){
-
-  code =
-    normalizeCode(code);
-
-
-  let shelf =
-    shelves.find(
-      shelf =>
-        shelf.code === code
-    );
-
-
-  if(!shelf){
-
-    alert(
-      "Shelf " +
-      code +
-      " was not found."
-    );
-
-    return;
-
-  }
-
-
-  /*
-    Remove this job from any
-    previous shelf.
-  */
-
-  shelves.forEach(shelf => {
-
-    shelf.orders =
-      (
-        shelf.orders || []
-      )
-      .filter(
-        existingJob =>
-          existingJob !== job
-      );
-
-  });
-
-
-  /*
-    Add the job to the new shelf.
-  */
-
-  if(
-    !shelf.orders.includes(job)
-  ){
-
-    shelf.orders.push(job);
-
-  }
-
-
-  save();
-
-  closeModal();
-
-
-  if(takePhoto){
-
-    shelfPhotoStep(
-      companyName,
-      job,
-      code
-    );
-
-  }
-  else{
-
-    order(
-      companyName,
-      job
-    );
-
-  }
-
-}
-
-
-/* -----------------------------
-   SHELF PHOTO
------------------------------ */
-
-function shelfPhotoStep(
-  companyName,
-  job,
-  code
-){
-
-  title(
-    "Shelf Photo"
-  );
-
-
-  content(`
-
-    <button
-      class="btn gray small"
-      onclick="order(
-        '${companyName}',
-        '${job}'
-      )"
-    >
-      ‹ Order
-    </button>
-
-
-    <div class="card center">
-
-      <div style="font-size:52px">
-        📷
-      </div>
-
-      <h2>
-        Take Shelf Photo
-      </h2>
-
-      <p class="sub">
-        Take one photo showing all
-        boxes/items together on
-        Shelf ${code}.
-      </p>
-
-
-      <input
-        id="shelfPhotoInput"
-        type="file"
-        accept="image/*"
-        capture="environment"
-        onchange="previewShelfPhoto(
-          event,
-          '${code}'
-        )"
-      >
-
-
-      <div id="photoPreview"></div>
-
-
-      <button
-        class="btn purple"
-        onclick="finishShelfPhoto(
-          '${companyName}',
-          '${job}',
-          '${code}'
-        )"
-      >
-        Save Location
-      </button>
-
-    </div>
-
-  `);
-
-}
-
-
-function previewShelfPhoto(
-  event,
-  code
-){
-
-  let file =
-    event.target.files[0];
-
-
-  if(!file){
-    return;
-  }
-
-
-  let reader =
-    new FileReader();
-
-
-  reader.onload =
-    function(){
-
-      shelfPhotos[code] =
-        reader.result;
-
-
-      document
-        .getElementById(
-          "photoPreview"
-        )
-        .innerHTML = `
-
-          <img
-            class="photo-preview"
-            src="${reader.result}"
-          >
-
-        `;
-
-    };
-
-
-  reader.readAsDataURL(file);
-
-}
-
-
-function finishShelfPhoto(
-  companyName,
-  job,
-  code
-){
-
-  save();
-
-
-  modal(`
-
-    <div class="center">
-
-      <div style="font-size:60px">
-        ✅
-      </div>
-
-      <h2>
-        Location Saved!
-      </h2>
-
-      <p class="sub">
-
-        ${job}
-        is now assigned to
-        Shelf ${code}.
-
-      </p>
-
-
-      <button
-        class="btn purple"
-        onclick="
-          closeModal();
-          order(
-            '${companyName}',
-            '${job}'
-          )
-        "
-      >
-        View Order
-      </button>
-
-    </div>
-
-  `);
-
-}
-
-
-/* -----------------------------
-   SEND OUT ORDER
------------------------------ */
-
-function sendConfirm(
-  companyName,
-  job
-){
-
-  let shelf =
-    findShelf(job);
-
-
-  modal(`
-
-    <h2>
-      Send Out Order
-    </h2>
-
-
-    <p>
-      Has
-      <strong>${job}</strong>
-      left the showroom?
-    </p>
-
-
-    <p class="sub">
-
-      This will remove the order from
-
-      ${
-        shelf
-        ? "Shelf " + shelf.code
-        : "its shelf location"
-      }
-
-      and move it into
-      Completed Orders.
-
-    </p>
-
-
-    <button
-      class="btn purple"
-      onclick="sendOut(
-        '${companyName}',
-        '${job}'
-      )"
-    >
-      Yes, Send Out Order
-    </button>
-
-
-    <button
-      class="btn gray"
-      onclick="closeModal()"
-    >
-      Cancel
-    </button>
-
-  `);
-
-}
-
-
-function sendOut(
-  companyName,
-  job
-){
-
-  let shelf =
-    findShelf(job);
-
-
-  /*
-    Remove order from shelf.
-  */
-
-  shelves.forEach(shelf => {
-
-    shelf.orders =
-      (
-        shelf.orders || []
-      )
-      .filter(
-        existingJob =>
-          existingJob !== job
-      );
-
-  });
-
-
-  /*
-    Remove from active company jobs.
-  */
-
-  if(companies[companyName]){
-
-    companies[companyName] =
-      companies[companyName]
-      .filter(
-        existingJob =>
-          existingJob !== job
-      );
-
-  }
-
-
-  /*
-    Remove from team member's
-    active order list.
-  */
-
-  Object
-    .keys(teamOrders)
-    .forEach(person => {
-
-      teamOrders[person] =
-        teamOrders[person]
-        .filter(
-          existingJob =>
-            existingJob !== job
-        );
-
-    });
-
-
-  /*
-    Preserve history.
-  */
-
-  completedOrders.unshift({
-
-    company:
-      companyName,
-
-    job:
-      job,
-
-    shelf:
-      shelf
-      ? shelf.code
-      : "None",
-
-    date:
-      new Date()
-      .toLocaleDateString()
-
-  });
-
-
-  save();
-
-
-  modal(`
-
-    <div class="center">
-
-      <div style="font-size:60px">
-        ✅
-      </div>
-
-
-      <h2>
-        Order Sent Out!
-      </h2>
-
-
-      <p class="sub">
-
-        ${job}
-        has been moved to
-        Completed Orders.
-
-        <br><br>
-
-        ${
-          shelf
-          ? "Shelf " +
-            shelf.code +
-            " is now available."
-          : ""
-        }
-
-      </p>
-
-
-      <button
-        class="btn purple"
-        onclick="
-          closeModal();
-          completed()
-        "
-      >
-        View Completed Orders
-      </button>
-
-    </div>
-
-  `);
-
-}
-
-
-/* -----------------------------
-   SETTINGS
------------------------------ */
-
-function settings(){
-
-  title(
-    "Settings"
-  );
-
-
-  content(`
-
-    <div class="section">
-      Order & Storage
-    </div>
-
-
-    <div
-      class="row"
-      onclick="shelfLocations()"
-    >
-
-      <div style="font-size:28px">
-        ▦
-      </div>
-
-      <div class="row-main">
-
-        <div class="title">
-          Shelf Locations
-        </div>
-
-        <div class="sub">
-          View, add and scan
-          showroom shelves
-        </div>
-
-      </div>
-
-      <div>
-        ›
-      </div>
-
-    </div>
-
-
-    <div
-      class="row"
-      onclick="completed()"
-    >
-
-      <div style="font-size:28px">
-        ✅
-      </div>
-
-      <div class="row-main">
-
-        <div class="title">
-          Completed Orders
-        </div>
-
-        <div class="sub">
-          Orders that have left
-          the showroom
-        </div>
-
-      </div>
-
-      <div>
-        ›
-      </div>
-
-    </div>
-
-
-    <div class="section">
-      App
-    </div>
-
-
-    <div class="card">
-
-      <div class="title">
-        Plumbing Supply Manager
-      </div>
-
-      <div class="sub">
-        Showroom Team App
-      </div>
-
-    </div>
-
-  `);
-
-}
-
-
-/* -----------------------------
-   SHELF LOCATIONS
------------------------------ */
-
-function shelfLocations(){
-
-  title(
-    "Shelf Locations"
-  );
-
-
-  let html = `
-
-    <div class="heading">
-
-      <h2>
-        All Shelves
-      </h2>
-
-      <button
-        class="btn purple small"
-        onclick="addShelf()"
-      >
-        + Add Shelf
-      </button>
-
-    </div>
-
-
-    <input
-      class="search"
-      placeholder="Search shelves..."
-      oninput="filterShelves(
-        this.value
-      )"
-    >
-
-
-    <div id="shelfList">
-
-  `;
-
-
-  shelves.forEach(shelf => {
-
-    html +=
-      shelfRow(shelf);
-
-  });
-
-
-  html += `
-    </div>
-  `;
 
 
   content(html);
@@ -5521,158 +4300,127 @@ function shelfLocations(){
 }
 
 
-function shelfRow(shelf){
+/* -----------------------------
+   QUOTES
+----------------------------- */
 
-  return `
+function quotes(){
 
-    <div
-      class="row shelf-row"
-      data-search="${
-        (
-          shelf.code +
-          " " +
-          shelf.description
-        )
-        .toLowerCase()
-      }"
-      onclick="viewShelf(
-        '${shelf.code}'
-      )"
+  title("Quotes");
+
+  content(`
+
+    <div class="heading">
+
+      <h2>
+        Quotes
+      </h2>
+
+      <button
+        class="btn purple small"
+        onclick="quoteScan()"
+      >
+        + Add / Scan Quote
+      </button>
+
+    </div>
+
+
+    <input
+      class="search"
+      placeholder="Search company or job..."
     >
 
-      <div style="font-size:24px">
-        ▦
-      </div>
 
+    <div class="row">
 
       <div class="row-main">
 
         <div class="title">
-          ${shelf.code}
+          D Star Plumbing
         </div>
 
         <div class="sub">
-          ${shelf.description}
+          306 Preserve • Quote
         </div>
 
       </div>
 
-
-      <span
-        class="badge ${
-          shelf.orders.length
-          ? "used"
-          : "available"
-        }"
-      >
-
-        ${
-          shelf.orders.length
-
-          ? shelf.orders.length +
-            (
-              shelf.orders.length === 1
-              ? " Order"
-              : " Orders"
-            )
-
-          : "Available"
-        }
-
-      </span>
+      <div>
+        ›
+      </div>
 
     </div>
 
-  `;
+  `);
 
 }
 
 
-function filterShelves(value){
+function quoteScan(){
 
-  let search =
-    value
-      .toLowerCase();
+  title("Quote Scan");
 
+  let companyOptions = "";
 
-  document
-    .querySelectorAll(
-      ".shelf-row"
-    )
-    .forEach(row => {
+  Object
+    .keys(companies)
+    .forEach(companyName => {
 
-      row.style.display =
-        row.dataset.search
-        .includes(search)
+      companyOptions += `
 
-        ? "flex"
-        : "none";
+        <option value="${companyName}">
+          ${companyName}
+        </option>
+
+      `;
 
     });
-
-}
-
-
-/* -----------------------------
-   ADD A NEW SHELF
------------------------------ */
-
-function addShelf(){
-
-  title(
-    "Add Shelf"
-  );
 
 
   content(`
 
-    <button
-      class="btn gray small"
-      onclick="shelfLocations()"
-    >
-      ‹ Shelf Locations
-    </button>
-
-
     <div class="card">
 
+      <h2>
+        Scan / Add Quote
+      </h2>
+
+
       <label>
-        Shelf Code *
+        Company / Plumber
+      </label>
+
+      <select>
+        ${companyOptions}
+      </select>
+
+
+      <label>
+        Job Name
       </label>
 
       <input
-        id="shelfCode"
-        placeholder="Example: GK1"
+        placeholder="Enter job name"
       >
 
 
       <label>
-        Description
+        Quote Photo / File
       </label>
 
       <input
-        id="shelfDescription"
-        placeholder="Example: Mountain Green"
-      >
-
-
-      <label>
-        Shelf Photo
-      </label>
-
-      <input
-        id="newShelfPhoto"
         type="file"
-        accept="image/*"
+        accept="image/*,application/pdf"
         capture="environment"
       >
 
 
       <button
         class="btn purple"
-        onclick="saveShelf()"
+        onclick="quotes()"
       >
-        Save Shelf
+        Save Quote
       </button>
 
     </div>
@@ -5682,192 +4430,90 @@ function addShelf(){
 }
 
 
-function saveShelf(){
-
-  let code =
-    normalizeCode(
-      document
-        .getElementById(
-          "shelfCode"
-        )
-        .value
-    );
-
-
-  let description =
-    document
-      .getElementById(
-        "shelfDescription"
-      )
-      .value
-      .trim();
-
-
-  if(!code){
-
-    alert(
-      "Please enter a shelf code."
-    );
-
-    return;
-
-  }
-
-
-  if(
-    shelves.some(
-      shelf =>
-        shelf.code === code
-    )
-  ){
-
-    alert(
-      "That shelf already exists."
-    );
-
-    return;
-
-  }
-
-
-  let photoInput =
-    document.getElementById(
-      "newShelfPhoto"
-    );
-
-
-  let file =
-    photoInput.files[0];
-
-
-  function finishSaving(){
-
-    shelves.push({
-
-      code:code,
-
-      description:
-        description ||
-        "Shelf Location",
-
-      orders:[]
-
-    });
-
-
-    save();
-
-    shelfAdded(code);
-
-  }
-
-
-  if(file){
-
-    let reader =
-      new FileReader();
-
-
-    reader.onload =
-      function(){
-
-        shelfPhotos[code] =
-          reader.result;
-
-        finishSaving();
-
-      };
-
-
-    reader.readAsDataURL(file);
-
-  }
-  else{
-
-    finishSaving();
-
-  }
-
-}
-
-
 /* -----------------------------
-   SHELF ADDED
+   CUSTOMERS
 ----------------------------- */
 
-function shelfAdded(code){
+function customers(){
 
-  let shelf =
-    shelves.find(
-      shelf =>
-        shelf.code === code
-    );
-
-
-  title(
-    "Shelf Added"
-  );
-
+  title("Customers");
 
   content(`
 
-    <div class="card center">
-
-      <div style="font-size:60px">
-        ✅
-      </div>
-
+    <div class="heading">
 
       <h2>
-        Shelf ${code} Added!
+        Customers
       </h2>
 
-
-      <p class="sub">
-        ${shelf.description}
-      </p>
-
-
-      <div style="font-size:60px">
-        ▥
-      </div>
-
-
-      <div
-        style="
-          font-size:34px;
-          font-weight:900;
-        "
-      >
-        ${code}
-      </div>
-
-
-      <p class="sub">
-
-        Your physical Code 128
-        barcode for Shelf ${code}
-        can now be scanned.
-
-      </p>
-
-
       <button
-        class="btn purple"
-        onclick="viewShelf(
-          '${code}'
-        )"
+        class="btn purple small"
       >
-        View Shelf
+        + Add Customer
       </button>
 
+    </div>
 
-      <button
-        class="btn soft"
-        onclick="addShelf()"
-      >
-        Add Another Shelf
-      </button>
+
+    <input
+      class="search"
+      placeholder="Search name or phone..."
+    >
+
+
+    <div class="row">
+
+      <div class="row-main">
+
+        <div class="title">
+          Ryan
+        </div>
+
+        <div class="sub">
+          Homeowner
+        </div>
+
+      </div>
+
+      <div>›</div>
+
+    </div>
+
+
+    <div class="row">
+
+      <div class="row-main">
+
+        <div class="title">
+          Rebecca
+        </div>
+
+        <div class="sub">
+          Homeowner
+        </div>
+
+      </div>
+
+      <div>›</div>
+
+    </div>
+
+
+    <div class="row">
+
+      <div class="row-main">
+
+        <div class="title">
+          John
+        </div>
+
+        <div class="sub">
+          Homeowner
+        </div>
+
+      </div>
+
+      <div>›</div>
 
     </div>
 
@@ -5877,201 +4523,686 @@ function shelfAdded(code){
 
 
 /* -----------------------------
-   VIEW A SHELF
+   INVOICES
 ----------------------------- */
 
-function viewShelf(code){
+function invoices(){
 
-  let shelf =
-    shelves.find(
-      shelf =>
-        shelf.code === code
-    );
+  title("Invoices");
+
+  content(`
+
+    <div class="heading">
+
+      <h2>
+        Invoices
+      </h2>
+
+      <button
+        class="btn purple small"
+        onclick="invoiceScan()"
+      >
+        + Scan Invoice
+      </button>
+
+    </div>
 
 
-  if(!shelf){
-    return;
-  }
+    <input
+      class="search"
+      placeholder="Search company or job..."
+    >
 
 
-  title(
-    "Shelf Details"
-  );
+    <div class="row">
 
+      <div class="row-main">
 
-  let ordersHTML = "";
-
-
-  if(
-    shelf.orders.length === 0
-  ){
-
-    ordersHTML = `
-
-      <div class="card center">
-
-        <div style="font-size:42px">
-          📭
+        <div class="title">
+          D Star Plumbing
         </div>
 
-        <h3>
-          No orders on this shelf
-        </h3>
-
-        <p class="sub">
-          Shelf ${code}
-          is available.
-        </p>
+        <div class="sub">
+          306 Preserve
+        </div>
 
       </div>
 
-    `;
+      <div>›</div>
 
-  }
-  else{
+    </div>
 
-    shelf.orders.forEach(job => {
+  `);
 
-      let companyName =
-        Object.keys(companies)
-        .find(
-          companyName =>
-            companies[
-              companyName
-            ]
-            .includes(job)
-        ) || "";
+}
 
 
-      ordersHTML += `
+function invoiceScan(){
 
-        <div
-          class="row"
-          onclick="order(
-            '${companyName}',
-            '${job}'
-          )"
-        >
+  title("Invoice Scan");
 
-          <div class="row-main">
+  let companyOptions = "";
 
-            <div class="title">
-              ${job}
-            </div>
+  Object
+    .keys(companies)
+    .forEach(companyName => {
 
-            <div class="sub">
-              ${companyName}
-            </div>
+      companyOptions += `
 
-          </div>
-
-          <div>
-            ›
-          </div>
-
-        </div>
+        <option value="${companyName}">
+          ${companyName}
+        </option>
 
       `;
 
     });
 
-  }
-
 
   content(`
 
-    <button
-      class="btn gray small"
-      onclick="shelfLocations()"
-    >
-      ‹ Shelf Locations
-    </button>
+    <div class="card">
+
+      <h2>
+        Scan Invoice
+      </h2>
 
 
-    <div class="card center">
+      <label>
+        Company / Plumber
+      </label>
 
-      <div style="font-size:58px">
-        ▥
-      </div>
-
-
-      <div
-        style="
-          font-size:34px;
-          font-weight:900;
-        "
-      >
-        ${shelf.code}
-      </div>
+      <select>
+        ${companyOptions}
+      </select>
 
 
-      <strong>
-        ${shelf.description}
-      </strong>
+      <label>
+        Job / Order
+      </label>
 
-
-      <br><br>
-
-
-      <span
-        class="badge ${
-          shelf.orders.length
-          ? "used"
-          : "available"
-        }"
+      <input
+        placeholder="Enter job name"
       >
 
-        ${
-          shelf.orders.length
 
-          ? shelf.orders.length +
-            (
-              shelf.orders.length === 1
-              ? " Order"
-              : " Orders"
-            )
+      <label>
+        Invoice Photo / File
+      </label>
 
-          : "Available"
-        }
-
-      </span>
-
-
-      ${
-        shelfPhotos[code]
-
-        ? `
-          <img
-            class="photo-preview"
-            src="${shelfPhotos[code]}"
-          >
-        `
-
-        : ""
-      }
+      <input
+        type="file"
+        accept="image/*,application/pdf"
+        capture="environment"
+      >
 
 
       <button
         class="btn purple"
-        onclick="scanShelf()"
+        onclick="invoices()"
       >
-        Scan Another Shelf
+        Save Invoice
+      </button>
+
+    </div>
+
+  `);
+
+}
+
+
+/* -----------------------------
+   REMINDERS
+----------------------------- */
+
+function reminders(){
+
+  title("Reminders");
+
+  content(`
+
+    <div class="card">
+
+      <h2>
+        New Reminder
+      </h2>
+
+
+      <label>
+        Company / Plumber
+      </label>
+
+      <select>
+
+        <option>
+          D Star Plumbing
+        </option>
+
+        <option>
+          Ridgeline Plumbing
+        </option>
+
+        <option>
+          Durant / Slate
+        </option>
+
+        <option>
+          Goff Plumbing
+        </option>
+
+      </select>
+
+
+      <label>
+        Job / Order
+      </label>
+
+      <select>
+
+        <option>
+          306 Preserve
+        </option>
+
+        <option>
+          Cross Roads
+        </option>
+
+        <option>
+          K Knutson
+        </option>
+
+        <option>
+          Johnson
+        </option>
+
+      </select>
+
+
+      <label>
+        Date & Time
+      </label>
+
+      <input
+        type="datetime-local"
+      >
+
+
+      <label>
+        Reminder
+      </label>
+
+      <input
+        placeholder="What do you need to remember?"
+      >
+
+
+      <button class="btn soft">
+        + Add Another Reminder
+      </button>
+
+
+      <label>
+        Notes
+      </label>
+
+      <textarea
+        placeholder="Add notes..."
+      ></textarea>
+
+
+      <button class="btn purple">
+        Save Reminder
       </button>
 
     </div>
 
 
     <h2>
-      Orders on This Shelf
+      Upcoming
     </h2>
 
 
-    ${ordersHTML}
+    <div class="row">
+
+      <div style="font-size:24px">
+        ○
+      </div>
+
+      <div class="row-main">
+
+        <div class="title">
+          Follow up on quote for
+          306 Preserve
+        </div>
+
+        <div class="sub">
+          D Star Plumbing
+        </div>
+
+      </div>
+
+      <span class="badge used">
+        Follow Up
+      </span>
+
+    </div>
+
+
+    <div class="row">
+
+      <div style="font-size:24px">
+        ○
+      </div>
+
+      <div class="row-main">
+
+        <div class="title">
+          Check status of Moen order
+        </div>
+
+      </div>
+
+      <span class="badge orange">
+        Order
+      </span>
+
+    </div>
+
+
+    <div class="row">
+
+      <div style="font-size:24px">
+        ○
+      </div>
+
+      <div class="row-main">
+
+        <div class="title">
+          Call D Star about invoice
+        </div>
+
+        <div class="sub">
+          D Star Plumbing
+        </div>
+
+      </div>
+
+      <span class="badge used">
+        Call
+      </span>
+
+    </div>
+
+  `);
+
+}
+
+
+/* -----------------------------
+   CREATE ORDER
+----------------------------- */
+
+function createOrder(){
+
+  title("New Order Sheet");
+
+  let lines = "";
+
+
+  for(
+    let i = 1;
+    i <= 10;
+    i++
+  ){
+
+    lines += `
+
+      <tr>
+
+        <td>
+          ${i}
+        </td>
+
+        <td>
+          <input
+            type="number"
+            min="0"
+          >
+        </td>
+
+        <td>
+          <input>
+        </td>
+
+      </tr>
+
+    `;
+
+  }
+
+
+  content(`
+
+    <div class="card">
+
+      <label>
+        Company / Plumber
+      </label>
+
+      <input
+        id="companyInput"
+        placeholder="Company or plumber name"
+      >
+
+
+      <label>
+        Job / Order
+      </label>
+
+      <input
+        id="jobInput"
+        placeholder="Job or order name"
+      >
+
+
+      <label>
+        Date
+      </label>
+
+      <input
+        id="orderDate"
+        type="date"
+      >
+
+
+      <br><br>
+
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              #
+            </th>
+
+            <th>
+              Qty.
+            </th>
+
+            <th>
+              Item / Description
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody id="orderLines">
+
+          ${lines}
+
+        </tbody>
+
+      </table>
+
+
+      <button
+        class="btn soft"
+        onclick="addOrderLine()"
+      >
+        + Add Another Line
+      </button>
+
+
+      <label>
+        Notes / Special Instructions
+      </label>
+
+      <textarea
+        placeholder="Add notes or special instructions..."
+      ></textarea>
+
+
+      <button
+        class="btn purple"
+        onclick="saveOrder()"
+      >
+        Save Order
+      </button>
+
+    </div>
 
   `);
 
 
+  /*
+    Automatically put today's date
+    into the order sheet.
+  */
+
+  let dateInput =
+    document.getElementById(
+      "orderDate"
+    );
 
 
+  if(dateInput){
+
+    let today =
+      new Date();
+
+
+    let year =
+      today.getFullYear();
+
+
+    let month =
+      String(
+        today.getMonth() + 1
+      )
+      .padStart(
+        2,
+        "0"
+      );
+
+
+    let day =
+      String(
+        today.getDate()
+      )
+      .padStart(
+        2,
+        "0"
+      );
+
+
+    dateInput.value =
+      year +
+      "-" +
+      month +
+      "-" +
+      day;
+
+  }
 
 }
+
+
+/* -----------------------------
+   ADD ORDER LINE
+----------------------------- */
+
+function addOrderLine(){
+
+  let body =
+    document.getElementById(
+      "orderLines"
+    );
+
+
+  let number =
+    body.children.length + 1;
+
+
+  body.insertAdjacentHTML(
+
+    "beforeend",
+
+    `
+
+      <tr>
+
+        <td>
+          ${number}
+        </td>
+
+        <td>
+          <input
+            type="number"
+            min="0"
+          >
+        </td>
+
+        <td>
+          <input>
+        </td>
+
+      </tr>
+
+    `
+
+  );
+
+}
+
+
+/* -----------------------------
+   SAVE NEW ORDER
+----------------------------- */
+
+function saveOrder(){
+
+  let companyName =
+    document
+      .getElementById(
+        "companyInput"
+      )
+      .value
+      .trim();
+
+
+  let job =
+    document
+      .getElementById(
+        "jobInput"
+      )
+      .value
+      .trim();
+
+
+  if(
+    !companyName ||
+    !job
+  ){
+
+    alert(
+      "Please enter the Company / Plumber and Job / Order."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Create company if it
+    doesn't already exist.
+  */
+
+  if(
+    !companies[
+      companyName
+    ]
+  ){
+
+    companies[
+      companyName
+    ] = [];
+
+  }
+
+
+  /*
+    Add job to company.
+  */
+
+  if(
+    !companies[
+      companyName
+    ]
+    .includes(job)
+  ){
+
+    companies[
+      companyName
+    ]
+    .push(job);
+
+  }
+
+
+  /*
+    For this prototype,
+    newly created orders
+    start under Mallerie.
+  */
+
+  if(
+    !teamOrders.Mallerie
+  ){
+
+    teamOrders.Mallerie = [];
+
+  }
+
+
+  if(
+    !teamOrders
+      .Mallerie
+      .includes(job)
+  ){
+
+    teamOrders
+      .Mallerie
+      .push(job);
+
+  }
+
+
+  save();
+
+
+  order(
+    companyName,
+    job
+  );
+
+}
+
+
+/* -----------------------------
+   START APP
+----------------------------- */
+
+load();
+
+home();
+
+</script>
+
+</body>
+
+</html>
