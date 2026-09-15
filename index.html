@@ -2,33 +2,32 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#f7f6fa">
-
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Plumbing Supply Manager</title>
 
 <style>
 :root{
-  --purple:#7847e8;
-  --purple2:#8b55ed;
-  --purpleSoft:#f0e9ff;
-  --bg:#f7f6fa;
+  --purple:#7c49e8;
+  --purple2:#8d55ee;
+  --soft:#f3edff;
+  --bg:#f8f7fb;
   --card:#ffffff;
-  --text:#17151b;
-  --muted:#77727e;
-  --line:#e5e1e9;
-  --orange:#f39a16;
+  --text:#18161c;
+  --muted:#77717e;
+  --line:#e6e2ea;
   --red:#e53935;
-  --green:#39a96b;
-  --shadow:0 8px 24px rgba(37,25,55,.08);
+  --green:#2e9d62;
+  --orange:#ed9411;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
-  background:#eeeef3;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:#ededf2;
   color:var(--text);
 }
 
@@ -40,77 +39,3411 @@ button{
   cursor:pointer;
 }
 
-.app{
-  width:min(100%,700px);
-  min-height:100vh;
+#app{
+  max-width:700px;
   margin:auto;
+  min-height:100vh;
   background:var(--bg);
-  padding-bottom:92px;
+  padding-bottom:90px;
 }
 
 /* HEADER */
 
-.top{
+header{
   height:86px;
-  background:#fff;
+  background:white;
   border-bottom:1px solid var(--line);
   display:flex;
   align-items:center;
-  gap:14px;
-  padding:0 22px;
+  gap:12px;
+  padding:0 20px;
   position:sticky;
   top:0;
-  z-index:20;
+  z-index:30;
 }
 
-.menuBtn{
+.menu{
   border:0;
-  background:transparent;
+  background:none;
   color:#168cff;
   font-size:27px;
-  padding:8px;
 }
 
-.pageTitle{
+.title{
   flex:1;
-  font-size:23px;
+  font-size:22px;
   font-weight:850;
 }
 
-.bellBtn{
+.bell{
   position:relative;
   border:0;
-  background:transparent;
+  background:none;
   font-size:32px;
-  padding:8px 12px;
 }
 
 .badge{
   position:absolute;
-  top:2px;
-  right:1px;
-  min-width:22px;
-  height:22px;
-  padding:0 6px;
+  right:-2px;
+  top:-3px;
+  min-width:21px;
+  height:21px;
+  padding:0 5px;
   border-radius:20px;
   background:var(--red);
   color:white;
   border:2px solid white;
-  font-size:12px;
+  font-size:11px;
   font-weight:900;
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
-/* GENERAL */
-
-.content{
-  padding:24px 20px;
-}
+/* SCREENS */
 
 .screen{
   display:none;
+  padding:22px 18px;
 }
 
 .screen.active{
+  display:block;
+}
+
+h2{
+  margin-top:4px;
+}
+
+.search,
+.input{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:white;
+  padding:15px;
+  outline:none;
+}
+
+textarea.input{
+  min-height:95px;
+}
+
+.search:focus,
+.input:focus{
+  border-color:#b79cff;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-top:16px;
+}
+
+.tile{
+  min-height:132px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:white;
+  padding:20px;
+  text-align:left;
+}
+
+.tile.purple{
+  color:white;
+  background:linear-gradient(135deg,var(--purple),var(--purple2));
+  border-color:var(--purple);
+}
+
+.icon{
+  font-size:29px;
+  display:block;
+  margin-bottom:28px;
+}
+
+.tile strong{
+  font-size:18px;
+}
+
+.card{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:16px;
+  margin:11px 0;
+}
+
+.row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.grow{
+  flex:1;
+}
+
+.strong{
+  font-weight:850;
+}
+
+.muted{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.small{
+  font-size:11px;
+  color:var(--muted);
+}
+
+.back{
+  border:0;
+  background:none;
+  color:var(--purple);
+  font-weight:800;
+  padding:0 0 12px;
+}
+
+.btn{
+  border:0;
+  border-radius:14px;
+  padding:13px 16px;
+  font-weight:850;
+}
+
+.primary{
+  background:var(--purple);
+  color:white;
+}
+
+.secondary{
+  background:var(--soft);
+  color:var(--purple);
+}
+
+.danger{
+  background:#fff0f0;
+  color:#d93025;
+}
+
+.full{
+  width:100%;
+}
+
+.link{
+  border:0;
+  background:none;
+  color:var(--purple);
+  font-weight:850;
+}
+
+.headingRow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.headingRow h2,
+.headingRow h3{
+  margin:0;
+  flex:1;
+}
+
+.label{
+  display:block;
+  font-size:12px;
+  font-weight:850;
+  margin:13px 0 6px;
+}
+
+.pill{
+  display:inline-block;
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:11px;
+  font-weight:850;
+  background:#f1eef4;
+}
+
+.pill.purple{
+  background:var(--soft);
+  color:var(--purple);
+}
+
+.pill.green{
+  background:#e8f7ef;
+  color:var(--green);
+}
+
+/* LIST BUTTON */
+
+.listButton{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:white;
+  padding:16px;
+  margin:10px 0;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-align:left;
+}
+
+.listIcon{
+  font-size:25px;
+}
+
+/* BOTTOM NAV */
+
+nav{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(100%,700px);
+  height:82px;
+  background:white;
+  border-top:1px solid var(--line);
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  z-index:40;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+
+.nav{
+  border:0;
+  background:white;
+  color:#77727e;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:4px;
+  font-size:11px;
+}
+
+.nav span{
+  font-size:22px;
+}
+
+.nav.active{
+  color:var(--purple);
+}
+
+/* TEAM MENU */
+
+#drawerOverlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.35);
+  z-index:100;
+}
+
+.drawer{
+  height:100%;
+  width:min(82%,340px);
+  background:white;
+  padding:22px 16px;
+}
+
+.avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:var(--soft);
+  color:var(--purple);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+}
+
+.close{
+  width:38px;
+  height:38px;
+  border:0;
+  border-radius:50%;
+  background:#f1eef5;
+  font-size:22px;
+}
+
+/* REMINDER POPUP */
+
+#reminderOverlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:90;
+  background:rgba(25,20,35,.20);
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+}
+
+.reminderPopup{
+  width:min(100%,620px);
+  max-height:80vh;
+  overflow:auto;
+  background:white;
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+
+.popupHead{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.popupHead h2{
+  flex:1;
+  margin:0;
+}
+
+.tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:7px;
+  margin:15px 0;
+}
+
+.tab{
+  border:1px solid var(--line);
+  background:#f7f5fa;
+  border-radius:12px;
+  padding:11px 5px;
+  font-size:12px;
+  font-weight:850;
+}
+
+.tab.active{
+  background:linear-gradient(135deg,var(--purple),var(--purple2));
+  color:white;
+}
+
+.reminder{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  margin:9px 0;
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.circle{
+  width:28px;
+  height:28px;
+  border:3px solid var(--purple);
+  border-radius:50%;
+  flex-shrink:0;
+}
+
+.circle.orange{
+  border-color:var(--orange);
+}
+
+.reminderText{
+  flex:1;
+}
+
+.reminderTitle{
+  font-weight:850;
+  font-size:14px;
+}
+
+.tag{
+  border-radius:999px;
+  padding:7px 11px;
+  background:var(--soft);
+  color:var(--purple);
+  font-size:11px;
+  font-weight:850;
+}
+
+.tag.orange{
+  background:#fff0dc;
+  color:#d77b00;
+}
+
+.addReminder{
+  width:100%;
+  border:0;
+  border-radius:13px;
+  padding:14px;
+  margin-top:12px;
+  background:linear-gradient(135deg,var(--purple),var(--purple2));
+  color:white;
+  font-weight:850;
+}
+
+/* ORDERS */
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+}
+
+th,td{
+  padding:9px 3px;
+  border-bottom:1px solid var(--line);
+  text-align:left;
+}
+
+.qty{
+  width:29px;
+  height:29px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:white;
+}
+
+/* SHELVES */
+
+.sectionName{
+  font-weight:900;
+  margin:22px 0 8px;
+}
+
+.shelfGrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.shelf{
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:white;
+  padding:11px 5px;
+  font-weight:850;
+}
+
+.shelf.used{
+  background:var(--soft);
+  color:var(--purple);
+}
+
+.barcode{
+  height:60px;
+  margin:15px auto;
+  max-width:300px;
+  background:
+  repeating-linear-gradient(
+    90deg,
+    #111 0px,
+    #111 2px,
+    transparent 2px,
+    transparent 5px,
+    #111 5px,
+    #111 9px,
+    transparent 9px,
+    transparent 12px
+  );
+}
+
+/* CREATE ORDER */
+
+.orderLine{
+  display:grid;
+  grid-template-columns:28px 75px 1fr;
+  gap:7px;
+  align-items:center;
+  margin:8px 0;
+}
+
+/* SCAN */
+
+.scanBox{
+  border:2px dashed #c7b4ff;
+  border-radius:20px;
+  background:#fbf9ff;
+  padding:40px 18px;
+  text-align:center;
+}
+
+.scanChoice{
+  min-height:120px;
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:white;
+  padding:16px;
+  text-align:left;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:480px){
+  header{
+    padding:0 13px;
+  }
+
+  .title{
+    font-size:19px;
+  }
+
+  .screen{
+    padding:18px 14px;
+  }
+
+  .tile{
+    min-height:118px;
+    padding:16px;
+  }
+
+  .icon{
+    margin-bottom:22px;
+  }
+
+  .reminderPopup{
+    padding:14px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<header>
+  <button class="menu" onclick="openDrawer()">☰</button>
+
+  <div id="headerTitle" class="title">
+    Plumbing Supply Manager
+  </div>
+
+  <button class="bell" onclick="openReminderPopup()">
+    🔔
+    <span id="badge" class="badge">3</span>
+  </button>
+</header>
+
+
+<!-- HOME -->
+
+<section id="home" class="screen active">
+
+  <input
+    id="search"
+    class="search"
+    placeholder="Search anything..."
+    oninput="searchApp()"
+  >
+
+  <div id="searchResults"></div>
+
+  <div class="grid">
+
+    <button class="tile" onclick="go('orders')">
+      <span class="icon">📦</span>
+      <strong>My Orders</strong>
+    </button>
+
+    <button class="tile" onclick="go('quotes')">
+      <span class="icon">📄</span>
+      <strong>Quotes</strong>
+    </button>
+
+    <button class="tile" onclick="go('customers')">
+      <span class="icon">👥</span>
+      <strong>Customers</strong>
+    </button>
+
+    <button class="tile purple" onclick="go('createOrder')">
+      <span class="icon">＋</span>
+      <strong>Create Order</strong>
+    </button>
+
+    <button class="tile" onclick="go('invoices')">
+      <span class="icon">🧾</span>
+      <strong>Invoices</strong>
+    </button>
+
+    <button class="tile" onclick="go('reminders')">
+      <span class="icon">🔔</span>
+      <strong>Reminders</strong>
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- MY ORDERS -->
+
+<section id="orders" class="screen">
+
+  <h2>My Orders</h2>
+
+  <div class="grid">
+
+    <button class="scanChoice" onclick="openCompanies()">
+      <div class="icon">👷</div>
+      <strong>Plumbers / Contractors</strong>
+      <div class="muted">Company → Jobs → Orders</div>
+    </button>
+
+    <button class="scanChoice" onclick="openHomeowners()">
+      <div class="icon">🏠</div>
+      <strong>Homeowners</strong>
+      <div class="muted">Individual customer orders</div>
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- COMPANIES -->
+
+<section id="companies" class="screen">
+
+  <button class="back" onclick="go('orders')">← My Orders</button>
+
+  <div class="headingRow">
+    <h2>Plumbers / Contractors</h2>
+    <button class="link" onclick="addCompany()">+ Add</button>
+  </div>
+
+  <input
+    class="search"
+    placeholder="Search companies..."
+    oninput="renderCompanies(this.value)"
+  >
+
+  <div id="companyList"></div>
+
+</section>
+
+
+<!-- JOBS -->
+
+<section id="jobs" class="screen">
+
+  <button class="back" onclick="openCompanies()">← Companies</button>
+
+  <div class="headingRow">
+    <h2 id="companyName"></h2>
+    <button class="link" onclick="addJob()">+ Add Job</button>
+  </div>
+
+  <div id="jobList"></div>
+
+</section>
+
+
+<!-- HOMEOWNERS -->
+
+<section id="homeowners" class="screen">
+
+  <button class="back" onclick="go('orders')">← My Orders</button>
+
+  <h2>Homeowners</h2>
+
+  <div id="homeownerList"></div>
+
+</section>
+
+
+<!-- ORDER DETAILS -->
+
+<section id="orderDetail" class="screen">
+
+  <button class="back" onclick="orderBack()">← Back</button>
+
+  <div id="orderBody"></div>
+
+</section>
+
+
+<!-- QUOTES -->
+
+<section id="quotes" class="screen">
+
+  <div class="headingRow">
+    <h2>Quotes</h2>
+    <button class="link" onclick="addQuote()">+ Add / Scan</button>
+  </div>
+
+  <input
+    class="search"
+    placeholder="Search quotes..."
+    oninput="renderQuotes(this.value)"
+  >
+
+  <div id="quoteList"></div>
+
+</section>
+
+
+<!-- CUSTOMERS -->
+
+<section id="customers" class="screen">
+
+  <div class="headingRow">
+    <h2>Customers</h2>
+    <button class="link" onclick="addCustomer()">+ Add Contact</button>
+  </div>
+
+  <input
+    class="search"
+    placeholder="Search name or phone..."
+    oninput="renderCustomers(this.value)"
+  >
+
+  <div id="customerList"></div>
+
+</section>
+
+
+<!-- INVOICES -->
+
+<section id="invoices" class="screen">
+
+  <div class="headingRow">
+    <h2>Invoices</h2>
+    <button class="link" onclick="addInvoice()">+ Add / Scan</button>
+  </div>
+
+  <input
+    class="search"
+    placeholder="Search invoices..."
+    oninput="renderInvoices(this.value)"
+  >
+
+  <div id="invoiceList"></div>
+
+</section>
+
+
+<!-- CREATE ORDER -->
+
+<section id="createOrder" class="screen">
+
+  <div class="card">
+
+    <h2>New Order Sheet</h2>
+
+    <label class="label">Company / Plumber</label>
+    <input id="newCompany" class="input">
+
+    <label class="label">Job / Order</label>
+    <input id="newJob" class="input">
+
+    <label class="label">Date</label>
+    <input id="newDate" class="input" type="date">
+
+    <h3>Items</h3>
+
+    <div id="orderLines"></div>
+
+    <button class="btn secondary" onclick="addLine()">
+      + Add Another Line
+    </button>
+
+    <label class="label">Notes / Special Instructions</label>
+    <textarea id="newNotes" class="input"></textarea>
+
+    <button
+      class="btn primary full"
+      style="margin-top:15px"
+      onclick="saveOrder()"
+    >
+      Save Order
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- REMINDERS -->
+
+<section id="reminders" class="screen">
+
+  <div class="headingRow">
+    <h2>Reminders</h2>
+    <button class="link" onclick="showReminderForm()">+ Add Reminder</button>
+  </div>
+
+  <div id="reminderForm" class="card" style="display:none">
+
+    <label class="label">Company / Plumber</label>
+    <input id="rCompany" class="input">
+
+    <label class="label">Job / Order</label>
+    <input id="rJob" class="input">
+
+    <label class="label">Date & Time</label>
+    <input id="rDate" class="input" type="datetime-local">
+
+    <label class="label">Reminder</label>
+    <input id="rText" class="input">
+
+    <label class="label">Type</label>
+
+    <select id="rType" class="input">
+      <option>Follow Up</option>
+      <option>Order</option>
+      <option>Call</option>
+      <option>Invoice</option>
+      <option>Delivery</option>
+      <option>Other</option>
+    </select>
+
+    <label class="label">Notes</label>
+    <textarea id="rNotes" class="input"></textarea>
+
+    <button
+      class="btn primary full"
+      style="margin-top:14px"
+      onclick="saveReminder()"
+    >
+      Save Reminder
+    </button>
+
+  </div>
+
+  <div id="reminderPageList"></div>
+
+</section>
+
+
+<!-- SCAN -->
+
+<section id="scan" class="screen">
+
+  <div class="scanBox">
+
+    <div style="font-size:52px">📷</div>
+
+    <h2>Scan</h2>
+
+    <div class="muted">
+      Scan a box, invoice, quote, or shelf location.
+    </div>
+
+    <button
+      class="btn primary"
+      style="margin-top:16px"
+      onclick="openScanChoices()"
+    >
+      Open Scanner
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- SCAN CHOICES -->
+
+<section id="scanChoices" class="screen">
+
+  <button class="back" onclick="go('scan')">← Scan</button>
+
+  <h2>What is this?</h2>
+
+  <div class="grid">
+
+    <button class="scanChoice" onclick="boxScan()">
+      <div class="icon">📦</div>
+      <strong>Box Scan</strong>
+      <div class="muted">Match a product box to an order</div>
+    </button>
+
+    <button class="scanChoice" onclick="invoiceScan()">
+      <div class="icon">🧾</div>
+      <strong>Invoice Scan</strong>
+      <div class="muted">Save invoice to Company + Job</div>
+    </button>
+
+    <button class="scanChoice" onclick="quoteScan()">
+      <div class="icon">📄</div>
+      <strong>Quote Scan</strong>
+      <div class="muted">Save quote to Company + Job</div>
+    </button>
+
+    <button class="scanChoice" onclick="locationScan()">
+      <div class="icon">📍</div>
+      <strong>Location Scan</strong>
+      <div class="muted">Open a shelf by barcode</div>
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- SETTINGS -->
+
+<section id="settings" class="screen">
+
+  <h2>Settings</h2>
+
+  <button class="listButton" onclick="openShelves()">
+    <span class="listIcon">🏷️</span>
+
+    <span class="grow">
+      <span class="strong">Shelf Locations</span>
+      <span class="muted" style="display:block">
+        View and manage shelf locations
+      </span>
+    </span>
+
+    <span>›</span>
+  </button>
+
+  <button class="listButton" onclick="openCompleted()">
+    <span class="listIcon">🗃️</span>
+
+    <span class="grow">
+      <span class="strong">Completed Orders</span>
+      <span class="muted" style="display:block">
+        Orders that have left the showroom
+      </span>
+    </span>
+
+    <span>›</span>
+  </button>
+
+</section>
+
+
+<!-- SHELVES -->
+
+<section id="shelves" class="screen">
+
+  <button class="back" onclick="go('settings')">← Settings</button>
+
+  <div class="headingRow">
+    <h2>Shelf Locations</h2>
+    <button class="link" onclick="addShelf()">+ Add Shelf</button>
+  </div>
+
+  <input
+    class="search"
+    placeholder="Search shelf..."
+    oninput="renderShelves(this.value)"
+  >
+
+  <div id="shelfList"></div>
+
+</section>
+
+
+<!-- SHELF DETAIL -->
+
+<section id="shelfDetail" class="screen">
+
+  <button class="back" onclick="openShelves()">← Shelf Locations</button>
+
+  <div id="shelfBody"></div>
+
+</section>
+
+
+<!-- COMPLETED -->
+
+<section id="completed" class="screen">
+
+  <button class="back" onclick="go('settings')">← Settings</button>
+
+  <h2>Completed Orders</h2>
+
+  <div id="completedList"></div>
+
+</section>
+
+
+<!-- TEAM ORDERS -->
+
+<section id="team" class="screen">
+
+  <button class="back" onclick="go('home')">← Home</button>
+
+  <h2 id="teamTitle"></h2>
+
+  <div id="teamList"></div>
+
+</section>
+
+
+<!-- NAVIGATION -->
+
+<nav>
+
+  <button class="nav active" data-page="home" onclick="go('home')">
+    <span>⌂</span>
+    Home
+  </button>
+
+  <button class="nav" data-page="orders" onclick="go('orders')">
+    <span>📦</span>
+    My Orders
+  </button>
+
+  <button class="nav" data-page="scan" onclick="go('scan')">
+    <span>▣</span>
+    Scan
+  </button>
+
+  <button class="nav" data-page="reminders" onclick="go('reminders')">
+    <span>🔔</span>
+    Reminders
+  </button>
+
+  <button class="nav" data-page="settings" onclick="go('settings')">
+    <span>⚙️</span>
+    Settings
+  </button>
+
+</nav>
+
+</div>
+
+
+<!-- TEAM DRAWER -->
+
+<div id="drawerOverlay" onclick="drawerBackground(event)">
+
+  <div class="drawer">
+
+    <div class="headingRow">
+      <h2>Team Members</h2>
+      <button class="close" onclick="closeDrawer()">×</button>
+    </div>
+
+    <div id="teamMenu"></div>
+
+  </div>
+
+</div>
+
+
+<!-- REMINDER POPUP -->
+
+<div id="reminderOverlay" onclick="reminderBackground(event)">
+
+  <div class="reminderPopup">
+
+    <div class="popupHead">
+
+      <span style="font-size:28px">🔔</span>
+
+      <h2>Reminders</h2>
+
+      <button class="close" onclick="closeReminderPopup()">×</button>
+
+    </div>
+
+    <div class="tabs">
+
+      <button
+        id="upcomingButton"
+        class="tab active"
+        onclick="popupReminders('upcoming')"
+      >
+        Upcoming (3)
+      </button>
+
+      <button
+        id="allButton"
+        class="tab"
+        onclick="popupReminders('all')"
+      >
+        All Reminders
+      </button>
+
+      <button class="tab" onclick="addReminderFromPopup()">
+        Add Reminder
+      </button>
+
+    </div>
+
+    <div id="popupList"></div>
+
+    <button class="addReminder" onclick="addReminderFromPopup()">
+      ＋ Add New Reminder
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   DATA
+===================================================== */
+
+var TEAM = [
+  "Mallerie",
+  "Kayla",
+  "Spencer",
+  "Ann",
+  "Haley"
+];
+
+
+function buildShelves(){
+
+  var list=[];
+
+  function add(code,section){
+    list.push({
+      code:code,
+      section:section,
+      description:section,
+      orders:[],
+      photo:""
+    });
+  }
+
+  ["HA","HB","HC","HD","HE","HF","HG","HH"]
+    .forEach(function(x){
+      add(x,"Haley's Shelf");
+    });
+
+  add("R1","Tub Filler Area");
+
+  for(var p=1;p<=20;p++){
+    add("P"+p,"Pallet Section");
+  }
+
+  add("MA","Mallerie's Section");
+  add("MB","Mallerie's Section");
+
+  ["A","B","C","D"].forEach(function(letter){
+    for(var n=1;n<=5;n++){
+      add("G"+letter+n,"Mtn Green Section");
+    }
+  });
+
+  ["E","F","G","H","I","J"].forEach(function(letter){
+    for(var n=1;n<=4;n++){
+      add("G"+letter+n,"Mtn Green Section");
+    }
+  });
+
+  ["A","B","C","D","E","F","G","H"].forEach(function(letter){
+    for(var n=1;n<=5;n++){
+      add("N"+letter+n,"Nike Area");
+    }
+  });
+
+  for(var w=1;w<=4;w++){
+    add("W"+w,"Will Call");
+  }
+
+  return list;
+}
+
+
+var defaultData = {
+
+  companies:{
+    "D Star Plumbing":[
+      "306 Preserve",
+      "Cross Roads",
+      "K Knutson",
+      "Johnson"
+    ],
+
+    "Ridgeline Plumbing":[
+      "Highland"
+    ],
+
+    "Durant / Slate":[
+      "Harvest Fields"
+    ],
+
+    "Goff Plumbing":[
+      "309 Stalker Farms"
+    ],
+
+    "Cable Plumbing":[]
+  },
+
+  homeowners:[
+    "Ryan",
+    "Johnson Residence",
+    "Rebecca",
+    "John"
+  ],
+
+  orders:[
+
+    {
+      id:1,
+      company:"D Star Plumbing",
+      job:"306 Preserve",
+      homeowner:false,
+      owner:"Mallerie",
+      shelf:"GH2",
+      notes:"",
+      po:"",
+      invoice:"",
+      items:[
+        {
+          name:"Brizo Trim",
+          ordered:2,
+          received:2
+        },
+        {
+          name:"Tub Filler",
+          ordered:1,
+          received:0
+        }
+      ]
+    },
+
+    {
+      id:2,
+      company:"D Star Plumbing",
+      job:"Cross Roads",
+      homeowner:false,
+      owner:"Mallerie",
+      shelf:"",
+      notes:"",
+      po:"",
+      invoice:"",
+      items:[
+        {
+          name:"Moen Order",
+          ordered:1,
+          received:0
+        }
+      ]
+    },
+
+    {
+      id:3,
+      company:"D Star Plumbing",
+      job:"K Knutson",
+      homeowner:false,
+      owner:"Kayla",
+      shelf:"",
+      notes:"",
+      po:"",
+      invoice:"",
+      items:[]
+    },
+
+    {
+      id:4,
+      company:"D Star Plumbing",
+      job:"Johnson",
+      homeowner:false,
+      owner:"Spencer",
+      shelf:"",
+      notes:"",
+      po:"",
+      invoice:"",
+      items:[]
+    },
+
+    {
+      id:5,
+      company:"Ridgeline Plumbing",
+      job:"Highland",
+      homeowner:false,
+      owner:"Spencer",
+      shelf:"",
+      notes:"",
+      po:"",
+      invoice:"",
+      items:[]
+    },
+
+    {
+      id:6,
+      company:"Durant / Slate",
+      job:"Harvest Fields",
+      homeowner:false,
+      owner:"Ann",
+      shelf:"",
+      notes:"",
+      po:"",
+      invoice:"",
+      items:[]
+    },
+
+    {
+      id:7,
+      company:"Goff Plumbing",
+      job:"309 Stalker Farms",
+      homeowner:false,
+      owner:"Haley",
+      shelf:"",
+      notes:"",
+      po:"",
+      invoice:"",
+      items:[]
+    }
+
+  ],
+
+  quotes:[
+    {
+      company:"D Star Plumbing",
+      job:"306 Preserve",
+      number:"Quote #306",
+      date:"Sep 15, 2026"
+    }
+  ],
+
+  invoices:[
+    {
+      company:"D Star Plumbing",
+      job:"306 Preserve",
+      number:"Invoice #2201",
+      date:"Sep 15, 2026"
+    }
+  ],
+
+  customers:[
+    {
+      name:"Ryan",
+      phone:"801-555-1234"
+    },
+    {
+      name:"Johnson Residence",
+      phone:"801-555-2345"
+    },
+    {
+      name:"Rebecca",
+      phone:"801-555-3456"
+    },
+    {
+      name:"John",
+      phone:"801-555-4567"
+    }
+  ],
+
+  reminders:[
+
+    {
+      id:101,
+      text:"Follow up on quote for 306 Preserve",
+      company:"D Star Plumbing",
+      job:"306 Preserve",
+      date:"Today, 4:00 PM",
+      type:"Follow Up",
+      color:"purple",
+      completed:false
+    },
+
+    {
+      id:102,
+      text:"Check status of Moen order",
+      company:"",
+      job:"Cross Roads",
+      date:"Tomorrow, 10:00 AM",
+      type:"Order",
+      color:"orange",
+      completed:false
+    },
+
+    {
+      id:103,
+      text:"Call D Star about invoice",
+      company:"D Star Plumbing",
+      job:"",
+      date:"Thu, Sep 18 • 9:00 AM",
+      type:"Call",
+      color:"purple",
+      completed:false
+    }
+
+  ],
+
+  shelves:buildShelves(),
+
+  completed:[]
+};
+
+
+var data = JSON.parse(JSON.stringify(defaultData));
+
+var currentCompany="";
+var currentOrderId=null;
+var previousOrderPage="orders";
+var currentShelf="";
+
+
+/* =====================================================
+   STORAGE
+===================================================== */
+
+function save(){
+
+  try{
+    localStorage.setItem(
+      "PSM_CLEAN_V1",
+      JSON.stringify(data)
+    );
+  }
+  catch(error){
+    console.log(error);
+  }
+}
+
+
+function load(){
+
+  var stored=null;
+
+  try{
+    stored=JSON.parse(
+      localStorage.getItem("PSM_CLEAN_V1")
+    );
+  }
+  catch(error){
+    stored=null;
+  }
+
+  if(stored){
+    data=stored;
+  }
+
+  mergeRealShelves();
+}
+
+
+function mergeRealShelves(){
+
+  var real=buildShelves();
+
+  if(!Array.isArray(data.shelves)){
+    data.shelves=[];
+  }
+
+  real.forEach(function(realShelf){
+
+    var old=data.shelves.find(function(s){
+      return s.code===realShelf.code;
+    });
+
+    if(!old){
+      data.shelves.push(realShelf);
+    }
+
+  });
+
+  data.shelves=data.shelves.filter(function(s){
+
+    var demo=[
+      "A1","A2","A3",
+      "B1","B2","B3"
+    ].indexOf(s.code)>=0;
+
+    if(!demo){
+      return true;
+    }
+
+    return Array.isArray(s.orders) && s.orders.length>0;
+  });
+
+  syncShelves();
+
+  save();
+}
+
+
+function syncShelves(){
+
+  data.shelves.forEach(function(s){
+    s.orders=[];
+  });
+
+  data.orders.forEach(function(order){
+
+    if(!order.shelf){
+      return;
+    }
+
+    var shelf=data.shelves.find(function(s){
+      return s.code===order.shelf;
+    });
+
+    if(shelf){
+      shelf.orders.push(order.id);
+    }
+
+  });
+}
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function html(value){
+
+  return String(value===undefined ? "" : value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+function js(value){
+
+  return String(value)
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'");
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+var pageTitles={
+  home:"Plumbing Supply Manager",
+  orders:"My Orders",
+  companies:"Plumbers / Contractors",
+  jobs:"Jobs / Orders",
+  homeowners:"Homeowners",
+  orderDetail:"Order Details",
+  quotes:"Quotes",
+  customers:"Customers",
+  invoices:"Invoices",
+  createOrder:"Create Order",
+  reminders:"Reminders",
+  scan:"Scan",
+  scanChoices:"What is this?",
+  settings:"Settings",
+  shelves:"Shelf Locations",
+  shelfDetail:"Shelf Details",
+  completed:"Completed Orders",
+  team:"Team Orders"
+};
+
+
+function go(page){
+
+  closeReminderPopup();
+
+  document.querySelectorAll(".screen")
+    .forEach(function(screen){
+      screen.classList.remove("active");
+    });
+
+  var target=document.getElementById(page);
+
+  if(target){
+    target.classList.add("active");
+  }
+
+  document.getElementById("headerTitle").textContent=
+    pageTitles[page] || "Plumbing Supply Manager";
+
+  document.querySelectorAll(".nav")
+    .forEach(function(button){
+
+      var navPage=button.getAttribute("data-page");
+
+      var active=navPage===page;
+
+      if(
+        page==="companies" ||
+        page==="jobs" ||
+        page==="homeowners" ||
+        page==="orderDetail"
+      ){
+        active=navPage==="orders";
+      }
+
+      if(page==="scanChoices"){
+        active=navPage==="scan";
+      }
+
+      if(
+        page==="shelves" ||
+        page==="shelfDetail" ||
+        page==="completed"
+      ){
+        active=navPage==="settings";
+      }
+
+      button.classList.toggle("active",active);
+    });
+
+  if(page==="quotes"){
+    renderQuotes("");
+  }
+
+  if(page==="customers"){
+    renderCustomers("");
+  }
+
+  if(page==="invoices"){
+    renderInvoices("");
+  }
+
+  if(page==="reminders"){
+    renderReminderPage();
+  }
+
+  if(page==="createOrder"){
+    setupOrderSheet();
+  }
+
+  window.scrollTo(0,0);
+}
+
+
+/* =====================================================
+   TEAM DRAWER
+===================================================== */
+
+function openDrawer(){
+
+  renderTeamMenu();
+
+  document.getElementById("drawerOverlay")
+    .style.display="block";
+}
+
+
+function closeDrawer(){
+
+  document.getElementById("drawerOverlay")
+    .style.display="none";
+}
+
+
+function drawerBackground(event){
+
+  if(event.target.id==="drawerOverlay"){
+    closeDrawer();
+  }
+}
+
+
+function renderTeamMenu(){
+
+  var output="";
+
+  TEAM.forEach(function(name){
+
+    var count=data.orders.filter(function(order){
+      return order.owner===name;
+    }).length;
+
+    output+=
+      '<button class="listButton" onclick="openTeam(\''+
+      js(name)+
+      '\')">'+
+      '<span class="avatar">'+
+      html(name.charAt(0))+
+      '</span>'+
+      '<span class="grow">'+
+      '<span class="strong">'+
+      html(name)+
+      '</span>'+
+      '<span class="muted" style="display:block">'+
+      count+
+      ' active order'+
+      (count===1 ? '' : 's')+
+      '</span>'+
+      '</span>'+
+      '<span>›</span>'+
+      '</button>';
+  });
+
+  document.getElementById("teamMenu").innerHTML=output;
+}
+
+
+function openTeam(name){
+
+  closeDrawer();
+
+  go("team");
+
+  document.getElementById("teamTitle").textContent=
+    name+"'s Orders";
+
+  var orders=data.orders.filter(function(order){
+    return order.owner===name;
+  });
+
+  document.getElementById("teamList").innerHTML=
+    orders.length
+      ? orders.map(function(order){
+          return orderListCard(order,"team");
+        }).join("")
+      : '<div class="card muted">No active orders.</div>';
+}
+
+
+/* =====================================================
+   COMPANIES / ORDERS
+===================================================== */
+
+function openCompanies(){
+
+  go("companies");
+
+  renderCompanies("");
+}
+
+
+function renderCompanies(search){
+
+  search=(search || "").toLowerCase();
+
+  var names=Object.keys(data.companies)
+    .filter(function(name){
+      return name.toLowerCase().indexOf(search)>=0;
+    });
+
+  var output="";
+
+  names.forEach(function(name){
+
+    var jobs=data.companies[name] || [];
+
+    output+=
+      '<button class="listButton" onclick="openCompany(\''+
+      js(name)+
+      '\')">'+
+      '<span class="listIcon">🏢</span>'+
+      '<span class="grow">'+
+      '<span class="strong">'+
+      html(name)+
+      '</span>'+
+      '<span class="muted" style="display:block">'+
+      jobs.length+
+      ' job'+
+      (jobs.length===1 ? '' : 's')+
+      '</span>'+
+      '</span>'+
+      '<span>›</span>'+
+      '</button>';
+  });
+
+  document.getElementById("companyList").innerHTML=output;
+}
+
+
+function openCompany(name){
+
+  currentCompany=name;
+
+  go("jobs");
+
+  document.getElementById("companyName").textContent=name;
+
+  renderJobs();
+}
+
+
+function renderJobs(){
+
+  var jobs=data.companies[currentCompany] || [];
+
+  var output="";
+
+  jobs.forEach(function(job){
+
+    var order=data.orders.find(function(o){
+      return o.company===currentCompany && o.job===job;
+    });
+
+    var shelf=order && order.shelf
+      ? order.shelf
+      : "Not assigned";
+
+    output+=
+      '<button class="listButton" onclick="openJob(\''+
+      js(job)+
+      '\')">'+
+      '<span class="listIcon">📦</span>'+
+      '<span class="grow">'+
+      '<span class="strong">'+
+      html(job)+
+      '</span>'+
+      '<span class="muted" style="display:block">'+
+      'Shelf: '+html(shelf)+
+      '</span>'+
+      '</span>'+
+      '<span>›</span>'+
+      '</button>';
+  });
+
+  document.getElementById("jobList").innerHTML=output;
+}
+
+
+function openJob(job){
+
+  var order=data.orders.find(function(o){
+    return o.company===currentCompany && o.job===job;
+  });
+
+  if(!order){
+
+    order={
+      id:Date.now(),
+      company:currentCompany,
+      job:job,
+      homeowner:false,
+      owner:"Mallerie",
+      shelf:"",
+      notes:"",
+      po:"",
+      invoice:"",
+      items:[]
+    };
+
+    data.orders.push(order);
+
+    save();
+  }
+
+  previousOrderPage="jobs";
+
+  openOrder(order.id);
+}
+
+
+function openHomeowners(){
+
+  go("homeowners");
+
+  var output="";
+
+  data.homeowners.forEach(function(name){
+
+    output+=
+      '<button class="listButton" onclick="openHomeowner(\''+
+      js(name)+
+      '\')">'+
+      '<span class="listIcon">🏠</span>'+
+      '<span class="grow strong">'+
+      html(name)+
+      '</span>'+
+      '<span>›</span>'+
+      '</button>';
+  });
+
+  document.getElementById("homeownerList").innerHTML=output;
+}
+
+
+function openHomeowner(name){
+
+  var order=data.orders.find(function(o){
+    return o.homeowner===true && o.company===name;
+  });
+
+  if(!order){
+
+    order={
+      id:Date.now(),
+      company:name,
+      job:name,
+      homeowner:true,
+      owner:"Mallerie",
+      shelf:"",
+      notes:"",
+      po:"",
+      invoice:"",
+      items:[]
+    };
+
+    data.orders.push(order);
+
+    save();
+  }
+
+  previousOrderPage="homeowners";
+
+  openOrder(order.id);
+}
+
+
+function orderListCard(order,backPage){
+
+  return (
+    '<button class="listButton" onclick="previousOrderPage=\''+
+    js(backPage)+
+    '\';openOrder('+
+    order.id+
+    ')">'+
+    '<span class="listIcon">📦</span>'+
+    '<span class="grow">'+
+    '<span class="strong">'+
+    html(order.company)+' – '+html(order.job)+
+    '</span>'+
+    '<span class="muted" style="display:block">'+
+    html(order.owner)+
+    ' · Shelf '+html(order.shelf || '—')+
+    '</span>'+
+    '</span>'+
+    '<span>›</span>'+
+    '</button>'
+  );
+}
+
+
+function openOrder(id){
+
+  currentOrderId=id;
+
+  var order=data.orders.find(function(o){
+    return o.id===id;
+  });
+
+  if(!order){
+    return;
+  }
+
+  go("orderDetail");
+
+  document.getElementById("headerTitle").textContent=
+    order.job;
+
+  var rows="";
+
+  order.items.forEach(function(item,index){
+
+    var ordered=Number(item.ordered || 0);
+    var received=Number(item.received || 0);
+    var missing=Math.max(0,ordered-received);
+
+    var status="Received";
+
+    if(received===0){
+      status="Missing";
+    }
+    else if(missing>0){
+      status="Partial";
+    }
+
+    rows+=
+      '<tr>'+
+      '<td>'+
+      '<strong>'+html(item.name)+'</strong>'+
+      '<div class="small">'+status+'</div>'+
+      '</td>'+
+      '<td>'+ordered+'</td>'+
+      '<td>'+
+      '<button class="qty" onclick="changeReceived('+index+',-1)">−</button> '+
+      received+
+      ' <button class="qty" onclick="changeReceived('+index+',1)">+</button>'+
+      '</td>'+
+      '<td>'+missing+'</td>'+
+      '<td><button class="qty" onclick="deleteItem('+index+')">🗑️</button></td>'+
+      '</tr>';
+  });
+
+  if(!rows){
+    rows='<tr><td colspan="5" class="muted">No items added yet.</td></tr>';
+  }
+
+  var shelfButtons="";
+
+  if(order.shelf){
+
+    shelfButtons=
+      '<button class="btn secondary full" onclick="chooseShelf()">Move to Another Shelf</button>'+
+      '<button class="btn secondary full" style="margin-top:8px" onclick="openShelf(\''+
+      js(order.shelf)+
+      '\')">View Shelf '+html(order.shelf)+'</button>';
+  }
+  else{
+
+    shelfButtons=
+      '<button class="btn secondary full" onclick="chooseShelf()">Assign Shelf</button>';
+  }
+
+  document.getElementById("orderBody").innerHTML=
+
+    '<div class="card">'+
+      '<div class="strong" style="font-size:20px">'+
+        html(order.company)+
+      '</div>'+
+      '<div style="font-size:17px;margin-top:4px">'+
+        html(order.job)+
+      '</div>'+
+      '<div style="margin-top:12px">'+
+        '<span class="pill purple">'+html(order.owner)+'</span> '+
+        '<span class="pill '+(order.shelf ? 'green' : '')+'">'+
+          'Shelf '+html(order.shelf || 'Not Assigned')+
+        '</span>'+
+      '</div>'+
+    '</div>'+
+
+    '<div class="card">'+
+      '<div class="headingRow">'+
+        '<h3>Items</h3>'+
+        '<button class="link" onclick="addItem()">+ Add Item</button>'+
+      '</div>'+
+      '<table>'+
+        '<thead>'+
+          '<tr>'+
+            '<th>Item</th>'+
+            '<th>Ordered</th>'+
+            '<th>Received</th>'+
+            '<th>Missing</th>'+
+            '<th></th>'+
+          '</tr>'+
+        '</thead>'+
+        '<tbody>'+rows+'</tbody>'+
+      '</table>'+
+    '</div>'+
+
+    '<div class="card">'+
+      '<label class="label">Notes</label>'+
+      '<textarea id="orderNotes" class="input"></textarea>'+
+      '<label class="label">PO #</label>'+
+      '<input id="orderPO" class="input">'+
+      '<label class="label">SOE / Invoice</label>'+
+      '<input id="orderInvoice" class="input">'+
+      '<button class="btn secondary full" style="margin-top:12px" onclick="saveOrderDetails()">Save Details</button>'+
+    '</div>'+
+
+    '<div class="card">'+
+      '<div class="strong">Shelf Location</div>'+
+      '<div class="muted" style="margin:5px 0 14px">'+
+        'Current location: '+html(order.shelf || 'Not assigned')+
+      '</div>'+
+      shelfButtons+
+    '</div>'+
+
+    '<button class="btn primary full" onclick="sendOut()">Send Out Order</button>';
+
+  document.getElementById("orderNotes").value=order.notes || "";
+  document.getElementById("orderPO").value=order.po || "";
+  document.getElementById("orderInvoice").value=order.invoice || "";
+}
+
+
+function orderBack(){
+
+  if(previousOrderPage==="jobs"){
+    openCompany(currentCompany);
+    return;
+  }
+
+  if(previousOrderPage==="homeowners"){
+    openHomeowners();
+    return;
+  }
+
+  if(previousOrderPage==="team"){
+    go("team");
+    return;
+  }
+
+  go("orders");
+}
+
+
+function saveOrderDetails(){
+
+  var order=data.orders.find(function(o){
+    return o.id===currentOrderId;
+  });
+
+  if(!order){
+    return;
+  }
+
+  order.notes=document.getElementById("orderNotes").value;
+  order.po=document.getElementById("orderPO").value;
+  order.invoice=document.getElementById("orderInvoice").value;
+
+  save();
+
+  alert("Order details saved.");
+}
+
+
+function addItem(){
+
+  var name=prompt("Item / Description");
+
+  if(!name){
+    return;
+  }
+
+  var qty=parseInt(prompt("Ordered quantity","1"),10);
+
+  if(!qty || qty<1){
+    qty=1;
+  }
+
+  var order=data.orders.find(function(o){
+    return o.id===currentOrderId;
+  });
+
+  order.items.push({
+    name:name,
+    ordered:qty,
+    received:0
+  });
+
+  save();
+
+  openOrder(order.id);
+}
+
+
+function deleteItem(index){
+
+  if(!confirm("Delete this item?")){
+    return;
+  }
+
+  var order=data.orders.find(function(o){
+    return o.id===currentOrderId;
+  });
+
+  order.items.splice(index,1);
+
+  save();
+
+  openOrder(order.id);
+}
+
+
+function changeReceived(index,change){
+
+  var order=data.orders.find(function(o){
+    return o.id===currentOrderId;
+  });
+
+  var item=order.items[index];
+
+  item.received=Math.max(
+    0,
+    Math.min(
+      Number(item.ordered),
+      Number(item.received)+change
+    )
+  );
+
+  save();
+
+  openOrder(order.id);
+}
+
+
+function addCompany(){
+
+  var name=prompt("Company / Plumber name");
+
+  if(!name){
+    return;
+  }
+
+  if(!data.companies[name]){
+    data.companies[name]=[];
+  }
+
+  save();
+
+  renderCompanies("");
+}
+
+
+function addJob(){
+
+  var job=prompt("Job / Order name");
+
+  if(!job){
+    return;
+  }
+
+  data.companies[currentCompany].push(job);
+
+  save();
+
+  renderJobs();
+}
+
+
+/* =====================================================
+   SHELF ASSIGNMENT
+===================================================== */
+
+function chooseShelf(){
+
+  var code=prompt(
+    "Scan or enter the shelf barcode / shelf code"
+  );
+
+  if(!code){
+    return;
+  }
+
+  code=code.trim().toUpperCase();
+
+  var shelf=data.shelves.find(function(s){
+    return s.code===code;
+  });
+
+  if(!shelf){
+
+    alert("Shelf "+code+" was not found.");
+
+    return;
+  }
+
+  var order=data.orders.find(function(o){
+    return o.id===currentOrderId;
+  });
+
+  data.shelves.forEach(function(s){
+    s.orders=s.orders.filter(function(id){
+      return id!==order.id;
+    });
+  });
+
+  order.shelf=code;
+
+  if(shelf.orders.indexOf(order.id)<0){
+    shelf.orders.push(order.id);
+  }
+
+  save();
+
+  alert(
+    order.job+" is now on shelf "+code+"."
+  );
+
+  openOrder(order.id);
+}
+
+
+/* =====================================================
+   SEND OUT
+===================================================== */
+
+function sendOut(){
+
+  var order=data.orders.find(function(o){
+    return o.id===currentOrderId;
+  });
+
+  if(!order){
+    return;
+  }
+
+  var confirmed=confirm(
+    "Has this order left the showroom?\n\n"+
+    "It will be removed from the shelf and moved to Completed Orders."
+  );
+
+  if(!confirmed){
+    return;
+  }
+
+  var previousShelf=order.shelf || "";
+
+  data.shelves.forEach(function(s){
+    s.orders=s.orders.filter(function(id){
+      return id!==order.id;
+    });
+  });
+
+  var completedOrder=JSON.parse(JSON.stringify(order));
+
+  completedOrder.previousShelf=previousShelf;
+  completedOrder.completedDate=new Date().toLocaleString();
+
+  data.completed.unshift(completedOrder);
+
+  data.orders=data.orders.filter(function(o){
+    return o.id!==order.id;
+  });
+
+  save();
+
+  alert("Order moved to Completed Orders.");
+
+  go("orders");
+}
+
+
+/* =====================================================
+   CREATE ORDER
+===================================================== */
+
+function setupOrderSheet(){
+
+  var date=document.getElementById("newDate");
+
+  if(!date.value){
+    date.value=new Date().toISOString().slice(0,10);
+  }
+
+  var lines=document.getElementById("orderLines");
+
+  if(lines.children.length===0){
+
+    for(var i=0;i<10;i++){
+      addLine();
+    }
+  }
+}
+
+
+function addLine(){
+
+  var box=document.getElementById("orderLines");
+
+  var row=document.createElement("div");
+
+  row.className="orderLine";
+
+  var number=box.children.length+1;
+
+  row.innerHTML=
+    '<div class="muted" style="text-align:center;font-weight:850">'+number+'</div>'+
+    '<input class="input lineQty" type="number" min="0" placeholder="Qty">'+
+    '<input class="input lineItem" placeholder="Item / Description">';
+
+  box.appendChild(row);
+}
+
+
+function saveOrder(){
+
+  var company=document.getElementById("newCompany").value.trim();
+  var job=document.getElementById("newJob").value.trim();
+
+  if(!company || !job){
+
+    alert("Please enter the Company / Plumber and Job / Order.");
+
+    return;
+  }
+
+  var items=[];
+
+  document.querySelectorAll(".orderLine")
+    .forEach(function(row){
+
+      var name=row.querySelector(".lineItem").value.trim();
+      var qty=parseInt(row.querySelector(".lineQty").value,10);
+
+      if(name){
+
+        items.push({
+          name:name,
+          ordered:qty>0 ? qty : 1,
+          received:0
+        });
+      }
+    });
+
+  if(!data.companies[company]){
+    data.companies[company]=[];
+  }
+
+  if(data.companies[company].indexOf(job)<0){
+    data.companies[company].push(job);
+  }
+
+  data.orders.push({
+
+    id:Date.now(),
+    company:company,
+    job:job,
+    homeowner:false,
+    owner:"Mallerie",
+    shelf:"",
+    notes:document.getElementById("newNotes").value,
+    po:"",
+    invoice:"",
+    items:items
+
+  });
+
+  save();
+
+  document.getElementById("newCompany").value="";
+  document.getElementById("newJob").value="";
+  document.getElementById("newNotes").value="";
+  document.getElementById("orderLines").innerHTML="";
+
+  alert("Order saved!");
+
+  go("orders");
+}
+
+
+/* =====================================================
+   SHELVES
+===================================================== */
+
+function openShelves(){
+
+  go("shelves");
+
+  renderShelves("");
+}
+
+
+function renderShelves(search){
+
+  search=(search || "").trim().toUpperCase();
+
+  var filtered=data.shelves.filter(function(s){
+
+    return (
+      s.code.toUpperCase().indexOf(search)>=0 ||
+      s.section.toUpperCase().indexOf(search)>=0
+    );
+  });
+
+  var groups={};
+
+  filtered.forEach(function(s){
+
+    if(!groups[s.section]){
+      groups[s.section]=[];
+    }
+
+    groups[s.section].push(s);
+  });
+
+  var output="";
+
+  Object.keys(groups).forEach(function(section){
+
+    output+=
+      '<div class="sectionName">'+
+      html(section)+
+      '</div>'+
+      '<div class="shelfGrid">';
+
+    groups[section].forEach(function(s){
+
+      output+=
+        '<button class="shelf '+(s.orders.length ? 'used' : '')+'" onclick="openShelf(\''+
+        js(s.code)+
+        '\')">'+
+        html(s.code)+
+        '<div class="small">'+
+        (s.orders.length ? s.orders.length+' order(s)' : 'Available')+
+        '</div>'+
+        '</button>';
+    });
+
+    output+='</div>';
+  });
+
+  document.getElementById("shelfList").innerHTML=output;
+}
+
+
+function openShelf(code){
+
+  currentShelf=code;
+
+  var shelf=data.shelves.find(function(s){
+    return s.code===code;
+  });
+
+  if(!shelf){
+    return;
+  }
+
+  go("shelfDetail");
+
+  var orders=shelf.orders.map(function(id){
+
+    return data.orders.find(function(o){
+      return o.id===id;
+    });
+
+  }).filter(Boolean);
+
+  var orderHTML="";
+
+  if(orders.length){
+
+    orders.forEach(function(order){
+      orderHTML+=orderListCard(order,"shelfDetail");
+    });
+  }
+  else{
+    orderHTML='<div class="muted">This shelf is available.</div>';
+  }
+
+  var photoHTML="";
+
+  if(shelf.photo){
+
+    photoHTML=
+      '<img src="'+shelf.photo+'" style="width:100%;border-radius:14px;margin-top:12px">';
+  }
+  else{
+
+    photoHTML=
+      '<div class="card muted">📷 No shelf photo yet.</div>';
+  }
+
+  document.getElementById("shelfBody").innerHTML=
+
+    '<div class="card">'+
+      '<div class="strong" style="font-size:27px">'+html(shelf.code)+'</div>'+
+      '<div class="muted">'+html(shelf.description || shelf.section)+'</div>'+
+      '<div style="margin-top:10px">'+
+        '<span class="pill '+(orders.length ? 'purple' : 'green')+'">'+
+        (orders.length ? orders.length+' order(s)' : 'Available')+
+        '</span>'+
+      '</div>'+
+    '</div>'+
+
+    '<div class="card" style="text-align:center">'+
+      '<div class="strong">Shelf Barcode</div>'+
+      '<div class="barcode"></div>'+
+      '<div style="font-size:22px;font-weight:900">'+html(shelf.code)+'</div>'+
+      '<div class="small">Code 128 shelf ID</div>'+
+    '</div>'+
+
+    '<div class="card">'+
+      '<div class="strong">Shelf Photo</div>'+
+      photoHTML+
+      '<input type="file" accept="image/*" capture="environment" style="margin-top:12px" onchange="saveShelfPhoto(event,\''+
+      js(shelf.code)+
+      '\')">'+
+    '</div>'+
+
+    '<div class="card">'+
+      '<div class="strong" style="margin-bottom:10px">Orders on this Shelf</div>'+
+      orderHTML+
+    '</div>'+
+
+    '<button class="btn secondary full" onclick="editShelf()">Edit Shelf</button>';
+}
+
+
+function addShelf(){
+
+  var code=prompt("Shelf Code");
+
+  if(!code){
+    return;
+  }
+
+  code=code.trim().toUpperCase();
+
+  var exists=data.shelves.some(function(s){
+    return s.code===code;
+  });
+
+  if(exists){
+
+    alert("That shelf already exists.");
+
+    return;
+  }
+
+  var description=prompt(
+    "Shelf description / section",
+    "Other"
+  );
+
+  if(!description){
+    description="Other";
+  }
+
+  data.shelves.push({
+    code:code,
+    section:description,
+    description:description,
+    orders:[],
+    photo:""
+  });
+
+  save();
+
+  renderShelves("");
+}
+
+
+function editShelf(){
+
+  var shelf=data.shelves.find(function(s){
+    return s.code===currentShelf;
+  });
+
+  if(!shelf){
+    return;
+  }
+
+  var description=prompt(
+    "Shelf description",
+    shelf.description
+  );
+
+  if(description===null){
+    return;
+  }
+
+  shelf.description=description;
+
+  save();
+
+  openShelf(shelf.code);
+}
+
+
+function saveShelfPhoto(event,code){
+
+  var file=event.target.files[0];
+
+  if(!file){
+    return;
+  }
+
+  var reader=new FileReader();
+
+  reader.onload=function(result){
+
+    var shelf=data.shelves.find(function(s){
+      return s.code===code;
+    });
+
+    if(!shelf){
+      return;
+    }
+
+    shelf.photo=result.target.result;
+
+    save();
+
+    openShelf(code);
+  };
+
+  reader.readAsDataURL(file);
+}
+
+
+/* =====================================================
+   COMPLETED
+===================================================== */
+
+function openCompleted(){
+
+  go("completed");
+
+  var output="";
+
+  if(!data.completed.length){
+
+    output='<div class="card muted">No completed orders yet.</div>';
+  }
+  else{
+
+    data.completed.forEach(function(order){
+
+      output+=
+        '<div class="card">'+
+        '<div class="strong">'+html(order.company)+'</div>'+
+        '<div>'+html(order.job)+'</div>'+
+        '<div class="muted" style="margin-top:6px">'+
+        'Previous Shelf: '+html(order.previousShelf || '—')+
+        '</div>'+
+        '<div class="small">'+html(order.completedDate || '')+'</div>'+
+        '</div>';
+    });
+  }
+
+  document.getElementById("completedList").innerHTML=output;
+}
+
+
+/* =====================================================
+   QUOTES
+===================================================== */
+
+function renderQuotes(search){
+
+  search=(search || "").toLowerCase();
+
+  var output="";
+
+  data.quotes
+    .filter(function(q){
+
+      return (
+        q.company+" "+q.job+" "+q.number
+      ).toLowerCase().indexOf(search)>=0;
+
+    })
+    .forEach(function(q){
+
+      output+=
+        '<div class="card row">'+
+        '<span style="font-size:25px">📄</span>'+
+        '<div class="grow">'+
+        '<div class="strong">'+html(q.company)+'</div>'+
+        '<div>'+html(q.job)+'</div>'+
+        '<div class="muted">'+html(q.number)+'</div>'+
+        '</div>'+
+        '<div class="small">'+html(q.date)+'</div>'+
+        '</div>';
+    });
+
+  document.getElementById("quoteList").innerHTML=output;
+}
+
+
+function addQuote(){
+
+  var company=prompt("Company / Plumber");
+
+  if(!company){
+    return;
+  }
+
+  var job=prompt("Job Name");
+
+  if(!job){
+    return;
+  }
+
+  data.quotes.unshift({
+    company:company,
+    job:job,
+    number:"Scanned Quote",
+    date:new Date().toLocaleDateString()
+  });
+
+  save();
+
+  renderQuotes("");
+}
+
+
+/* =====================================================
+   INVOICES
+===================================================== */
+
+function renderInvoices(search){
+
+  search=(search || "").toLowerCase();
+
+  var output="";
+
+  data.invoices
+    .filter(function(invoice){
+
+      return (
+        invoice.company+" "+
+        invoice.job+" "+
+        invoice.number
+      ).toLowerCase().indexOf(search)>=0;
+
+    })
+    .forEach(function(invoice){
+
+      output+=
+        '<div class="card row">'+
+        '<span style="font-size:25px">🧾</span>'+
+        '<div class="grow">'+
+        '<div class="strong">'+html(invoice.company)+'</div>'+
+        '<div>'+html(invoice.job)+'</div>'+
+        '<div class="muted">'+html(invoice.number)+'</div>'+
+        '</div>'+
+        '<div class="small">'+html(invoice.date)+'</div>'+
+        '</div>';
+    });
+
+  document.getElementById("invoiceList").innerHTML=output;
+}
+
+
+function addInvoice(){
+
+  var company=prompt("Company / Plumber");
+
+  if(!company){
+    return;
+  }
+
+  var job=prompt("Job");
+
+  if(!job){
+    return;
+  }
+
+  data.invoices.unshift({
+    company:company,
+    job:job,
+    number:"Scanned Invoice",
+    date:new Date().toLocaleDateString()
+  });
+
+  save();
+
+  renderInvoices("");
+}
+
+
+/* =====================================================
+   CUSTOMERS
+===================================================== */
+
+function renderCustomers(search){
+
+  search=(search || "").toLowerCase();
+
+  var output="";
+
+  data.customers
+    .filter(function(customer){
+
+      return (
+        customer.name+" "+customer.phone
+      ).toLowerCase().indexOf(search)>=0;
+
+    })
+    .forEach(function(customer){
+
+      output+=
+        '<div class="card row">'+
+        '<div class="avatar">'+
+        html(customer.name.charAt(0))+
+        '</div>'+
+        '<div class="grow">'+
+        '<div class="strong">'+html(customer.name)+'</div>'+
+        '<div class="muted">'+html(customer.phone)+'</div>'+
+        '</div>'+
+        '<span>›</span>'+
+        '</div>';
+    });
+
+  document.getElementById("customerList").innerHTML=output;
+}
+
+
+function addCustomer(){
+
+  var name=prompt("Contact Name");
+
+  if(!name){
+    return;
+  }
+
+  var phone=prompt("Phone Number");
+
+  if(!phone){
+    phone="";
+  }
+
+  data.customers.unshift({
+    name:name,
+    phone:phone
+  });
+
+  save();
+
+  renderCustomers("");
+}
+
+
+/* =====================================================
+   REMINDERS
+===================================================== */
+
+function activeReminderCount(){
+
+  return data.reminders.filter(function(r){
+    return !r.completed;
+  }).length;
+}
+
+
+function updateBadge(){
+
+  var count=activeReminderCount();
+
+  var badge=document.getElementById("badge");
+
+  badge.textContent=count;
+
+  badge.style.display=count ? "flex" : "none";
+
+  document.getElementById("upcomingButton").textContent=
+    "Upcoming ("+count+")";
+}
+
+
+function openReminderPopup(){
+
+  popupReminders("upcoming");
+
+  document.getElementById("reminderOverlay")
+    .style.display="flex";
+}
+
+
+function closeReminderPopup(){
+
+  document.getElementById("reminderOverlay")
+    .style.display="none";
+}
+
+
+function reminderBackground(event){
+
+  if(event.target.id==="reminderOverlay"){
+    closeReminderPopup();
+  }
+}
+
+
+function popupReminders(mode){
+
+  document.getElementById("upcomingButton")
+    .classList.toggle("active",mode==="upcoming");
+
+  document.getElementById("allButton")
+    .classList.toggle("active",mode==="all");
+
+  var reminders;
+
+  if(mode==="upcoming"){
+
+    reminders=data.reminders.filter(function(r){
+      return !r.completed;
+    });
+  }
+  else{
+
+    reminders=data.reminders;
+  }
+
+  var output="";
+
+  reminders.forEach(function(r){
+
+    var orange=r.color==="orange";
+
+    output+=
+      '<div class="reminder">'+
+      '<button class="circle '+(orange ? 'orange' : '')+'" onclick="completeReminder('+r.id+')"></button>'+
+      '<div class="reminderText">'+
+      '<div class="reminderTitle">'+html(r.text)+'</div>'+
+      '<div class="muted">'+html(r.company || r.job || '')+'</div>'+
+      '<div class="small">🗓 '+html(r.date)+'</div>'+
+      '</div>'+
+      '<div class="tag '+(orange ? 'orange' : '')+'">'+html(r.type)+'</div>'+
+      '<div style="font-size:24px">›</div>'+
+      '</div>';
+  });
+
+  if(!output){
+    output='<div class="card muted">No reminders here.</div>';
+  }
+
+  document.getElementById("popupList").innerHTML=output;
+
+  updateBadge();
+}
+
+
+function completeReminder(id){
+
+  var reminder=data.reminders.find(function(r){
+    return r.id===id;
+  });
+
+  if(!reminder){
+    return;
+  }
+
+  reminder.completed=!reminder.completed;
+
+  save();
+
+  popupReminders("upcoming");
+
+  renderReminderPage();
+}
+
+
+function addReminderFromPopup(){
+
+  closeReminderPopup();
+
+  go("reminders");
+
+  showReminderForm();
+}
+
+
+function showReminderForm(){
+
+  document.getElementById("reminderForm")
+    .style.display="block";
+}
+
+
+function saveReminder(){
+
+  var text=document.getElementById("rText").value.trim();
+
+  if(!text){
+
+    alert("Please enter a reminder.");
+
+    return;
+  }
+
+  var rawDate=document.getElementById("rDate").value;
+
+  var displayDate="No date selected";
+
+  if(rawDate){
+
+    displayDate=new Date(rawDate).toLocaleString([],{
+      month:"short",
+      day:"numeric",
+      hour:"numeric",
+      minute:"2-digit"
+    });
+  }
+
+  var type=document.getElementById("rType").value;
+
+  data.reminders.unshift({
+
+    id:Date.now(),
+
+    text:text,
+
+    company:document.getElementById("rCompany").value.trim(),
+
+    job:document.getElementById("rJob").value.trim(),
+
+    date:displayDate,
+
+    type:type,
+
+    color:type==="Order" ? "orange" : "purple",
+
+    notes:document.getElementById("rNotes").value,
+
+    completed:false
+
+  });
+
+  save();
+
+  document.getElementById("rCompany").value="";
+  document.getElementById("rJob").value="";
+  document.getElementById("rDate").value="";
+  document.getElementById("rText").value="";
+  document.getElementById("rNotes").value="";
+
+  document.getElementById("reminderForm")
+    .style.display="none";
+
+  updateBadge();
+
+  renderReminderPage();
+}
+
+
+function renderReminderPage(){
+
+  var output="";
+
+  data.reminders.forEach(function(r){
+
+    output+=
+      '<div class="card row">'+
+      '<button class="qty" onclick="completeReminderPage('+r.id+')">'+
+      (r.completed ? '✓' : '○')+
+      '</button>'+
+      '<div class="grow">'+
+      '<div class="strong" style="'+
+      (r.completed ? 'text-decoration:line-through;opacity:.55' : '')+
+      '">'+
+      html(r.text)+
+      '</div>'+
+      '<div class="muted">'+
+      html([r.company,r.job].filter(Boolean).join(" · "))+
+      '</div>'+
+      '<div class="small">'+html(r.date)+'</div>'+
+      '</div>'+
+      '<span class="tag '+(r.color==="orange" ? 'orange' : '')+'">'+
+      html(r.type)+
+      '</span>'+
+      '</div>';
+  });
+
+  document.getElementById("reminderPageList").innerHTML=output;
+
+  updateBadge();
+}
+
+
+function completeReminderPage(id){
+
+  var reminder=data.reminders.find(function(r){
+    return r.id===id;
+  });
+
+  if(!reminder){
+    return;
+  }
+
+  reminder.completed=!reminder.completed;
+
+  save();
+
+  renderReminderPage();
+}
+
+
+/* =====================================================
+   SCAN
+===================================================== */
+
+function openScanChoices(){
+
+  go("scanChoices");
+}
+
+
+function locationScan(){
+
+  var code=prompt(
+    "Scan or enter the shelf barcode / shelf code"
+  );
+
+  if(!code){
+    return;
+  }
+
+  code=code.trim().toUpperCase();
+
+  var shelf=data.shelves.find(function(s){
+    return s.code===code;
+  });
+
+  if(!shelf){
+
+    alert("Shelf "+code+" was not found.");
+
+    return;
+  }
+
+  openShelf(code);
+}
+
+
+function boxScan(){
+
+  var company=prompt("Company / Plumber");
+
+  if(!company){
+    return;
+  }
+
+  var job=prompt("Job / Order");
+
+  if(!job){
+    return;
+  }
+
+  var order=data.orders.find(function(o){
+
+    return (
+      o.company.toLowerCase()===company.toLowerCase() &&
+      o.job.toLowerCase()===job.toLowerCase()
+    );
+  });
+
+  if(!order){
+
+    alert("That order was not found.");
+
+    return;
+  }
+
+  var item=prompt("Item / Description");
+
+  if(!item){
+    return;
+  }
+
+  var qty=parseInt(
+    prompt("Quantity received","1"),
+    10
+  );
+
+  if(!qty || qty<1){
+    qty=1;
+  }
+
+  var shelfCode=prompt(
+    "Scan or enter Shelf Barcode"
+  );
+
+  if(!shelfCode){
+    return;
+  }
+
+  shelfCode=shelfCode.trim().toUpperCase();
+
+  var shelf=data.shelves.find(function(s){
+    return s.code===shelfCode;
+  });
+
+  if(!shelf){
+
+    alert("Shelf not found.");
+
+    return;
+  }
+
+  var existing=order.items.find(function(i){
+    return i.name.toLowerCase()===item.toLowerCase();
+  });
+
+  if(existing){
+
+    existing.received=Math.min(
+      Number(existing.ordered),
+      Number(existing.received)+qty
+    );
+  }
+  else{
+
+    order.items.push({
+      name:item,
+      ordered:qty,
+      received:qty
+    });
+  }
+
+  data.shelves.forEach(function(s){
+    s.orders=s.orders.filter(function(id){
+      return id!==order.id;
+    });
+  });
+
+  order.shelf=shelfCode;
+
+  shelf.orders.push(order.id);
+
+  save();
+
+  alert(
+    "Saved! "+job+
+    " is connected to shelf "+
+    shelfCode+"."
+  );
+
+  openShelf(shelfCode);
+}
+
+
+function invoiceScan(){
+
+  addInvoice();
+
+  go("invoices");
+}
+
+
+function quoteScan(){
+
+  addQuote();
+
+  go("quotes");
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function searchApp(){
+
+  var search=document.getElementById("search")
+    .value.trim().toLowerCase();
+
+  var box=document.getElementById("searchResults");
+
+  if(!search){
+
+    box.innerHTML="";
+
+    return;
+  }
+
+  var results=data.orders.filter(function(order){
+
+    var itemNames=order.items.map(function(item){
+      return item.name;
+    }).join(" ");
+
+    var text=
+      order.company+" "+
+      order.job+" "+
+      order.owner+" "+
+      order.shelf+" "+
+      itemNames;
+
+    return text.toLowerCase().indexOf(search)>=0;
+  });
+
+  var output='<div class="sectionName">Search Results</div>';
+
+  if(results.length){
+
+    results.forEach(function(order){
+      output+=orderListCard(order,"home");
+    });
+  }
+  else{
+
+    output+='<div class="card muted">No matching orders.</div>';
+  }
+
+  box.innerHTML=output;
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+load();
+
+renderTeamMenu();
+
+updateBadge();
+
+go("home");
+
+</script>
+
+</body>
+</html>
