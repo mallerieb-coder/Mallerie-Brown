@@ -1,2191 +1,1105 @@
-<!DOCTYPE html>
-<html lang="en">
+/* -----------------------------
+   ORDER DETAILS
+----------------------------- */
 
-<head>
-<meta charset="UTF-8">
+function order(companyName,job){
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1, viewport-fit=cover"
->
+  title("Order Details");
 
-<title>Plumbing Supply Manager</title>
+  let shelf =
+    findShelf(job);
 
-<style>
-
-:root{
-  --bg:#f7f6fa;
-  --card:#ffffff;
-  --text:#17151a;
-  --muted:#77717f;
-  --line:#e5e1ea;
-  --purple:#7548e8;
-  --purple-soft:#f1ebff;
-  --orange:#f4a000;
-  --green:#2f9e67;
-  --red:#e5484d;
-  --shadow:0 6px 20px rgba(41,30,61,.07);
-}
-
-*{
-  box-sizing:border-box;
-}
-
-body{
-  margin:0;
-  background:#eceaf1;
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Arial,
-    sans-serif;
-  color:var(--text);
-}
-
-button,
-input,
-textarea,
-select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-.app{
-  width:min(100%,640px);
-  min-height:100vh;
-  margin:0 auto;
-  background:var(--bg);
-  position:relative;
-  padding-bottom:90px;
-}
-
-/* HEADER */
-
-.top{
-  position:sticky;
-  top:0;
-  z-index:8;
-  background:rgba(255,255,255,.96);
-  backdrop-filter:blur(12px);
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:18px 20px;
-  border-bottom:1px solid var(--line);
-}
-
-.iconbtn{
-  width:42px;
-  height:42px;
-  border:0;
-  background:transparent;
-  border-radius:14px;
-  font-size:22px;
-}
-
-.menuIcon{
-  color:#1689ff;
-  font-weight:900;
-}
-
-.titlewrap{
-  flex:1;
-}
-
-.pageTitle{
-  font-weight:850;
-  font-size:22px;
-}
-
-.bellWrap{
-  position:relative;
-}
-
-.reminderBadge{
-  position:absolute;
-  top:-4px;
-  right:-5px;
-  min-width:19px;
-  height:19px;
-  padding:0 5px;
-  border-radius:999px;
-  background:#e5484d;
-  color:white;
-  font-size:11px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border:2px solid white;
-}
-
-/* MAIN */
-
-.content{
-  padding:20px;
-}
-
-.screen{
-  display:none;
-}
-
-.screen.active{
-  display:block;
-}
-
-.search,
-.field{
-  width:100%;
-  border:1px solid var(--line);
-  border-radius:16px;
-  background:white;
-  padding:14px;
-  outline:none;
-  font-size:16px;
-}
-
-.grid2{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-}
-
-.tile{
-  min-height:135px;
-  border:1px solid var(--line);
-  background:white;
-  border-radius:20px;
-  padding:20px;
-  text-align:left;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-
-.tile.primary{
-  background:var(--purple);
-  color:white;
-}
-
-.emoji{
-  font-size:29px;
-}
-
-.label{
-  font-size:18px;
-  font-weight:850;
-}
-
-.card{
-  background:white;
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:16px;
-  margin:12px 0;
-  box-shadow:var(--shadow);
-}
-
-.row{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.grow{
-  flex:1;
-}
-
-.strong{
-  font-weight:850;
-}
-
-.muted{
-  color:var(--muted);
-  font-size:13px;
-}
-
-.section{
-  margin:20px 2px 9px;
-  font-size:13px;
-  font-weight:850;
-}
-
-.btn{
-  border:0;
-  border-radius:14px;
-  padding:13px 15px;
-  font-weight:850;
-}
-
-.btn.primary{
-  background:var(--purple);
-  color:white;
-}
-
-.btn.secondary{
-  background:var(--purple-soft);
-  color:var(--purple);
-}
-
-.btn.full{
-  width:100%;
-}
-
-.back{
-  border:0;
-  background:transparent;
-  color:var(--purple);
-  font-weight:850;
-  padding:5px 0 12px;
-}
-
-.headerRow{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.headerRow h3{
-  flex:1;
-}
-
-.linkbtn{
-  border:0;
-  background:transparent;
-  color:var(--purple);
-  font-weight:850;
-}
-
-.choice{
-  border:1px solid var(--line);
-  background:white;
-  border-radius:18px;
-  padding:20px;
-  text-align:left;
-  min-height:120px;
-}
-
-.ctitle{
-  font-weight:850;
-  margin-top:10px;
-}
-
-.label2{
-  display:block;
-  margin-top:14px;
-  margin-bottom:6px;
-  font-size:12px;
-  font-weight:850;
-}
-
-textarea.field{
-  min-height:90px;
-}
-
-.pill{
-  display:inline-block;
-  padding:7px 11px;
-  border-radius:999px;
-  background:var(--purple-soft);
-  color:var(--purple);
-  font-size:12px;
-  font-weight:850;
-}
-
-/* BOTTOM NAV */
-
-.bottom{
-  position:fixed;
-  z-index:10;
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(100%,640px);
-  height:78px;
-  background:white;
-  border-top:1px solid var(--line);
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  padding-bottom:env(safe-area-inset-bottom);
-}
-
-.nav{
-  border:0;
-  background:transparent;
-  color:#6f6977;
-  font-size:11px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:3px;
-}
-
-.nav .ico{
-  font-size:20px;
-}
-
-.nav.active{
-  color:var(--purple);
-}
-
-/* TEAM DRAWER */
-
-.drawerMask{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:30;
-  background:rgba(0,0,0,.35);
-}
-
-.drawer{
-  width:min(82%,340px);
-  height:100%;
-  background:white;
-  padding:20px;
-}
-
-.drawerClose{
-  float:right;
-  width:36px;
-  height:36px;
-  border:0;
-  border-radius:50%;
-  font-size:22px;
-}
-
-.teamButton{
-  width:100%;
-  border:0;
-  background:white;
-  border-bottom:1px solid var(--line);
-  padding:16px 4px;
-  text-align:left;
-  font-weight:800;
-  font-size:16px;
-}
-
-/* REMINDER POPUP */
-
-.reminderOverlay{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:50;
-  background:rgba(30,25,35,.30);
-  padding:20px;
-  align-items:center;
-  justify-content:center;
-}
-
-.reminderPopup{
-  width:min(100%,600px);
-  max-height:82vh;
-  overflow:auto;
-  background:white;
-  border-radius:22px;
-  padding:18px;
-  box-shadow:
-    0 20px 60px
-    rgba(30,20,45,.25);
-}
-
-.popupHeader{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.popupHeader h2{
-  flex:1;
-  margin:0;
-}
-
-.popupClose{
-  width:40px;
-  height:40px;
-  border:0;
-  border-radius:50%;
-  background:#f1eff5;
-  font-size:25px;
-  color:#65606b;
-}
-
-.reminderTabs{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:8px;
-  margin:18px 0 12px;
-}
-
-.reminderTab{
-  border:1px solid var(--line);
-  border-radius:11px;
-  padding:11px 5px;
-  background:#f8f7fa;
-  font-size:12px;
-  font-weight:800;
-}
-
-.reminderTab.active{
-  background:var(--purple);
-  color:white;
-  border-color:var(--purple);
-}
-
-.reminderRow{
-  border:1px solid var(--line);
-  border-radius:15px;
-  padding:14px;
-  margin:10px 0;
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.reminderCircle{
-  width:24px;
-  height:24px;
-  flex:0 0 24px;
-  border:3px solid var(--purple);
-  border-radius:50%;
-}
-
-.reminderCircle.orange{
-  border-color:var(--orange);
-}
-
-.reminderInfo{
-  flex:1;
-}
-
-.reminderTitle{
-  font-weight:850;
-  margin-bottom:3px;
-}
-
-.reminderCompany,
-.reminderTime{
-  color:#6f6977;
-  font-size:13px;
-}
-
-.tag{
-  padding:7px 13px;
-  border-radius:999px;
-  background:var(--purple-soft);
-  color:var(--purple);
-  font-size:12px;
-  font-weight:850;
-}
-
-.tag.orange{
-  background:#fff0d5;
-  color:#d98200;
-}
-
-.chevron{
-  font-size:26px;
-  color:#5d5962;
-}
-
-.addReminderPopup{
-  width:100%;
-  border:0;
-  border-radius:13px;
-  padding:15px;
-  margin-top:12px;
-  background:var(--purple);
-  color:white;
-  font-weight:850;
-  font-size:16px;
-}
-
-/* SETTINGS */
-
-.settingRow{
-  width:100%;
-  border:0;
-  background:white;
-  border:1px solid var(--line);
-  border-radius:17px;
-  padding:17px;
-  margin:10px 0;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  text-align:left;
-}
-
-.settingIcon{
-  font-size:26px;
-}
-
-.settingArrow{
-  font-size:22px;
-  color:var(--muted);
-}
-
-/* SCAN */
-
-.camera{
-  border:2px dashed #c8b9ff;
-  background:#faf8ff;
-  border-radius:20px;
-  padding:55px 20px;
-  text-align:center;
-}
-
-/* RESPONSIVE */
-
-@media(max-width:500px){
-
-  .tile{
-    min-height:115px;
-    padding:16px;
-  }
-
-  .content{
-    padding:16px;
-  }
-
-  .reminderOverlay{
-    align-items:flex-end;
-    padding:10px;
-  }
-
-  .reminderPopup{
-    border-radius:22px;
-  }
-
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="app">
-
-<!-- HEADER -->
-
-<header class="top">
-
-  <button
-    class="iconbtn menuIcon"
-    onclick="openDrawer()"
-  >
-    ☰
-  </button>
-
-  <div class="titlewrap">
-    <div
-      id="pageTitle"
-      class="pageTitle"
-    >
-      Plumbing Supply Manager
-    </div>
-  </div>
-
-  <div class="bellWrap">
+  content(`
 
     <button
-      class="iconbtn"
-      onclick="openReminderPopup()"
-      aria-label="Open reminders"
+      class="btn gray small"
+      onclick="company('${companyName}')"
     >
-      🔔
+      ‹ ${companyName}
     </button>
 
-    <div
-      id="reminderBadge"
-      class="reminderBadge"
-    >
-      3
-    </div>
+    <div class="card">
 
-  </div>
-
-</header>
-
-
-<main>
-
-<!-- HOME -->
-
-<section
-  id="home"
-  class="screen active content"
->
-
-  <input
-    class="search"
-    id="globalSearch"
-    placeholder="Search anything..."
-  >
-
-  <div
-    class="grid2"
-    style="margin-top:16px"
-  >
-
-    <button
-      class="tile"
-      onclick="show('myorders')"
-    >
-      <span class="emoji">📦</span>
-      <span class="label">My Orders</span>
-    </button>
-
-    <button
-      class="tile"
-      onclick="show('quotes')"
-    >
-      <span class="emoji">📄</span>
-      <span class="label">Quotes</span>
-    </button>
-
-    <button
-      class="tile"
-      onclick="show('customers')"
-    >
-      <span class="emoji">👥</span>
-      <span class="label">Customers</span>
-    </button>
-
-    <button
-      class="tile primary"
-      onclick="show('create')"
-    >
-      <span class="emoji">＋</span>
-      <span class="label">Create Order</span>
-    </button>
-
-    <button
-      class="tile"
-      onclick="show('invoices')"
-    >
-      <span class="emoji">🧾</span>
-      <span class="label">Invoices</span>
-    </button>
-
-    <button
-      class="tile"
-      onclick="show('reminders')"
-    >
-      <span class="emoji">🔔</span>
-      <span class="label">Reminders</span>
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- MY ORDERS -->
-
-<section
-  id="myorders"
-  class="screen content"
->
-
-  <div class="section">
-    Choose a section
-  </div>
-
-  <div class="grid2">
-
-    <button
-      class="choice"
-      onclick="show('contractors')"
-    >
-      <div style="font-size:30px">
-        🔧
-      </div>
-
-      <div class="ctitle">
-        Plumbers / Contractors
-      </div>
-
-      <div class="muted">
-        Company → Jobs → Orders
-      </div>
-    </button>
-
-    <button
-      class="choice"
-      onclick="show('homeowners')"
-    >
-      <div style="font-size:30px">
-        🏠
-      </div>
-
-      <div class="ctitle">
-        Homeowners
-      </div>
-
-      <div class="muted">
-        Individual orders
-      </div>
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- CONTRACTORS -->
-
-<section
-  id="contractors"
-  class="screen content"
->
-
-  <button
-    class="back"
-    onclick="show('myorders')"
-  >
-    ← My Orders
-  </button>
-
-  <h3>
-    Plumbers / Contractors
-  </h3>
-
-  <input
-    class="search"
-    placeholder="Search companies..."
-  >
-
-  <div id="companyList"></div>
-
-</section>
-
-
-<!-- HOMEOWNERS -->
-
-<section
-  id="homeowners"
-  class="screen content"
->
-
-  <button
-    class="back"
-    onclick="show('myorders')"
-  >
-    ← My Orders
-  </button>
-
-  <h3>
-    Homeowners
-  </h3>
-
-  <input
-    class="search"
-    placeholder="Search homeowners..."
-  >
-
-  <div id="homeownerList"></div>
-
-</section>
-
-
-<!-- QUOTES -->
-
-<section
-  id="quotes"
-  class="screen content"
->
-
-  <div class="headerRow">
-
-    <h3>
-      Quotes
-    </h3>
-
-    <button class="linkbtn">
-      + Add / Scan Quote
-    </button>
-
-  </div>
-
-  <input
-    class="search"
-    placeholder="Search company or job..."
-  >
-
-  <div class="card">
-    <div class="strong">
-      D Star Plumbing
-    </div>
-
-    <div class="muted">
-      306 Preserve
-    </div>
-  </div>
-
-</section>
-
-
-<!-- CUSTOMERS -->
-
-<section
-  id="customers"
-  class="screen content"
->
-
-  <div class="headerRow">
-
-    <h3>
-      Customers
-    </h3>
-
-    <button class="linkbtn">
-      + Add Customer
-    </button>
-
-  </div>
-
-  <input
-    class="search"
-    placeholder="Search name or phone..."
-  >
-
-  <div id="customerList"></div>
-
-</section>
-
-
-<!-- CREATE ORDER -->
-
-<section
-  id="create"
-  class="screen content"
->
-
-  <div class="card">
-
-    <h3>
-      New Order Sheet
-    </h3>
-
-    <label class="label2">
-      Company / Plumber
-    </label>
-
-    <input
-      class="field"
-      placeholder="Company / Plumber"
-    >
-
-    <label class="label2">
-      Job / Order
-    </label>
-
-    <input
-      class="field"
-      placeholder="Job / Order"
-    >
-
-    <label class="label2">
-      Date
-    </label>
-
-    <input
-      class="field"
-      type="date"
-    >
-
-    <div class="section">
-      Items
-    </div>
-
-    <div id="orderLines"></div>
-
-    <button
-      class="btn secondary"
-      onclick="addOrderLine()"
-    >
-      + Add Another Line
-    </button>
-
-    <label class="label2">
-      Notes / Special Instructions
-    </label>
-
-    <textarea class="field"></textarea>
-
-    <button
-      class="btn primary full"
-      style="margin-top:14px"
-      onclick="alert('Order saved!')"
-    >
-      Save Order
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- INVOICES -->
-
-<section
-  id="invoices"
-  class="screen content"
->
-
-  <div class="headerRow">
-
-    <h3>
-      Invoices
-    </h3>
-
-    <button class="linkbtn">
-      + Scan Invoice
-    </button>
-
-  </div>
-
-  <input
-    class="search"
-    placeholder="Search company or job..."
-  >
-
-  <div class="card">
-
-    <div class="strong">
-      D Star Plumbing
-    </div>
-
-    <div class="muted">
-      306 Preserve
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- FULL REMINDERS PAGE -->
-
-<section
-  id="reminders"
-  class="screen content"
->
-
-  <div class="headerRow">
-
-    <h3>
-      Reminders
-    </h3>
-
-    <button
-      class="linkbtn"
-      onclick="focusNewReminder()"
-    >
-      + Add Reminder
-    </button>
-
-  </div>
-
-  <div class="card">
-
-    <label class="label2">
-      Company / Plumber
-    </label>
-
-    <input
-      id="remCompany"
-      class="field"
-      placeholder="Company / Plumber"
-    >
-
-    <label class="label2">
-      Job / Order
-    </label>
-
-    <input
-      id="remJob"
-      class="field"
-      placeholder="Job / Order"
-    >
-
-    <label class="label2">
-      Date & Time
-    </label>
-
-    <input
-      id="remDate"
-      class="field"
-      type="datetime-local"
-    >
-
-    <label class="label2">
-      Reminder
-    </label>
-
-    <input
-      id="remText"
-      class="field"
-      placeholder="What do you need to remember?"
-    >
-
-    <label class="label2">
-      Notes
-    </label>
-
-    <textarea
-      id="remNotes"
-      class="field"
-    ></textarea>
-
-    <button
-      class="btn primary full"
-      style="margin-top:14px"
-      onclick="saveReminder()"
-    >
-      Save Reminder
-    </button>
-
-  </div>
-
-  <div id="reminderList"></div>
-
-</section>
-
-
-<!-- SCAN -->
-
-<section
-  id="scan"
-  class="screen content"
->
-
-  <div
-    class="camera"
-    onclick="show('scanchoose')"
-  >
-
-    <div style="font-size:52px">
-      📷
-    </div>
-
-    <div class="strong">
-      Tap to open camera
-    </div>
-
-    <div class="muted">
-      Take a picture or scan
-    </div>
-
-  </div>
-
-</section>
-
-
-<section
-  id="scanchoose"
-  class="screen content"
->
-
-  <button
-    class="back"
-    onclick="show('scan')"
-  >
-    ← Scan
-  </button>
-
-  <h3>
-    What is this?
-  </h3>
-
-  <div class="grid2">
-
-    <button class="choice">
-      📦
-      <div class="ctitle">
-        Box Scan
-      </div>
-    </button>
-
-    <button class="choice">
-      🧾
-      <div class="ctitle">
-        Invoice Scan
-      </div>
-    </button>
-
-    <button class="choice">
-      📄
-      <div class="ctitle">
-        Quote Scan
-      </div>
-    </button>
-
-    <button class="choice">
-      ▦
-      <div class="ctitle">
-        Location Scan
-      </div>
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- SETTINGS -->
-
-<section
-  id="settings"
-  class="screen content"
->
-
-  <h3>
-    Settings
-  </h3>
-
-  <div class="section">
-    Order & Storage
-  </div>
-
-  <button class="settingRow">
-
-    <div class="settingIcon">
-      ▦
-    </div>
-
-    <div class="grow">
-
-      <div class="strong">
-        Shelf Locations
-      </div>
-
-      <div class="muted">
-        View and manage showroom shelves
-      </div>
-
-    </div>
-
-    <div class="settingArrow">
-      ›
-    </div>
-
-  </button>
-
-
-  <button class="settingRow">
-
-    <div class="settingIcon">
-      ✅
-    </div>
-
-    <div class="grow">
-
-      <div class="strong">
-        Completed Orders
-      </div>
-
-      <div class="muted">
-        Orders that have left the showroom
-      </div>
-
-    </div>
-
-    <div class="settingArrow">
-      ›
-    </div>
-
-  </button>
-
-</section>
-
-
-<!-- TEAM MEMBER ORDERS -->
-
-<section
-  id="teamorders"
-  class="screen content"
->
-
-  <button
-    class="back"
-    onclick="show('home')"
-  >
-    ← Home
-  </button>
-
-  <div id="teamOrderContent"></div>
-
-</section>
-
-</main>
-
-
-<!-- BOTTOM NAVIGATION -->
-
-<nav class="bottom">
-
-  <button
-    class="nav active"
-    data-nav="home"
-    onclick="show('home')"
-  >
-    <span class="ico">⌂</span>
-    Home
-  </button>
-
-  <button
-    class="nav"
-    data-nav="myorders"
-    onclick="show('myorders')"
-  >
-    <span class="ico">📦</span>
-    My Orders
-  </button>
-
-  <button
-    class="nav"
-    data-nav="scan"
-    onclick="show('scan')"
-  >
-    <span class="ico">▣</span>
-    Scan
-  </button>
-
-  <button
-    class="nav"
-    data-nav="reminders"
-    onclick="show('reminders')"
-  >
-    <span class="ico">🔔</span>
-    Reminders
-  </button>
-
-  <button
-    class="nav"
-    data-nav="settings"
-    onclick="show('settings')"
-  >
-    <span class="ico">⚙️</span>
-    Settings
-  </button>
-
-</nav>
-
-</div>
-
-
-<!-- TEAM DRAWER -->
-
-<div
-  id="drawerMask"
-  class="drawerMask"
-  onclick="
-    if(event.target===this){
-      closeDrawer()
-    }
-  "
->
-
-  <div class="drawer">
-
-    <button
-      class="drawerClose"
-      onclick="closeDrawer()"
-    >
-      ×
-    </button>
-
-    <h2>
-      Team Members
-    </h2>
-
-    <div class="muted">
-      Everyone can view and edit everyone's orders.
-    </div>
-
-    <br>
-
-    <button
-      class="teamButton"
-      onclick="openTeam('Mallerie')"
-    >
-      Mallerie
-    </button>
-
-    <button
-      class="teamButton"
-      onclick="openTeam('Kayla')"
-    >
-      Kayla
-    </button>
-
-    <button
-      class="teamButton"
-      onclick="openTeam('Spencer')"
-    >
-      Spencer
-    </button>
-
-    <button
-      class="teamButton"
-      onclick="openTeam('Ann')"
-    >
-      Ann
-    </button>
-
-    <button
-      class="teamButton"
-      onclick="openTeam('Haley')"
-    >
-      Haley
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- REMINDER BELL POPUP -->
-
-<div
-  id="reminderOverlay"
-  class="reminderOverlay"
-  onclick="
-    if(event.target===this){
-      closeReminderPopup()
-    }
-  "
->
-
-  <div class="reminderPopup">
-
-    <div class="popupHeader">
-
-      <div style="font-size:28px">
-        🔔
-      </div>
-
-      <h2>
-        Reminders
+      <h2 style="margin-bottom:4px">
+        ${job}
       </h2>
 
+      <div class="sub">
+        ${companyName}
+      </div>
+
+      <br>
+
+
+      <div class="card">
+
+        <div class="sub">
+          Shelf Location
+        </div>
+
+        <div class="title">
+
+          ${
+            shelf
+            ? "▦ " + shelf.code
+            : "Not Assigned"
+          }
+
+        </div>
+
+        ${
+          shelf
+          ? `
+            <div class="sub">
+              ${shelf.description}
+            </div>
+          `
+          : ""
+        }
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="row-main">
+
+          <div class="title">
+            Items
+          </div>
+
+          <div class="sub">
+            View received and missing items
+          </div>
+
+        </div>
+
+        <div>›</div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="row-main">
+
+          <div class="title">
+            Notes
+          </div>
+
+        </div>
+
+        <div>›</div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="row-main">
+
+          <div class="title">
+            Shelf Photo
+          </div>
+
+          <div class="sub">
+
+            ${
+              shelf &&
+              shelfPhotos[shelf.code]
+
+              ? "Shelf photo saved"
+
+              : "Photo of all boxes together"
+            }
+
+          </div>
+
+        </div>
+
+        <div>›</div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="row-main">
+
+          <div class="title">
+            Invoices
+          </div>
+
+        </div>
+
+        <div>›</div>
+
+      </div>
+
+
       <button
-        class="popupClose"
-        onclick="closeReminderPopup()"
+        class="btn soft"
+        onclick="chooseShelf(
+          '${companyName}',
+          '${job}'
+        )"
       >
-        ×
+
+        ${
+          shelf
+          ? "Move to Another Shelf"
+          : "Assign Shelf"
+        }
+
+      </button>
+
+
+      <button
+        class="btn purple"
+        onclick="sendConfirm(
+          '${companyName}',
+          '${job}'
+        )"
+      >
+        Send Out Order
       </button>
 
     </div>
 
-
-    <div class="reminderTabs">
-
-      <button
-        class="reminderTab active"
-      >
-        Upcoming (3)
-      </button>
-
-      <button
-        class="reminderTab"
-        onclick="
-          closeReminderPopup();
-          show('reminders')
-        "
-      >
-        All Reminders
-      </button>
-
-      <button
-        class="reminderTab"
-        onclick="popupAddReminder()"
-      >
-        Add Reminder
-      </button>
-
-    </div>
-
-
-    <div id="popupReminderList"></div>
-
-
-    <button
-      class="addReminderPopup"
-      onclick="popupAddReminder()"
-    >
-      ＋ &nbsp; Add New Reminder
-    </button>
-
-  </div>
-
-</div>
-
-
-<script>
-
-/* -------------------------
-   APP DATA
-------------------------- */
-
-const companies = {
-  "D Star Plumbing":[
-    "306 Preserve",
-    "Cross Roads",
-    "K Knutson",
-    "Johnson"
-  ],
-
-  "Ridgeline Plumbing":[
-    "Highland"
-  ],
-
-  "Durant / Slate":[
-    "Harvest Fields"
-  ],
-
-  "Goff Plumbing":[
-    "309 Stalker Farms"
-  ],
-
-  "Cable Plumbing":[]
-};
-
-
-const homeowners = [
-  "Ryan",
-  "Johnson Residence",
-  "Rebecca",
-  "John"
-];
-
-
-const teamOrders = {
-
-  "Mallerie":[
-    "306 Preserve",
-    "Cross Roads"
-  ],
-
-  "Kayla":[
-    "K Knutson"
-  ],
-
-  "Spencer":[
-    "Johnson",
-    "Highland"
-  ],
-
-  "Ann":[
-    "Harvest Fields"
-  ],
-
-  "Haley":[
-    "309 Stalker Farms"
-  ]
-
-};
-
-
-let reminders = [
-
-  {
-    title:
-      "Follow up on quote for 306 Preserve",
-
-    company:
-      "D Star Plumbing",
-
-    time:
-      "Today, 4:00 PM",
-
-    type:
-      "Follow Up"
-  },
-
-  {
-    title:
-      "Check status of Moen order",
-
-    company:
-      "Cross Roads",
-
-    time:
-      "Tomorrow, 10:00 AM",
-
-    type:
-      "Order"
-  },
-
-  {
-    title:
-      "Call D Star about invoice",
-
-    company:
-      "D Star Plumbing",
-
-    time:
-      "Thu, Sep 18 • 9:00 AM",
-
-    type:
-      "Call"
-  }
-
-];
-
-
-/* -------------------------
-   NAVIGATION
-------------------------- */
-
-const titles = {
-
-  home:
-    "Plumbing Supply Manager",
-
-  myorders:
-    "My Orders",
-
-  contractors:
-    "Plumbers / Contractors",
-
-  homeowners:
-    "Homeowners",
-
-  quotes:
-    "Quotes",
-
-  customers:
-    "Customers",
-
-  create:
-    "Create Order",
-
-  invoices:
-    "Invoices",
-
-  reminders:
-    "Reminders",
-
-  scan:
-    "Scan",
-
-  scanchoose:
-    "What is this?",
-
-  settings:
-    "Settings",
-
-  teamorders:
-    "Team Member Orders"
-
-};
-
-
-function show(id){
-
-  document
-    .querySelectorAll(".screen")
-    .forEach(
-      screen =>
-        screen.classList.remove(
-          "active"
-        )
-    );
-
-
-  const screen =
-    document.getElementById(id);
-
-
-  if(screen){
-
-    screen.classList.add(
-      "active"
-    );
-
-  }
-
-
-  document
-    .getElementById(
-      "pageTitle"
-    )
-    .textContent =
-      titles[id] ||
-      "Plumbing Supply Manager";
-
-
-  document
-    .querySelectorAll(".nav")
-    .forEach(nav => {
-
-      nav.classList.toggle(
-        "active",
-        nav.dataset.nav === id
-      );
-
-    });
-
-
-  if(id === "contractors"){
-    renderCompanies();
-  }
-
-
-  if(id === "homeowners"){
-    renderHomeowners();
-  }
-
-
-  if(id === "customers"){
-    renderCustomers();
-  }
-
-
-  if(id === "reminders"){
-    renderReminders();
-  }
-
-
-  if(id === "create"){
-    createOrderLines();
-  }
-
-
-  window.scrollTo(
-    0,
-    0
-  );
+  `);
 
 }
 
 
-/* -------------------------
-   TEAM DRAWER
-------------------------- */
+/* -----------------------------
+   CHOOSE SHELF
+----------------------------- */
 
-function openDrawer(){
-
-  document
-    .getElementById(
-      "drawerMask"
-    )
-    .style.display =
-      "block";
-
-}
-
-
-function closeDrawer(){
-
-  document
-    .getElementById(
-      "drawerMask"
-    )
-    .style.display =
-      "none";
-
-}
-
-
-function openTeam(name){
-
-  closeDrawer();
-
-  const jobs =
-    teamOrders[name] || [];
-
+function chooseShelf(companyName,job){
 
   let html = `
 
     <h2>
-      ${name}'s Orders
+      Assign Shelf
     </h2>
+
+    <p class="sub">
+      Scan the permanent barcode
+      attached to the shelf.
+    </p>
+
+    <button
+      class="btn purple"
+      onclick="
+        closeModal();
+        scanShelfForOrder(
+          '${companyName}',
+          '${job}'
+        )
+      "
+    >
+      ▥ Scan Shelf Barcode
+    </button>
+
+
+    <p class="sub">
+      Or choose a shelf manually:
+    </p>
 
   `;
 
 
-  if(!jobs.length){
+  shelves.forEach(shelf => {
 
     html += `
 
-      <div class="card">
-        No active orders.
+      <div
+        class="row"
+        onclick="assignShelf(
+          '${companyName}',
+          '${job}',
+          '${shelf.code}',
+          true
+        )"
+      >
+
+        <div class="row-main">
+
+          <div class="title">
+            ${shelf.code}
+          </div>
+
+          <div class="sub">
+            ${shelf.description}
+          </div>
+
+        </div>
+
+
+        <span
+          class="badge ${
+            shelf.orders.length
+            ? "used"
+            : "available"
+          }"
+        >
+
+          ${
+            shelf.orders.length
+
+            ? shelf.orders.length +
+              (
+                shelf.orders.length === 1
+                ? " Order"
+                : " Orders"
+              )
+
+            : "Available"
+          }
+
+        </span>
+
       </div>
 
     `;
+
+  });
+
+
+  html += `
+
+    <button
+      class="btn gray"
+      onclick="closeModal()"
+    >
+      Cancel
+    </button>
+
+  `;
+
+
+  modal(html);
+
+}
+
+
+/* -----------------------------
+   ASSIGN ORDER TO SHELF
+----------------------------- */
+
+function assignShelf(
+  companyName,
+  job,
+  code,
+  takePhoto
+){
+
+  code =
+    normalizeCode(code);
+
+
+  let shelf =
+    shelves.find(
+      shelf =>
+        shelf.code === code
+    );
+
+
+  if(!shelf){
+
+    alert(
+      "Shelf " +
+      code +
+      " was not found."
+    );
+
+    return;
 
   }
 
 
-  jobs.forEach(job => {
+  /*
+    Remove this job from any
+    previous shelf.
+  */
 
-    html += `
+  shelves.forEach(shelf => {
 
-      <div class="card row">
-
-        <div class="grow">
-
-          <div class="strong">
-            ${job}
-          </div>
-
-          <div class="muted">
-            Active Order
-          </div>
-
-        </div>
-
-        <div>
-          ›
-        </div>
-
-      </div>
-
-    `;
+    shelf.orders =
+      (
+        shelf.orders || []
+      )
+      .filter(
+        existingJob =>
+          existingJob !== job
+      );
 
   });
 
 
-  document
-    .getElementById(
-      "teamOrderContent"
-    )
-    .innerHTML =
-      html;
-
-
-  show(
-    "teamorders"
-  );
-
-}
-
-
-/* -------------------------
-   COMPANIES
-------------------------- */
-
-function renderCompanies(){
-
-  let html = "";
-
-
-  Object
-    .keys(companies)
-    .forEach(company => {
-
-      html += `
-
-        <div class="card row">
-
-          <div class="grow">
-
-            <div class="strong">
-              ${company}
-            </div>
-
-            <div class="muted">
-              ${companies[company].length}
-              active jobs
-            </div>
-
-          </div>
-
-          <div>
-            ›
-          </div>
-
-        </div>
-
-      `;
-
-    });
-
-
-  document
-    .getElementById(
-      "companyList"
-    )
-    .innerHTML =
-      html;
-
-}
-
-
-/* -------------------------
-   HOMEOWNERS
-------------------------- */
-
-function renderHomeowners(){
-
-  let html = "";
-
-
-  homeowners.forEach(name => {
-
-    html += `
-
-      <div class="card row">
-
-        <div class="grow">
-
-          <div class="strong">
-            ${name}
-          </div>
-
-          <div class="muted">
-            Homeowner
-          </div>
-
-        </div>
-
-        <div>
-          ›
-        </div>
-
-      </div>
-
-    `;
-
-  });
-
-
-  document
-    .getElementById(
-      "homeownerList"
-    )
-    .innerHTML =
-      html;
-
-}
-
-
-/* -------------------------
-   CUSTOMERS
-------------------------- */
-
-function renderCustomers(){
-
-  const customers = [
-    "Ryan",
-    "Rebecca",
-    "John",
-    "Johnson Residence",
-    "D Star Plumbing",
-    "Ridgeline Plumbing"
-  ];
-
-
-  document
-    .getElementById(
-      "customerList"
-    )
-    .innerHTML =
-      customers
-      .map(name => `
-
-        <div class="card row">
-
-          <div class="grow">
-
-            <div class="strong">
-              ${name}
-            </div>
-
-            <div class="muted">
-              Contact
-            </div>
-
-          </div>
-
-          <div>
-            ›
-          </div>
-
-        </div>
-
-      `)
-      .join("");
-
-}
-
-
-/* -------------------------
-   CREATE ORDER
-------------------------- */
-
-function createOrderLines(){
-
-  const container =
-    document.getElementById(
-      "orderLines"
-    );
-
+  /*
+    Add the job to the new shelf.
+  */
 
   if(
-    container.children.length
+    !shelf.orders.includes(job)
   ){
+
+    shelf.orders.push(job);
+
+  }
+
+
+  save();
+
+  closeModal();
+
+
+  if(takePhoto){
+
+    shelfPhotoStep(
+      companyName,
+      job,
+      code
+    );
+
+  }
+  else{
+
+    order(
+      companyName,
+      job
+    );
+
+  }
+
+}
+
+
+/* -----------------------------
+   SHELF PHOTO
+----------------------------- */
+
+function shelfPhotoStep(
+  companyName,
+  job,
+  code
+){
+
+  title(
+    "Shelf Photo"
+  );
+
+
+  content(`
+
+    <button
+      class="btn gray small"
+      onclick="order(
+        '${companyName}',
+        '${job}'
+      )"
+    >
+      ‹ Order
+    </button>
+
+
+    <div class="card center">
+
+      <div style="font-size:52px">
+        📷
+      </div>
+
+      <h2>
+        Take Shelf Photo
+      </h2>
+
+      <p class="sub">
+        Take one photo showing all
+        boxes/items together on
+        Shelf ${code}.
+      </p>
+
+
+      <input
+        id="shelfPhotoInput"
+        type="file"
+        accept="image/*"
+        capture="environment"
+        onchange="previewShelfPhoto(
+          event,
+          '${code}'
+        )"
+      >
+
+
+      <div id="photoPreview"></div>
+
+
+      <button
+        class="btn purple"
+        onclick="finishShelfPhoto(
+          '${companyName}',
+          '${job}',
+          '${code}'
+        )"
+      >
+        Save Location
+      </button>
+
+    </div>
+
+  `);
+
+}
+
+
+function previewShelfPhoto(
+  event,
+  code
+){
+
+  let file =
+    event.target.files[0];
+
+
+  if(!file){
     return;
   }
 
 
-  for(
-    let i = 1;
-    i <= 10;
-    i++
-  ){
-
-    addOrderLine();
-
-  }
-
-}
+  let reader =
+    new FileReader();
 
 
-function addOrderLine(){
+  reader.onload =
+    function(){
 
-  const container =
-    document.getElementById(
-      "orderLines"
-    );
-
-
-  const number =
-    container.children.length + 1;
+      shelfPhotos[code] =
+        reader.result;
 
 
-  const row =
-    document.createElement(
-      "div"
-    );
+      document
+        .getElementById(
+          "photoPreview"
+        )
+        .innerHTML = `
 
-
-  row.className =
-    "row";
-
-
-  row.style.margin =
-    "8px 0";
-
-
-  row.innerHTML = `
-
-    <div
-      style="
-        width:25px;
-        text-align:center;
-        font-weight:800;
-        color:#77717f;
-      "
-    >
-      ${number}
-    </div>
-
-    <input
-      class="field"
-      style="width:72px"
-      type="number"
-      min="0"
-      placeholder="Qty"
-    >
-
-    <input
-      class="field"
-      placeholder="Item / Description"
-    >
-
-  `;
-
-
-  container.appendChild(row);
-
-}
-
-
-/* -------------------------
-   REMINDER POPUP
-------------------------- */
-
-function openReminderPopup(){
-
-  renderPopupReminders();
-
-
-  document
-    .getElementById(
-      "reminderOverlay"
-    )
-    .style.display =
-      "flex";
-
-}
-
-
-function closeReminderPopup(){
-
-  document
-    .getElementById(
-      "reminderOverlay"
-    )
-    .style.display =
-      "none";
-
-}
-
-
-function renderPopupReminders(){
-
-  let html = "";
-
-
-  reminders
-    .slice(0,3)
-    .forEach(
-      (reminder,index) => {
-
-        const orange =
-          reminder.type ===
-          "Order";
-
-
-        html += `
-
-          <div class="reminderRow">
-
-            <div
-              class="
-                reminderCircle
-                ${orange ? "orange" : ""}
-              "
-            ></div>
-
-
-            <div class="reminderInfo">
-
-              <div class="reminderTitle">
-                ${reminder.title}
-              </div>
-
-              <div class="reminderCompany">
-                ${reminder.company}
-              </div>
-
-              <div class="reminderTime">
-                🗓 ${reminder.time}
-              </div>
-
-            </div>
-
-
-            <div
-              class="
-                tag
-                ${orange ? "orange" : ""}
-              "
-            >
-              ${reminder.type}
-            </div>
-
-
-            <div class="chevron">
-              ›
-            </div>
-
-          </div>
+          <img
+            class="photo-preview"
+            src="${reader.result}"
+          >
 
         `;
 
+    };
+
+
+  reader.readAsDataURL(file);
+
+}
+
+
+function finishShelfPhoto(
+  companyName,
+  job,
+  code
+){
+
+  save();
+
+
+  modal(`
+
+    <div class="center">
+
+      <div style="font-size:60px">
+        ✅
+      </div>
+
+      <h2>
+        Location Saved!
+      </h2>
+
+      <p class="sub">
+
+        ${job}
+        is now assigned to
+        Shelf ${code}.
+
+      </p>
+
+
+      <button
+        class="btn purple"
+        onclick="
+          closeModal();
+          order(
+            '${companyName}',
+            '${job}'
+          )
+        "
+      >
+        View Order
+      </button>
+
+    </div>
+
+  `);
+
+}
+
+
+/* -----------------------------
+   SEND OUT ORDER
+----------------------------- */
+
+function sendConfirm(
+  companyName,
+  job
+){
+
+  let shelf =
+    findShelf(job);
+
+
+  modal(`
+
+    <h2>
+      Send Out Order
+    </h2>
+
+
+    <p>
+      Has
+      <strong>${job}</strong>
+      left the showroom?
+    </p>
+
+
+    <p class="sub">
+
+      This will remove the order from
+
+      ${
+        shelf
+        ? "Shelf " + shelf.code
+        : "its shelf location"
       }
-    );
+
+      and move it into
+      Completed Orders.
+
+    </p>
 
 
-  document
-    .getElementById(
-      "popupReminderList"
-    )
-    .innerHTML =
-      html;
+    <button
+      class="btn purple"
+      onclick="sendOut(
+        '${companyName}',
+        '${job}'
+      )"
+    >
+      Yes, Send Out Order
+    </button>
 
 
-  document
-    .getElementById(
-      "reminderBadge"
-    )
-    .textContent =
-      reminders.length;
+    <button
+      class="btn gray"
+      onclick="closeModal()"
+    >
+      Cancel
+    </button>
 
-}
-
-
-function popupAddReminder(){
-
-  closeReminderPopup();
-
-  show(
-    "reminders"
-  );
-
-
-  setTimeout(
-    focusNewReminder,
-    100
-  );
+  `);
 
 }
 
 
-function focusNewReminder(){
+function sendOut(
+  companyName,
+  job
+){
 
-  const field =
-    document.getElementById(
-      "remText"
-    );
+  let shelf =
+    findShelf(job);
 
 
-  if(field){
+  /*
+    Remove order from shelf.
+  */
 
-    field.focus();
+  shelves.forEach(shelf => {
 
-    field.scrollIntoView({
-      behavior:"smooth",
-      block:"center"
-    });
+    shelf.orders =
+      (
+        shelf.orders || []
+      )
+      .filter(
+        existingJob =>
+          existingJob !== job
+      );
+
+  });
+
+
+  /*
+    Remove from active company jobs.
+  */
+
+  if(companies[companyName]){
+
+    companies[companyName] =
+      companies[companyName]
+      .filter(
+        existingJob =>
+          existingJob !== job
+      );
 
   }
 
+
+  /*
+    Remove from team member's
+    active order list.
+  */
+
+  Object
+    .keys(teamOrders)
+    .forEach(person => {
+
+      teamOrders[person] =
+        teamOrders[person]
+        .filter(
+          existingJob =>
+            existingJob !== job
+        );
+
+    });
+
+
+  /*
+    Preserve history.
+  */
+
+  completedOrders.unshift({
+
+    company:
+      companyName,
+
+    job:
+      job,
+
+    shelf:
+      shelf
+      ? shelf.code
+      : "None",
+
+    date:
+      new Date()
+      .toLocaleDateString()
+
+  });
+
+
+  save();
+
+
+  modal(`
+
+    <div class="center">
+
+      <div style="font-size:60px">
+        ✅
+      </div>
+
+
+      <h2>
+        Order Sent Out!
+      </h2>
+
+
+      <p class="sub">
+
+        ${job}
+        has been moved to
+        Completed Orders.
+
+        <br><br>
+
+        ${
+          shelf
+          ? "Shelf " +
+            shelf.code +
+            " is now available."
+          : ""
+        }
+
+      </p>
+
+
+      <button
+        class="btn purple"
+        onclick="
+          closeModal();
+          completed()
+        "
+      >
+        View Completed Orders
+      </button>
+
+    </div>
+
+  `);
+
 }
 
 
-/* -------------------------
-   SAVE REMINDER
-------------------------- */
+/* -----------------------------
+   SETTINGS
+----------------------------- */
 
-function saveReminder(){
+function settings(){
 
-  const title =
+  title(
+    "Settings"
+  );
+
+
+  content(`
+
+    <div class="section">
+      Order & Storage
+    </div>
+
+
+    <div
+      class="row"
+      onclick="shelfLocations()"
+    >
+
+      <div style="font-size:28px">
+        ▦
+      </div>
+
+      <div class="row-main">
+
+        <div class="title">
+          Shelf Locations
+        </div>
+
+        <div class="sub">
+          View, add and scan
+          showroom shelves
+        </div>
+
+      </div>
+
+      <div>
+        ›
+      </div>
+
+    </div>
+
+
+    <div
+      class="row"
+      onclick="completed()"
+    >
+
+      <div style="font-size:28px">
+        ✅
+      </div>
+
+      <div class="row-main">
+
+        <div class="title">
+          Completed Orders
+        </div>
+
+        <div class="sub">
+          Orders that have left
+          the showroom
+        </div>
+
+      </div>
+
+      <div>
+        ›
+      </div>
+
+    </div>
+
+
+    <div class="section">
+      App
+    </div>
+
+
+    <div class="card">
+
+      <div class="title">
+        Plumbing Supply Manager
+      </div>
+
+      <div class="sub">
+        Showroom Team App
+      </div>
+
+    </div>
+
+  `);
+
+}
+
+
+/* -----------------------------
+   SHELF LOCATIONS
+----------------------------- */
+
+function shelfLocations(){
+
+  title(
+    "Shelf Locations"
+  );
+
+
+  let html = `
+
+    <div class="heading">
+
+      <h2>
+        All Shelves
+      </h2>
+
+      <button
+        class="btn purple small"
+        onclick="addShelf()"
+      >
+        + Add Shelf
+      </button>
+
+    </div>
+
+
+    <input
+      class="search"
+      placeholder="Search shelves..."
+      oninput="filterShelves(
+        this.value
+      )"
+    >
+
+
+    <div id="shelfList">
+
+  `;
+
+
+  shelves.forEach(shelf => {
+
+    html +=
+      shelfRow(shelf);
+
+  });
+
+
+  html += `
+    </div>
+  `;
+
+
+  content(html);
+
+}
+
+
+function shelfRow(shelf){
+
+  return `
+
+    <div
+      class="row shelf-row"
+      data-search="${
+        (
+          shelf.code +
+          " " +
+          shelf.description
+        )
+        .toLowerCase()
+      }"
+      onclick="viewShelf(
+        '${shelf.code}'
+      )"
+    >
+
+      <div style="font-size:24px">
+        ▦
+      </div>
+
+
+      <div class="row-main">
+
+        <div class="title">
+          ${shelf.code}
+        </div>
+
+        <div class="sub">
+          ${shelf.description}
+        </div>
+
+      </div>
+
+
+      <span
+        class="badge ${
+          shelf.orders.length
+          ? "used"
+          : "available"
+        }"
+      >
+
+        ${
+          shelf.orders.length
+
+          ? shelf.orders.length +
+            (
+              shelf.orders.length === 1
+              ? " Order"
+              : " Orders"
+            )
+
+          : "Available"
+        }
+
+      </span>
+
+    </div>
+
+  `;
+
+}
+
+
+function filterShelves(value){
+
+  let search =
+    value
+      .toLowerCase();
+
+
+  document
+    .querySelectorAll(
+      ".shelf-row"
+    )
+    .forEach(row => {
+
+      row.style.display =
+        row.dataset.search
+        .includes(search)
+
+        ? "flex"
+        : "none";
+
+    });
+
+}
+
+
+/* -----------------------------
+   ADD A NEW SHELF
+----------------------------- */
+
+function addShelf(){
+
+  title(
+    "Add Shelf"
+  );
+
+
+  content(`
+
+    <button
+      class="btn gray small"
+      onclick="shelfLocations()"
+    >
+      ‹ Shelf Locations
+    </button>
+
+
+    <div class="card">
+
+      <label>
+        Shelf Code *
+      </label>
+
+      <input
+        id="shelfCode"
+        placeholder="Example: GK1"
+      >
+
+
+      <label>
+        Description
+      </label>
+
+      <input
+        id="shelfDescription"
+        placeholder="Example: Mountain Green"
+      >
+
+
+      <label>
+        Shelf Photo
+      </label>
+
+      <input
+        id="newShelfPhoto"
+        type="file"
+        accept="image/*"
+        capture="environment"
+      >
+
+
+      <button
+        class="btn purple"
+        onclick="saveShelf()"
+      >
+        Save Shelf
+      </button>
+
+    </div>
+
+  `);
+
+}
+
+
+function saveShelf(){
+
+  let code =
+    normalizeCode(
+      document
+        .getElementById(
+          "shelfCode"
+        )
+        .value
+    );
+
+
+  let description =
     document
       .getElementById(
-        "remText"
+        "shelfDescription"
       )
       .value
       .trim();
 
 
-  if(!title){
+  if(!code){
 
     alert(
-      "Please enter a reminder."
+      "Please enter a shelf code."
     );
 
     return;
@@ -2193,138 +1107,360 @@ function saveReminder(){
   }
 
 
-  const company =
-    document
-      .getElementById(
-        "remCompany"
-      )
-      .value
-      .trim();
-
-
-  const date =
-    document
-      .getElementById(
-        "remDate"
-      )
-      .value;
-
-
-  reminders.unshift({
-
-    title:title,
-
-    company:
-      company ||
-      "General",
-
-    time:
-      date ||
-      "Upcoming",
-
-    type:
-      "Reminder"
-
-  });
-
-
-  document
-    .getElementById(
-      "remText"
+  if(
+    shelves.some(
+      shelf =>
+        shelf.code === code
     )
-    .value =
-      "";
+  ){
+
+    alert(
+      "That shelf already exists."
+    );
+
+    return;
+
+  }
 
 
-  document
-    .getElementById(
-      "reminderBadge"
-    )
-    .textContent =
-      reminders.length;
+  let photoInput =
+    document.getElementById(
+      "newShelfPhoto"
+    );
 
 
-  renderReminders();
+  let file =
+    photoInput.files[0];
 
 
-  alert(
-    "Reminder saved!"
-  );
+  function finishSaving(){
+
+    shelves.push({
+
+      code:code,
+
+      description:
+        description ||
+        "Shelf Location",
+
+      orders:[]
+
+    });
+
+
+    save();
+
+    shelfAdded(code);
+
+  }
+
+
+  if(file){
+
+    let reader =
+      new FileReader();
+
+
+    reader.onload =
+      function(){
+
+        shelfPhotos[code] =
+          reader.result;
+
+        finishSaving();
+
+      };
+
+
+    reader.readAsDataURL(file);
+
+  }
+  else{
+
+    finishSaving();
+
+  }
 
 }
 
 
-function renderReminders(){
+/* -----------------------------
+   SHELF ADDED
+----------------------------- */
 
-  let html = "";
+function shelfAdded(code){
+
+  let shelf =
+    shelves.find(
+      shelf =>
+        shelf.code === code
+    );
 
 
-  reminders.forEach(
-    reminder => {
+  title(
+    "Shelf Added"
+  );
 
-      html += `
 
-        <div class="card row">
+  content(`
 
-          <div style="font-size:25px">
-            🔔
+    <div class="card center">
+
+      <div style="font-size:60px">
+        ✅
+      </div>
+
+
+      <h2>
+        Shelf ${code} Added!
+      </h2>
+
+
+      <p class="sub">
+        ${shelf.description}
+      </p>
+
+
+      <div style="font-size:60px">
+        ▥
+      </div>
+
+
+      <div
+        style="
+          font-size:34px;
+          font-weight:900;
+        "
+      >
+        ${code}
+      </div>
+
+
+      <p class="sub">
+
+        Your physical Code 128
+        barcode for Shelf ${code}
+        can now be scanned.
+
+      </p>
+
+
+      <button
+        class="btn purple"
+        onclick="viewShelf(
+          '${code}'
+        )"
+      >
+        View Shelf
+      </button>
+
+
+      <button
+        class="btn soft"
+        onclick="addShelf()"
+      >
+        Add Another Shelf
+      </button>
+
+    </div>
+
+  `);
+
+}
+
+
+/* -----------------------------
+   VIEW A SHELF
+----------------------------- */
+
+function viewShelf(code){
+
+  let shelf =
+    shelves.find(
+      shelf =>
+        shelf.code === code
+    );
+
+
+  if(!shelf){
+    return;
+  }
+
+
+  title(
+    "Shelf Details"
+  );
+
+
+  let ordersHTML = "";
+
+
+  if(
+    shelf.orders.length === 0
+  ){
+
+    ordersHTML = `
+
+      <div class="card center">
+
+        <div style="font-size:42px">
+          📭
+        </div>
+
+        <h3>
+          No orders on this shelf
+        </h3>
+
+        <p class="sub">
+          Shelf ${code}
+          is available.
+        </p>
+
+      </div>
+
+    `;
+
+  }
+  else{
+
+    shelf.orders.forEach(job => {
+
+      let companyName =
+        Object.keys(companies)
+        .find(
+          companyName =>
+            companies[
+              companyName
+            ]
+            .includes(job)
+        ) || "";
+
+
+      ordersHTML += `
+
+        <div
+          class="row"
+          onclick="order(
+            '${companyName}',
+            '${job}'
+          )"
+        >
+
+          <div class="row-main">
+
+            <div class="title">
+              ${job}
+            </div>
+
+            <div class="sub">
+              ${companyName}
+            </div>
+
           </div>
 
-          <div class="grow">
-
-            <div class="strong">
-              ${reminder.title}
-            </div>
-
-            <div class="muted">
-              ${reminder.company}
-            </div>
-
-            <div class="muted">
-              ${reminder.time}
-            </div>
-
+          <div>
+            ›
           </div>
-
-          <span class="pill">
-            ${reminder.type}
-          </span>
 
         </div>
 
       `;
 
-    }
-  );
+    });
+
+  }
 
 
-  document
-    .getElementById(
-      "reminderList"
-    )
-    .innerHTML =
-      html;
+  content(`
+
+    <button
+      class="btn gray small"
+      onclick="shelfLocations()"
+    >
+      ‹ Shelf Locations
+    </button>
+
+
+    <div class="card center">
+
+      <div style="font-size:58px">
+        ▥
+      </div>
+
+
+      <div
+        style="
+          font-size:34px;
+          font-weight:900;
+        "
+      >
+        ${shelf.code}
+      </div>
+
+
+      <strong>
+        ${shelf.description}
+      </strong>
+
+
+      <br><br>
+
+
+      <span
+        class="badge ${
+          shelf.orders.length
+          ? "used"
+          : "available"
+        }"
+      >
+
+        ${
+          shelf.orders.length
+
+          ? shelf.orders.length +
+            (
+              shelf.orders.length === 1
+              ? " Order"
+              : " Orders"
+            )
+
+          : "Available"
+        }
+
+      </span>
+
+
+      ${
+        shelfPhotos[code]
+
+        ? `
+          <img
+            class="photo-preview"
+            src="${shelfPhotos[code]}"
+          >
+        `
+
+        : ""
+      }
+
+
+      <button
+        class="btn purple"
+        onclick="scanShelf()"
+      >
+        Scan Another Shelf
+      </button>
+
+    </div>
+
+
+    <h2>
+      Orders on This Shelf
+    </h2>
+
+
+    ${ordersHTML}
+
+  `);
 
 }
-
-
-/* -------------------------
-   START APP
-------------------------- */
-
-renderCompanies();
-
-renderHomeowners();
-
-renderCustomers();
-
-renderReminders();
-
-renderPopupReminders();
-
-show("home");
-
-</script>
-
-</body>
-</html>
